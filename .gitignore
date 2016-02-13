@@ -1,0 +1,9 @@
+# IntelliJ, WebStorm, ...
+.idea
+
+# Node
+node_modules
+npm-debug.log
+
+# Project
+lib
