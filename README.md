@@ -1,4 +1,4 @@
-# mocha-webpack
+# mocha-webpack [![npm package][npm-badge]][npm]
 
 Precompiles your server-side webpack bundles before running mocha.  Inspired by [karma-webpack] alternatives usage, but this is for NodeJS!
 
@@ -64,3 +64,6 @@ TODO
 ##
 
 [karma-webpack]: https://github.com/webpack/karma-webpack
+
+[npm-badge]: https://img.shields.io/npm/v/mocha-webpack.svg?style=flat-square
+[npm]: https://www.npmjs.org/package/mocha-webpack
