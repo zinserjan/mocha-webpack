@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "invariant": "^2.2.0",
-    "lodash": "^4.3.0"
+    "lodash": "^4.3.0",
+    "webpack-sources": "^0.1.1"
   }
 }

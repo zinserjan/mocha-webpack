@@ -296,6 +296,9 @@ webpackConfig.output = _.extend({}, webpackConfig.output, {
   path: outputPath
 });
 
+var InjectChangedFilesPlugin = require('../lib/webpack/InjectChangedFilesPlugin');
+var injectChangedFilesPlugin = new InjectChangedFilesPlugin();
+webpackConfig.plugins = (webpackConfig.plugins || []).concat([injectChangedFilesPlugin]);
 
 var mochaRunner = null;
 
@@ -324,6 +327,8 @@ if (program.watch) {
       mocha.files = [outputFilePath];
       runAgain = false;
       mochaRunner = mocha.run(function(failures){
+        injectChangedFilesPlugin.testsCompleted(failures > 0);
+
         // need to defer, otherwise mochaRunner = null doesn't work..
         process.nextTick(function () {
           mochaRunner = null;
