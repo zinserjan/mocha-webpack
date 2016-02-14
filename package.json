@@ -7,15 +7,14 @@
   },
   "files": [
     "*.md",
-    "bin",
-    "src",
-    "lib",
-    "modules/*.js",
-    "npm-scripts"
+    "bin/_mocha",
+    "bin/*.js",
+    "src/*.js",
+    "lib/*.js"
   ],
   "scripts": {
     "build": "rimraf lib && babel ./src -d lib --ignore '__test__'",
-    "lint": "eslint src"
+    "lint": "eslint src bin"
   },
   "repository": {
     "type": "git",
@@ -47,6 +46,7 @@
   "dependencies": {
     "invariant": "^2.2.0",
     "lodash": "^4.3.0",
-    "webpack-sources": "^0.1.1"
+    "webpack-sources": "^0.1.1",
+    "yargs": "^3.32.0"
   }
 }
