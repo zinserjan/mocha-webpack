@@ -7,10 +7,9 @@
   },
   "files": [
     "*.md",
-    "bin/_mocha",
-    "bin/*.js",
-    "src/*.js",
-    "lib/*.js"
+    "bin",
+    "src",
+    "lib"
   ],
   "scripts": {
     "build": "rimraf lib && babel ./src -d lib --ignore '__test__'",
