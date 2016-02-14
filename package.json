@@ -2,6 +2,9 @@
   "name": "mocha-webpack",
   "version": "0.0.1-alpha",
   "description": "mocha cli with webpack support",
+  "bin": {
+    "mocha-webpack": "./bin/_mocha"
+  },
   "files": [
     "*.md",
     "lib",
@@ -19,6 +22,10 @@
   ],
   "author": "Jan-André Zinser",
   "license": "MIT",
+  "peerDependencies": {
+    "mocha": "^2.4.5",
+    "webpack": "^1.12.13"
+  },
   "devDependencies": {
     "babel-cli": "^6.5.1",
     "babel-eslint": "^4.1.8",
@@ -28,5 +35,9 @@
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^5.0.1",
     "rimraf": "^2.5.2"
+  },
+  "dependencies": {
+    "invariant": "^2.2.0",
+    "lodash": "^4.3.0"
   }
 }
