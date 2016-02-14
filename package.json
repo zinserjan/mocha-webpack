@@ -15,8 +15,7 @@
   ],
   "scripts": {
     "build": "rimraf lib && babel ./src -d lib --ignore '__test__'",
-    "lint": "eslint src",
-    "postinstall": "node ./npm-scripts/postinstall.js"
+    "lint": "eslint src"
   },
   "keywords": [
     "wepback",
