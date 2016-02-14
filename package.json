@@ -7,6 +7,8 @@
   },
   "files": [
     "*.md",
+    "bin",
+    "src",
     "lib",
     "modules/*.js",
     "npm-scripts"
