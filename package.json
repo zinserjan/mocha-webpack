@@ -17,6 +17,13 @@
     "build": "rimraf lib && babel ./src -d lib --ignore '__test__'",
     "lint": "eslint src"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zinserjan/mocha-webpack"
+  },
+  "bugs": {
+    "url": "https://github.com/zinserjan/mocha-webpack/issues"
+  },
   "keywords": [
     "wepback",
     "mocha"
