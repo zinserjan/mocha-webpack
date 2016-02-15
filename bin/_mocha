@@ -32,6 +32,7 @@ function exit(code) {
 var path = require('path');
 var _ = require('lodash');
 
+var existsSync = require('../lib/util/existsSync');
 var configureMocha = require('../lib/mocha/configureMocha');
 var resetMocha = require('../lib/mocha/resetMocha');
 
@@ -40,6 +41,12 @@ var webpackWatch = require('../lib/webpack/watch');
 var InjectChangedFilesPlugin = require('../lib/webpack/InjectChangedFilesPlugin');
 
 var options = require('./options');
+
+options.require.forEach(function requireModule(mod) {
+  var absolute = existsSync(mod) || existsSync(mod + '.js');
+  var file = absolute ? path.resolve(mod) : mod;
+  require(file);
+});
 
 var files = options.files;
 

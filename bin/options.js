@@ -81,6 +81,13 @@ var options = {
     group: ADVANCED_GROUP,
     default: false,
   },
+  require: {
+    alias: 'r',
+    type: 'array',
+    describe: 'require the given module',
+    group: ADVANCED_GROUP,
+    requiresArg: true,
+  },
   slow: {
     alias: 's',
     describe: '"slow" test threshold in milliseconds',
@@ -190,5 +197,6 @@ if (validOptions.reporterOptions) {
 }
 
 validOptions.reporterOptions = reporterOptions;
+validOptions.require = validOptions.require || [];
 
 module.exports = validOptions;
