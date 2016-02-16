@@ -170,6 +170,7 @@ var argv = yargs
   .version(function getVersion() {
     return require('../package').version;
   })
+  .demand(0, 1)
   .options(options)
   .strict()
   .argv;
