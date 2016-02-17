@@ -30,12 +30,19 @@ function exit(code) {
 
 
 var path = require('path');
+var fs = require('fs-extra');
 var _ = require('lodash');
+var isGlob = require('is-glob');
+var globParent = require('glob-parent');
+var hash = require('object-hash');
+var anymatch = require('anymatch');
 
-var existsSync = require('../lib/util/existsSync');
+var exists = require('../lib/util/exists');
 var configureMocha = require('../lib/mocha/configureMocha');
 var resetMocha = require('../lib/mocha/resetMocha');
 
+var contextReplacementPlugin = require('../lib/webpack/contextReplacementPlugin');
+var prepareEntry = require('../lib/webpack/prepareEntry');
 var webpackBuild = require('../lib/webpack/build');
 var webpackWatch = require('../lib/webpack/watch');
 var InjectChangedFilesPlugin = require('../lib/webpack/InjectChangedFilesPlugin');
@@ -43,7 +50,7 @@ var InjectChangedFilesPlugin = require('../lib/webpack/InjectChangedFilesPlugin'
 var options = require('./options');
 
 options.require.forEach(function requireModule(mod) {
-  var absolute = existsSync(mod) || existsSync(mod + '.js');
+  var absolute = exists.existsFileSync(mod) || exists.existsFileSync(mod + '.js');
   var file = absolute ? path.resolve(mod) : mod;
   require(file);
 });
@@ -51,14 +58,54 @@ options.require.forEach(function requireModule(mod) {
 var files = options.files;
 
 if (!files.length) {
-  throw new Error('test entry is missing, please provide it!');
+  files.push('test/**.js');
 }
 
-var entryFilePath = path.resolve(_.last(files));
+var file = files[0];
+
+var entryFilePath = null;
+var outputFilePath = null;
+
+var webpackPlugins = [];
+
+var tmpPath = path.join(process.cwd(), '.tmp');
+
+if (isGlob(file)) {
+  var globPattern = file;
+  var matcher = anymatch(globPattern);
+  var parent = globParent(globPattern);
+  var directory = path.resolve(parent);
+
+  var context = path.relative(tmpPath, directory);
+
+  var recursive = file.indexOf('**') !== -1;
+
+  var bundleFileName = hash.MD5(options); // eslint-disable-line new-cap
+  entryFilePath = path.join(tmpPath, bundleFileName + '-entry.js');
+  outputFilePath = path.join(tmpPath, bundleFileName, bundleFileName + '-output.js');
+
+  var fileContent = prepareEntry(context);
+  fs.outputFileSync(entryFilePath, fileContent); // todo fix webpack runs twice...
+
+  function matchModule(mod) { // eslint-disable-line no-inner-declarations
+    // normalize path to match glob
+    var correctedPath = path.join(parent, mod);
+    return matcher(correctedPath);
+  }
+  webpackPlugins.push(contextReplacementPlugin(context, matchModule, recursive));
+} else if (exists.existsDirSync(file)) {
+  throw new Error('Directories are currently unsupported!');
+} else if (exists.existsFileSync(file)) {
+  entryFilePath = path.resolve(file);
+  outputFilePath = path.join(tmpPath, path.basename(entryFilePath));
+} else {
+  throw new Error('File/Directory not found: ' + file);
+}
+
+
 var entryFileName = path.basename(entryFilePath);
 var entryPath = path.dirname(entryFilePath);
 
-var outputFilePath = path.join(process.cwd(), '.tmp', entryFileName);
 var outputFileName = path.basename(outputFilePath);
 var outputPath = path.dirname(outputFilePath);
 
@@ -73,7 +120,9 @@ webpackConfig.output = _.extend({}, webpackConfig.output, {
 });
 
 var injectChangedFilesPlugin = new InjectChangedFilesPlugin();
-webpackConfig.plugins = (webpackConfig.plugins || []).concat([injectChangedFilesPlugin]);
+webpackPlugins.push(injectChangedFilesPlugin);
+
+webpackConfig.plugins = (webpackConfig.plugins || []).concat(webpackPlugins);
 
 
 var mocha = configureMocha(options);
