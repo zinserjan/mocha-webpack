@@ -6,4 +6,8 @@ node_modules
 npm-debug.log
 
 # Project
-lib
+lib/*
+!lib/utils.js
+!lib/reporters
+lib/reporters/*
+!lib/reporters/base.js

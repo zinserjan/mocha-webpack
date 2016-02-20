@@ -12,7 +12,8 @@
     "lib"
   ],
   "scripts": {
-    "build": "rimraf lib && babel ./src -d lib --ignore '__test__'",
+    "clean": "node scripts/clean.js",
+    "build": "npm run clean && babel ./src -d lib --ignore '__test__'",
     "lint": "eslint src bin"
   },
   "repository": {
@@ -38,9 +39,9 @@
     "babel-plugin-add-module-exports": "^0.1.2",
     "babel-plugin-transform-class-properties": "^6.5.2",
     "babel-preset-es2015": "^6.5.0",
+    "del": "^2.2.0",
     "eslint": "^1.10.3",
-    "eslint-config-airbnb": "^5.0.1",
-    "rimraf": "^2.5.2"
+    "eslint-config-airbnb": "^5.0.1"
   },
   "dependencies": {
     "anymatch": "^1.3.0",
