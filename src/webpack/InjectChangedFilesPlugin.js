@@ -1,5 +1,5 @@
-import ReplaceSource from 'webpack-core/lib/ReplaceSource';
-import SourceMapSource from 'webpack-core/lib/SourceMapSource';
+import ReplaceSource from 'webpack-sources/lib/ReplaceSource';
+import SourceMapSource from 'webpack-sources/lib/SourceMapSource';
 
 
 function isBuilt(module) {
