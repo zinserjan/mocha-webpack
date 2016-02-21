@@ -5,4 +5,5 @@ function exec(command) {
 }
 
 exec('npm run lint');
+exec('npm run test');
 exec('npm run build');
