@@ -11,7 +11,7 @@ export function existsFileSync(file) {
 
 export function existsDirSync(file) {
   try {
-    return fs.statSync(file).isDir();
+    return fs.statSync(file).isDirectory();
   } catch (err) {
     return false;
   }

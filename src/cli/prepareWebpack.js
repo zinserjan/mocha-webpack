@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import path from 'path';
+import normalizePath from 'normalize-path';
 import fs from 'fs-extra';
 import isGlob from 'is-glob';
 import globParent from 'glob-parent';
@@ -11,6 +12,16 @@ import createContextReplacementPlugin from '../webpack/contextReplacementPlugin'
 import prepareEntry from '../webpack/prepareEntry';
 
 const tmpPath = path.join(process.cwd(), '.tmp');
+
+const extensions = ['js'];
+
+function directoryToGlob(directory, options) {
+  const { recursive } = options;
+  const normalizedPath = normalizePath(directory);
+  const star = recursive ? '**/*' : '*';
+  const pattern = `${normalizedPath}/${star}.(${extensions.join('|')})`;
+  return pattern;
+}
 
 
 function createWebpackConfig(webpackConfig, entryFilePath, outputFilePath, plugins = []) {
@@ -35,15 +46,17 @@ function createWebpackConfig(webpackConfig, entryFilePath, outputFilePath, plugi
 
 export default function prepareWebpack(options, cb) {
   const [file] = options.files;
+  const glob = isGlob(file);
 
-  if (isGlob(file)) {
-    const globPattern = file;
+  if (glob || existsDirSync(file)) {
+    const globPattern = glob ? file : directoryToGlob(file, options);
+
     const matcher = anymatch(globPattern);
     const parent = globParent(globPattern);
     const directory = path.resolve(parent);
 
     const context = path.relative(tmpPath, directory);
-    const recursive = file.indexOf('**') !== -1; // or via options.recursive?
+    const recursive = globPattern.indexOf('**') !== -1; // or via options.recursive?
 
     const optionsHash = hash.MD5(options); // eslint-disable-line new-cap
 
@@ -76,8 +89,6 @@ export default function prepareWebpack(options, cb) {
         cb(null, webpackConfig);
       });
     }
-  } else if (existsDirSync(file)) {
-    throw new Error('Directories are currently unsupported!');
   } else if (existsFileSync(file)) {
     const entryFilePath = path.resolve(file);
     const outputFilePath = path.join(tmpPath, path.basename(entryFilePath));

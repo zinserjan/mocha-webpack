@@ -112,7 +112,7 @@ describe('cli', function () {
     ];
 
     corruptedPatterns.forEach((pattern) => {
-      it(`handles failed modules with pattern '${pattern}'`, function (done) {
+      it(`handles corrupted modules with pattern '${pattern}'`, function (done) {
         exec(`node ${binPath} '${pattern}'`, (err) => {
           assert.isNotNull(err);
           assert.isAbove(err.code, 0);
@@ -171,6 +171,130 @@ describe('cli', function () {
 
     after(function () {
       return del(testFiles);
+    });
+  });
+
+  context('directory as option', function () {
+    const subdirectories = ['', 'sub1', 'sub2'];
+
+    context('directory with passing tests', function () {
+      before(function () {
+        this.testFiles = _.range(1, 10).map((x) => {
+          const subdir = subdirectories[x % 3];
+          return path.join(fixtureDir, subdir, `passing-test-${x}.js`);
+        });
+        this.testFiles.forEach((file) => createTest(file, true));
+      });
+
+      it(`runs all tests in directory'`, function (done) {
+        const matcher = anymatch(`${fixtureDir}/*.js`);
+        const files = this.testFiles.filter(matcher);
+
+        exec(`node ${binPath} ${fixtureDir}`, (err, stdout) => {
+          assert.isNull(err);
+          files.forEach((file) => {
+            assert.include(stdout, file);
+          });
+          assert.include(stdout, `${files.length} passing`);
+          done();
+        });
+      });
+
+      it(`runs all tests in directory & subdirectories'`, function (done) {
+        const matcher = anymatch(`${fixtureDir}/**/*.js`);
+        const files = this.testFiles.filter(matcher);
+
+        exec(`node ${binPath} --recursive ${fixtureDir}`, (err, stdout) => {
+          assert.isNull(err);
+          files.forEach((file) => {
+            assert.include(stdout, file);
+          });
+          assert.include(stdout, `${files.length} passing`);
+          done();
+        });
+      });
+
+      after(function () {
+        return del(this.testFiles);
+      });
+    });
+
+    context('directory with failing tests', function () {
+      before(function () {
+        this.testFiles = _.range(1, 10).map((x) => {
+          const subdir = subdirectories[x % 3];
+          return path.join(fixtureDir, subdir, `failing-test-${x}.js`);
+        });
+        this.testFiles.forEach((file) => createTest(file, false));
+      });
+
+      it(`runs all tests in directory'`, function (done) {
+        const matcher = anymatch(`${fixtureDir}/*.js`);
+        const files = this.testFiles.filter(matcher);
+
+        exec(`node ${binPath} ${fixtureDir}`, (err, stdout) => {
+          assert.isNotNull(err);
+          assert.strictEqual(err.code, files.length);
+          files.forEach((file) => {
+            assert.include(stdout, file);
+          });
+
+          assert.include(stdout, '0 passing');
+          assert.include(stdout, `${files.length} failing`);
+          done();
+        });
+      });
+
+      it(`runs all tests in directory & subdirectories'`, function (done) {
+        const matcher = anymatch(`${fixtureDir}/**/*.js`);
+        const files = this.testFiles.filter(matcher);
+
+        exec(`node ${binPath} --recursive ${fixtureDir}`, (err, stdout) => {
+          assert.isNotNull(err);
+          assert.strictEqual(err.code, files.length);
+          files.forEach((file) => {
+            assert.include(stdout, file);
+          });
+
+          assert.include(stdout, '0 passing');
+          assert.include(stdout, `${files.length} failing`);
+          done();
+        });
+      });
+
+      after(function () {
+        return del(this.testFiles);
+      });
+    });
+
+    context('directory with corrupted modules', function () {
+      before(function () {
+        this.testFiles = _.range(1, 10).map((x) => {
+          const subdir = subdirectories[x % 3];
+          return path.join(fixtureDir, subdir, `corrupted-test-${x}.js`);
+        });
+        this.testFiles.forEach((file) => createCorruptedTest(file));
+      });
+
+      it(`fails before running tests of directory`, function (done) {
+        exec(`node ${binPath} ${fixtureDir}`, (err) => {
+          assert.isNotNull(err);
+          assert.isAbove(err.code, 0);
+          done();
+        });
+      });
+
+      it(`fails before running tests of directory directory & subdirectories'`, function (done) {
+        exec(`node ${binPath} --recursive ${fixtureDir}`, (err) => {
+          assert.isNotNull(err);
+          assert.isAbove(err.code, 0);
+          done();
+        });
+      });
+
+      after(function () {
+        return del(this.testFiles);
+      });
     });
   });
 });
