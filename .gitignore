@@ -11,3 +11,6 @@ lib/*
 !lib/reporters
 lib/reporters/*
 !lib/reporters/base.js
+
+# Temp
+.tmp

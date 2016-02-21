@@ -12,9 +12,11 @@
     "lib"
   ],
   "scripts": {
-    "clean": "node scripts/clean.js",
-    "build": "npm run clean && babel ./src -d lib --ignore '__test__'",
-    "lint": "eslint src bin"
+    "clean-lib": "del-cli 'lib/**' '!lib' '!lib/reporters' '!lib/utils.js' '!lib/reporters/base.js'",
+    "clean-tmp": "del-cli 'tmp/**'",
+    "build": "npm run clean-lib && babel ./src -d lib",
+    "lint": "eslint src test bin",
+    "test": "npm run clean-tmp && npm run build && mocha --recursive --compilers js:babel-register 'test/**/*.test.js'"
   },
   "repository": {
     "type": "git",
@@ -39,9 +41,11 @@
     "babel-plugin-add-module-exports": "^0.1.2",
     "babel-plugin-transform-class-properties": "^6.5.2",
     "babel-preset-es2015": "^6.5.0",
-    "del": "^2.2.0",
+    "chai": "^3.5.0",
+    "del-cli": "^0.2.0",
     "eslint": "^1.10.3",
-    "eslint-config-airbnb": "^5.0.1"
+    "eslint-config-airbnb": "^5.0.1",
+    "mocha": "^2.4.5"
   },
   "dependencies": {
     "anymatch": "^1.3.0",

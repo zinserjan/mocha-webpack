@@ -1,47 +1,38 @@
-/* eslint-disable no-var,prefer-arrow-callback,prefer-template  */
+import yargs from 'yargs';
+import _ from 'lodash';
 
-var yargs = require('yargs');
-var _ = require('lodash');
+const BASIC_GROUP = 'Basic options:';
+const OUTPUT_GROUP = 'Output options:';
+const ADVANCED_GROUP = 'Advanced options:';
 
-var BASIC_GROUP = 'Basic options:';
-var OUTPUT_GROUP = 'Output options:';
-var ADVANCED_GROUP = 'Advanced options:';
-
-var reporterOptions = {};
-
-
-var options = {
+const options = {
   'async-only': {
     alias: 'A',
     type: 'boolean',
     describe: 'force all tests to take a callback (async) or return a promise',
     group: ADVANCED_GROUP,
-    default: false,
   },
   colors: {
     alias: 'c',
     type: 'boolean',
     describe: 'force enabling of colors',
     group: OUTPUT_GROUP,
-    default: false,
   },
   growl: {
     alias: 'G',
     type: 'boolean',
     describe: 'enable growl notification support',
     group: OUTPUT_GROUP,
-    default: false,
   },
   recursive: {
     type: 'boolean',
     describe: 'include sub directories',
     group: ADVANCED_GROUP,
-    default: false,
   },
   'reporter-options': {
     alias: 'O',
     type: 'string',
-    describe: 'reporter-specific options, --reporter-specific <k=v,k2=v2,...>',
+    describe: 'reporter-specific options, --reporter-options <k=v,k2=v2,...>',
     group: OUTPUT_GROUP,
     requiresArg: true,
   },
@@ -119,13 +110,6 @@ var options = {
     group: BASIC_GROUP,
     default: false,
   },
-  'webpack-config': {
-    type: 'string',
-    describe: 'path to webpack-config file',
-    group: BASIC_GROUP,
-    default: 'webpack.config.js',
-    requiresArg: true,
-  },
   'check-leaks': {
     type: 'boolean',
     describe: 'check for global variable leaks',
@@ -161,43 +145,53 @@ var options = {
     group: ADVANCED_GROUP,
     default: false,
   },
+  'webpack-config': {
+    type: 'string',
+    describe: 'path to webpack-config file',
+    group: BASIC_GROUP,
+    requiresArg: true,
+  },
 };
 
+export default function parseArgv(argv) {
+  const parsedArgs = yargs(argv)
+    .help('help')
+    .alias('help', 'h', '?')
+    .version(() => require('../package').version)
+    .demand(0, 1)
+    .options(options)
+    .strict()
+    .argv;
 
-var argv = yargs
-  .help('help')
-  .alias('help', 'h', '?')
-  .version(function getVersion() {
-    return require('../package').version;
-  })
-  .demand(0, 1)
-  .options(options)
-  .strict()
-  .argv;
+  let files = parsedArgs._;
 
+  if (!files.length) {
+    files = ['./test'];
+  }
 
-var files = argv._ || [];
+  const parameters = _.map(_.keys(options), _.camelCase); // camel case parameters
 
-var parameters = _.map(_.keys(options), _.camelCase); // camel case parameters
+  const parsedOptions = _.pick(parsedArgs, parameters); // pick all parameters as new object
+  const validOptions = _.omitBy(parsedOptions, _.isUndefined); // remove all undefined values
+  validOptions.files = files;
 
-var parsedOptions = _.pick(argv, parameters); // pick all parameters as new object from options
-var validOptions = _.omitBy(parsedOptions, _.isUndefined); // remove all undefined values
-validOptions.files = files;
+  const reporterOptions = {};
 
-if (validOptions.reporterOptions) {
-  validOptions.reporterOptions.split(',').forEach(function parsedReporterOptions(opt) {
-    var L = opt.split('=');
-    if (L.length > 2 || L.length === 0) {
-      throw new Error('invalid reporter option "' + opt + '"');
-    } else if (L.length === 2) {
-      reporterOptions[L[0]] = L[1];
-    } else {
-      reporterOptions[L[0]] = true;
-    }
-  });
+  if (validOptions.reporterOptions) {
+    validOptions.reporterOptions.split(',').forEach((opt) => {
+      const L = opt.split('=');
+      if (L.length > 2 || L.length === 0) {
+        throw new Error(`invalid reporter option ${opt}`);
+      } else if (L.length === 2) {
+        reporterOptions[L[0]] = L[1];
+      } else {
+        reporterOptions[L[0]] = true;
+      }
+    });
+  }
+
+  validOptions.reporterOptions = reporterOptions;
+  validOptions.require = validOptions.require || [];
+
+  return validOptions;
 }
-
-validOptions.reporterOptions = reporterOptions;
-validOptions.require = validOptions.require || [];
-
-module.exports = validOptions;
