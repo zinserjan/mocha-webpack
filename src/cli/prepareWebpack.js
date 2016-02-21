@@ -55,7 +55,7 @@ export default function prepareWebpack(options, cb) {
     const parent = globParent(globPattern);
     const directory = path.resolve(parent);
 
-    const context = path.relative(tmpPath, directory);
+    const context = normalizePath(path.relative(tmpPath, directory));
     const recursive = globPattern.indexOf('**') !== -1; // or via options.recursive?
 
     const optionsHash = hash.MD5(options); // eslint-disable-line new-cap

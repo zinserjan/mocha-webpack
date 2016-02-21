@@ -8,6 +8,7 @@ import del from 'del';
 import path from 'path';
 import { exec } from 'child_process';
 import anymatch from 'anymatch';
+import normalizePath from 'normalize-path';
 
 
 function createTest(filePath, passing) {
@@ -39,16 +40,16 @@ const binPath = path.relative(process.cwd(), path.join('bin', '_mocha'));
 describe('cli', function () {
   context('single test file as option', function () {
     before(function () {
-      this.passingTest = path.join(fixtureDir, 'passing-test.js');
-      this.failingTest = path.join(fixtureDir, 'failing-test.js');
-      this.corruptedTest = path.join(fixtureDir, 'corrupted-test.js');
+      this.passingTest = normalizePath(path.join(fixtureDir, 'passing-test.js'));
+      this.failingTest = normalizePath(path.join(fixtureDir, 'failing-test.js'));
+      this.corruptedTest = normalizePath(path.join(fixtureDir, 'corrupted-test.js'));
       createTest(this.passingTest, true);
       createTest(this.failingTest, false);
       createCorruptedTest(this.corruptedTest);
     });
 
     it('handles failed module with syntax errors', function (done) {
-      exec(`node ${binPath} ${this.corruptedTest}`, (err) => {
+      exec(`node ${binPath} \"${this.corruptedTest}\"`, (err) => {
         assert.isNotNull(err);
         assert.isAbove(err.code, 0);
         done();
@@ -56,7 +57,7 @@ describe('cli', function () {
     });
 
     it('runs successfull test', function (done) {
-      exec(`node ${binPath} ${this.passingTest}`, (err, stdout) => {
+      exec(`node ${binPath} \"${this.passingTest}\"`, (err, stdout) => {
         assert.isNull(err);
         assert.include(stdout, this.passingTest);
         assert.include(stdout, '1 passing');
@@ -65,7 +66,7 @@ describe('cli', function () {
     });
 
     it('runs failing test', function (done) {
-      exec(`node ${binPath} ${this.failingTest}`, (err, stdout) => {
+      exec(`node ${binPath} \"${this.failingTest}\"`, (err, stdout) => {
         assert.isNotNull(err);
         assert.strictEqual(err.code, 1);
         assert.include(stdout, this.failingTest);
@@ -93,7 +94,7 @@ describe('cli', function () {
         return path.join(fixtureDir, 'sub1', `passing-test-${x}.js`);
       }
       return path.join(fixtureDir, 'sub2', `passing-test-${x}.js`);
-    });
+    }).map((file) => normalizePath(file));
 
     before(function () {
       testFiles.forEach((file) => {
@@ -113,7 +114,7 @@ describe('cli', function () {
 
     corruptedPatterns.forEach((pattern) => {
       it(`handles corrupted modules with pattern '${pattern}'`, function (done) {
-        exec(`node ${binPath} '${pattern}'`, (err) => {
+        exec(`node ${binPath} \"${pattern}\"`, (err) => {
           assert.isNotNull(err);
           assert.isAbove(err.code, 0);
           done();
@@ -133,7 +134,7 @@ describe('cli', function () {
       const files = testFiles.filter(matcher);
 
       it(`runs ${files.length} passing tests of ${testFiles.length} with pattern '${pattern}'`, function (done) {
-        exec(`node ${binPath} '${pattern}'`, (err, stdout) => {
+        exec(`node ${binPath} \"${pattern}\"`, (err, stdout) => {
           assert.isNull(err);
           files.forEach((file) => {
             assert.include(stdout, file);
@@ -155,7 +156,7 @@ describe('cli', function () {
       const files = testFiles.filter(matcher);
 
       it(`runs ${files.length} failing tests of ${testFiles.length} with pattern '${pattern}'`, function (done) {
-        exec(`node ${binPath} '${pattern}'`, (err, stdout) => {
+        exec(`node ${binPath} \"${pattern}\"`, (err, stdout) => {
           assert.isNotNull(err);
           assert.strictEqual(err.code, files.length);
           files.forEach((file) => {
@@ -182,7 +183,7 @@ describe('cli', function () {
         this.testFiles = _.range(1, 10).map((x) => {
           const subdir = subdirectories[x % 3];
           return path.join(fixtureDir, subdir, `passing-test-${x}.js`);
-        });
+        }).map((file) => normalizePath(file));
         this.testFiles.forEach((file) => createTest(file, true));
       });
 
@@ -190,7 +191,7 @@ describe('cli', function () {
         const matcher = anymatch(`${fixtureDir}/*.js`);
         const files = this.testFiles.filter(matcher);
 
-        exec(`node ${binPath} ${fixtureDir}`, (err, stdout) => {
+        exec(`node ${binPath} \"${fixtureDir}\"`, (err, stdout) => {
           assert.isNull(err);
           files.forEach((file) => {
             assert.include(stdout, file);
@@ -204,7 +205,7 @@ describe('cli', function () {
         const matcher = anymatch(`${fixtureDir}/**/*.js`);
         const files = this.testFiles.filter(matcher);
 
-        exec(`node ${binPath} --recursive ${fixtureDir}`, (err, stdout) => {
+        exec(`node ${binPath} --recursive \"${fixtureDir}\"`, (err, stdout) => {
           assert.isNull(err);
           files.forEach((file) => {
             assert.include(stdout, file);
@@ -224,7 +225,7 @@ describe('cli', function () {
         this.testFiles = _.range(1, 10).map((x) => {
           const subdir = subdirectories[x % 3];
           return path.join(fixtureDir, subdir, `failing-test-${x}.js`);
-        });
+        }).map((file) => normalizePath(file));
         this.testFiles.forEach((file) => createTest(file, false));
       });
 
@@ -232,7 +233,7 @@ describe('cli', function () {
         const matcher = anymatch(`${fixtureDir}/*.js`);
         const files = this.testFiles.filter(matcher);
 
-        exec(`node ${binPath} ${fixtureDir}`, (err, stdout) => {
+        exec(`node ${binPath} \"${fixtureDir}\"`, (err, stdout) => {
           assert.isNotNull(err);
           assert.strictEqual(err.code, files.length);
           files.forEach((file) => {
@@ -249,7 +250,7 @@ describe('cli', function () {
         const matcher = anymatch(`${fixtureDir}/**/*.js`);
         const files = this.testFiles.filter(matcher);
 
-        exec(`node ${binPath} --recursive ${fixtureDir}`, (err, stdout) => {
+        exec(`node ${binPath} --recursive \"${fixtureDir}\"`, (err, stdout) => {
           assert.isNotNull(err);
           assert.strictEqual(err.code, files.length);
           files.forEach((file) => {
@@ -272,12 +273,12 @@ describe('cli', function () {
         this.testFiles = _.range(1, 10).map((x) => {
           const subdir = subdirectories[x % 3];
           return path.join(fixtureDir, subdir, `corrupted-test-${x}.js`);
-        });
+        }).map((file) => normalizePath(file));
         this.testFiles.forEach((file) => createCorruptedTest(file));
       });
 
       it(`fails before running tests of directory`, function (done) {
-        exec(`node ${binPath} ${fixtureDir}`, (err) => {
+        exec(`node ${binPath} \"${fixtureDir}\"`, (err) => {
           assert.isNotNull(err);
           assert.isAbove(err.code, 0);
           done();
@@ -285,7 +286,7 @@ describe('cli', function () {
       });
 
       it(`fails before running tests of directory directory & subdirectories'`, function (done) {
-        exec(`node ${binPath} --recursive ${fixtureDir}`, (err) => {
+        exec(`node ${binPath} --recursive \"${fixtureDir}\"`, (err) => {
           assert.isNotNull(err);
           assert.isAbove(err.code, 0);
           done();

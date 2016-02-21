@@ -18,22 +18,22 @@ Work in progress...
 
 run a single test
 ```
-mocha-webpack --webpack-config webpack.config-test.js --colors test_index.js
+mocha-webpack --webpack-config webpack.config-test.js --colors "test_index.js"
 ```
 
 run all tests by glob
 ```
-mocha-webpack --webpack-config webpack.config-test.js --colors test/**/*.js
+mocha-webpack --webpack-config webpack.config-test.js --colors "test/**/*.js"
 ```
 
 run all tests in directory (add `--recursive` to include subdirectories)
 ```
-mocha-webpack --webpack-config webpack.config-test.js --colors test
+mocha-webpack --webpack-config webpack.config-test.js --colors "test"
 ```
 
 Watch mode? just add `--watch`
 ```
-mocha-webpack --webpack-config webpack.config-test.js --watch --colors test
+mocha-webpack --webpack-config webpack.config-test.js --watch --colors "test"
 ```
 
 ### CLI options
