@@ -14,46 +14,26 @@ Work in progress...
 - reruns modified tests on file change
 
 ### Usage
+
+
+run a single test
 ```
-mocha-webpack --webpack-config webpack.config-test.js --watch --colors test_index.js
-```
-
-```js
-
-// webpack.config-test.js
-var nodeExternals = require('webpack-node-externals');
-
-module.exports = {
-  target: 'node', // in order to ignore built-in modules like path, fs, etc.
-  externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
-  devtool: "#source-map"
-};
+mocha-webpack --webpack-config webpack.config-test.js --colors test_index.js
 ```
 
-```js
+run all tests by glob
+```
+mocha-webpack --webpack-config webpack.config-test.js --colors test/**/*.js
+```
 
-// test_index.js
+run all tests in directory (add `--recursive` to include subdirectories)
+```
+mocha-webpack --webpack-config webpack.config-test.js --colors test
+```
 
-// This gets replaced by webpack with the updated files on rebuild
-var __webpackManifest__ = [];
-
-// require all modules ending in ".test" from the
-// src directory and all subdirectories
-var testsContext = require.context("./src", true, /\.test$/);
-
-function inManifest(path) {
-  return __webpackManifest__.indexOf(path) >= 0;
-}
-
-var runnable = testsContext.keys().filter(inManifest);
-
-// // Run all tests if we didn't find any changes
-if (!runnable.length) {
-  runnable = testsContext.keys();
-}
-
-runnable.forEach(testsContext);
-
+Watch mode? just add `--watch`
+```
+mocha-webpack --webpack-config webpack.config-test.js --watch --colors test
 ```
 
 ### CLI options
