@@ -51,6 +51,12 @@ const options = {
     group: ADVANCED_GROUP,
     default: false,
   },
+  glob: {
+    type: 'string',
+    describe: 'only run files matching <pattern> (only valid for directory entry)',
+    group: ADVANCED_GROUP,
+    requiresArg: true,
+  },
   grep: {
     alias: 'g',
     type: 'string',

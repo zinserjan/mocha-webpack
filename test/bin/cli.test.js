@@ -201,6 +201,20 @@ describe('cli', function () {
         });
       });
 
+      it(`runs all tests matching file glob'`, function (done) {
+        const matcher = anymatch(`${fixtureDir}/*-test-3.js`);
+        const files = this.testFiles.filter(matcher);
+        exec(`node ${binPath} --glob "*-test-3.js" \"${fixtureDir}\"`, (err, stdout) => {
+          assert.isNull(err);
+          files.forEach((file) => {
+            assert.include(stdout, file);
+          });
+          assert.include(stdout, `${files.length} passing`);
+          done();
+        });
+      });
+
+
       it(`runs all tests in directory & subdirectories'`, function (done) {
         const matcher = anymatch(`${fixtureDir}/**/*.js`);
         const files = this.testFiles.filter(matcher);

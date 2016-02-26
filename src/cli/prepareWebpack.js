@@ -13,14 +13,33 @@ import prepareEntry from '../webpack/prepareEntry';
 
 const tmpPath = path.join(process.cwd(), '.tmp');
 
-const extensions = ['js'];
+const defaultFilePattern = '*.js';
 
 function directoryToGlob(directory, options) {
-  const { recursive } = options;
+  const { recursive, glob } = options;
+
+  let fileGlob = defaultFilePattern;
+
+  if (glob) {
+    if (!isGlob(glob)) {
+      throw new Error(`Provided Glob ${glob} is not a valid glob pattern`);
+    }
+
+    const parent = globParent(glob);
+
+    if (parent !== '.' || glob.indexOf('**') !== -1) {
+      throw new Error(`Provided Glob ${glob} must be a file pattern like *.js`);
+    }
+
+    fileGlob = glob;
+  }
+
+
   const normalizedPath = normalizePath(directory);
-  const star = recursive ? '**/*' : '*';
-  const pattern = `${normalizedPath}/${star}.(${extensions.join('|')})`;
-  return pattern;
+  const globstar = recursive ? '**/' : '';
+  const filePattern = [globstar, fileGlob].join('');
+
+  return `${normalizedPath}/${filePattern}`;
 }
 
 
