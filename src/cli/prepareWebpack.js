@@ -11,7 +11,7 @@ import { existsFileSync, existsDirSync } from '../util/exists';
 import createContextReplacementPlugin from '../webpack/contextReplacementPlugin';
 import prepareEntry from '../webpack/prepareEntry';
 
-const tmpPath = path.join(process.cwd(), '.tmp');
+const tmpPath = path.join(process.cwd(), '.tmp', 'mocha-webpack');
 
 const defaultFilePattern = '*.js';
 
