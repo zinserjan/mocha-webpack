@@ -83,10 +83,31 @@ module.exports = {
 };
 ```
 
-Maybe you noticed, [entry](https://webpack.github.io/docs/configuration.html#entry), [output.filename](https://webpack.github.io/docs/configuration.html#output-filename) and [output.path](https://webpack.github.io/docs/configuration.html#output-path) are completely missing in this config. mocha-webpack does this automatically for you and if you would specify it anyway, it will be overridden by mocha-webpack.
+Maybe you noticed that [entry](https://webpack.github.io/docs/configuration.html#entry), [output.filename](https://webpack.github.io/docs/configuration.html#output-filename) and [output.path](https://webpack.github.io/docs/configuration.html#output-path) are completely missing in this config. mocha-webpack does this automatically for you and if you would specify it anyway, it will be overridden by mocha-webpack.
 
 **Note:** mocha-webpack emits the generated files currently into `./tmp/mocha-webpack`. So you should make sure that this folder is ignored in your `.gitignore` file. In future versions this could be unnecessary.
 
+### Shared configuration
+
+mocha-webpack will attempt to load `mocha-webpack.opts` as a configuration file in your working directory. The lines in this file are combined with any command-line arguments. The command-line arguments take precedence. Imagine you have the following mocha-webpack.opts file:
+
+**mocha-webpack.opts**
+```
+--colors
+--webpack-config webpack.config-test.js
+src/**/*.test.js
+```
+
+and call mocha-webpack with
+```bash
+$ mocha-webpack --growl
+```
+
+then it's equivalent to
+
+```bash
+$ mocha-webpack --growl --colors --webpack-config webpack.config-test.js "src/**/*.test.js"
+```
 
 ## Sample commands
 
