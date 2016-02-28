@@ -33,8 +33,6 @@ describe('parseConfig', function () {
 
     const parsedOptions = parseConfig();
 
-    assert.notProperty(parsedOptions, 'files');
-
     assert.deepEqual(parsedOptions, expectedResult);
 
     parseConfig.__ResetDependency__('existsFileSync');

@@ -12,7 +12,6 @@ export default function parseConfig() {
       .filter(Boolean)
       .map((value) => value.replace(/%20/g, ' '));
     const defaultOptions = parseArgv(argv, true);
-    delete defaultOptions.files; // ignoring files
     return defaultOptions;
   }
   return {};
