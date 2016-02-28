@@ -60,6 +60,7 @@
     "lodash": "^4.3.0",
     "normalize-path": "^2.0.1",
     "object-hash": "^1.1.2",
+    "webpack-info-plugin": "^0.1.0",
     "webpack-sources": "^0.1.1",
     "yargs": "^3.32.0"
   }

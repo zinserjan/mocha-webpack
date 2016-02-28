@@ -6,6 +6,7 @@ import isGlob from 'is-glob';
 import globParent from 'glob-parent';
 import hash from 'object-hash';
 import anymatch from 'anymatch';
+import WebpackInfoPlugin from 'webpack-info-plugin';
 
 import { existsFileSync, existsDirSync } from '../util/exists';
 import createContextReplacementPlugin from '../webpack/contextReplacementPlugin';
@@ -67,6 +68,30 @@ export default function prepareWebpack(options, cb) {
   const [file] = options.files;
   const glob = isGlob(file);
 
+  const webpackInfoPlugin = new WebpackInfoPlugin({
+    stats: {
+      // pass options from http://webpack.github.io/docs/node.js-api.html#stats-tostring
+      //context: false,
+      hash: false,
+      version: false,
+      timings: false,
+      assets: false,
+      chunks: false,
+      chunkModules: false,
+      modules: false,
+      children: false,
+      cached: false,
+      reasons: false,
+      source: false,
+      errorDetails: true,
+      chunkOrigins: false,
+      colors: options.colors,
+    },
+    state: false, // show bundle valid / invalid
+  });
+
+  const webpackPlugins = [webpackInfoPlugin];
+
   if (glob || existsDirSync(file)) {
     const globPattern = glob ? file : directoryToGlob(file, options);
 
@@ -88,7 +113,7 @@ export default function prepareWebpack(options, cb) {
       return matcher(correctedPath);
     }
 
-    const webpackPlugins = [createContextReplacementPlugin(context, matchModule, recursive)];
+    webpackPlugins.push(createContextReplacementPlugin(context, matchModule, recursive));
 
     const webpackConfig = createWebpackConfig(
       options.webpackConfig,
@@ -111,11 +136,18 @@ export default function prepareWebpack(options, cb) {
   } else if (existsFileSync(file)) {
     const entryFilePath = path.resolve(file);
     const outputFilePath = path.join(tmpPath, path.basename(entryFilePath));
-    const webpackConfig = createWebpackConfig(options.webpackConfig, entryFilePath, outputFilePath);
+    const webpackConfig = createWebpackConfig(
+      options.webpackConfig,
+      entryFilePath,
+      outputFilePath,
+      webpackPlugins
+    );
     process.nextTick(() => {
       cb(null, webpackConfig);
     });
   } else {
-    cb(new Error(`File/Directory not found: ${file}`));
+    process.nextTick(() => {
+      cb(new Error(`File/Directory not found: ${file}`));
+    });
   }
 }
