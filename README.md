@@ -43,15 +43,15 @@ Congratulations, you are ready to run mocha-webpack for the first time in your p
 
 ```bash
 # display version of mocha-webpack
-$ node ./node_modules/mocha-webpack/bin/_mocha -v
+$ node ./node_modules/mocha-webpack/bin/mocha-webpack -v
 
 # display available commands & options of mocha-webpack
-$ node ./node_modules/mocha-webpack/bin/_mocha --help
+$ node ./node_modules/mocha-webpack/bin/mocha-webpack --help
 ```
 
 ### Configuring mocha-webpack
 
-Typing `node ./node_modules/mocha-webpack/bin/_mocha ....` is just annoying and you might find it useful to configure your run commands as npm scripts inside your `package.json`.
+Typing `node ./node_modules/mocha-webpack/bin/mocha-webpack ....` is just annoying and you might find it useful to configure your run commands as npm scripts inside your `package.json`.
 
 
 **package.json**
@@ -104,7 +104,11 @@ $ mocha-webpack --growl --colors --webpack-config webpack.config-test.js "src/**
 ```
 ### Sourcemaps
 
-For using sourcemaps with mocha-webpack you just need to enable sourcemaps in your webpack config and use `source-map-support` to apply sourcemaps.
+For using sourcemaps with mocha-webpack you just need to enable sourcemaps in your webpack config and use [source-map-support] to apply sourcemaps.
+
+```bash
+$ npm install --save-dev source-map-support
+```
 
 **webpack.config-test.js**
 ```javascript
@@ -169,6 +173,7 @@ see `mocha-webpack --help`
 
 MIT
 
+[source-map-support]: https://github.com/evanw/node-source-map-support
 [karma-webpack]: https://github.com/webpack/karma-webpack
 [build-badge]: https://travis-ci.org/zinserjan/mocha-webpack.svg?branch=master
 [build]: https://travis-ci.org/zinserjan/mocha-webpack
