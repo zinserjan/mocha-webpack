@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 describe('parseArgv', function () {
   beforeEach(function () {
-    this.parseArgv = require('../../src/cli/parseArgv');
+    this.parseArgv = require('../../src/cli/parseArgv').default;
     this.argv = [
       'src',
     ];
