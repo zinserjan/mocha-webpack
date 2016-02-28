@@ -11,6 +11,34 @@ describe('parseArgv', function () {
     ];
   });
 
+  context('duplicated arguments', function () {
+    it('should throw for non arrays', function () {
+      // given
+      const argv = ['--webpack-config', 'webpack-config.js', '--webpack-config', 'webpack-config2.js'];
+
+      // when
+      const fn = () => {
+        this.parseArgv(argv);
+      };
+
+      // then
+      assert.throws(fn, /Duplicating arguments for /);
+    });
+
+    it('should not throw for arrays', function () {
+      // given
+      const argv = ['--require', 'test', 'test2'];
+
+      // when
+      const fn = () => {
+        this.parseArgv(argv);
+      };
+
+      // then
+      assert.doesNotThrow(fn);
+    });
+  });
+
   context('non-option as files', function () {
     it('uses "./test" as default', function () {
       // given
@@ -37,657 +65,659 @@ describe('parseArgv', function () {
     });
   });
 
-  context('async-only', function () {
-    it('uses false as default value', function () {
-      // given
-      const argv = this.argv;
-
-      // when
-      const parsedArgv = this.parseArgv(argv);
-
-      // then
-      assert.propertyVal(parsedArgv, 'asyncOnly', false);
-    });
-
-    for (const parameter of ['--async-only', '--A', '-A']) {
-      it(`'parses ${parameter}'`, function () { // eslint-disable-line no-loop-func
+  context('options', function () {
+    context('async-only', function () {
+      it('uses false as default value', function () {
         // given
-        const argv = this.argv.concat([parameter]);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'asyncOnly', true);
+        assert.propertyVal(parsedArgv, 'asyncOnly', false);
       });
-    }
-  });
 
-  context('colors', function () {
-    it('uses false as default value', function () {
-      // given
-      const argv = this.argv;
+      for (const parameter of['--async-only', '--A', '-A']) {
+        it(`'parses ${parameter}'`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+          // when
+          const parsedArgv = this.parseArgv(argv);
 
-      // then
-      assert.propertyVal(parsedArgv, 'colors', false);
+          // then
+          assert.propertyVal(parsedArgv, 'asyncOnly', true);
+        });
+      }
     });
 
-
-    for (const parameter of ['--colors', '--c', '-c']) {
-      it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+    context('colors', function () {
+      it('uses false as default value', function () {
         // given
-        const argv = this.argv.concat([parameter]);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'colors', true);
+        assert.propertyVal(parsedArgv, 'colors', false);
       });
-    }
-  });
 
-  context('growl', function () {
-    it('uses false as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of['--colors', '--c', '-c']) {
+        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
 
-      // then
-      assert.propertyVal(parsedArgv, 'growl', false);
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'colors', true);
+        });
+      }
     });
 
-
-    for (const parameter of ['--growl', '--G', '-G']) {
-      it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+    context('growl', function () {
+      it('uses false as default value', function () {
         // given
-        const argv = this.argv.concat([parameter]);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'growl', true);
+        assert.propertyVal(parsedArgv, 'growl', false);
       });
-    }
-  });
 
-  context('recursive', function () {
-    it('uses false as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of['--growl', '--G', '-G']) {
+        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
 
-      // then
-      assert.propertyVal(parsedArgv, 'recursive', false);
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'growl', true);
+        });
+      }
     });
 
-
-    for (const parameter of ['--recursive']) {
-      it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+    context('recursive', function () {
+      it('uses false as default value', function () {
         // given
-        const argv = this.argv.concat([parameter]);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'recursive', true);
+        assert.propertyVal(parsedArgv, 'recursive', false);
       });
-    }
-  });
 
-  context('reporter-options', function () {
-    it('uses {} as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of['--recursive']) {
+        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
 
-      // then
-      assert.property(parsedArgv, 'reporterOptions');
-      assert.deepEqual(parsedArgv.reporterOptions, {});
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'recursive', true);
+        });
+      }
     });
 
-    const parameters = [
-      { given: ['--reporter-options', 'foo=bar,quux'], expected: { foo: 'bar', quux: true } },
-      { given: ['--reporter-options', 'foo=bar,quux,bar=foo'], expected: { foo: 'bar', quux: true, bar: 'foo' } },
-      { given: ['--reporter-options', 'foo=bar,quux,bar=foo'], expected: { foo: 'bar', quux: true, bar: 'foo' } },
-      { given: ['--O', 'foo=bar'], expected: { foo: 'bar' } },
-      { given: ['-O', 'foo=bar'], expected: { foo: 'bar' } },
-    ];
-
-    for (const parameter of parameters) {
-      it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+    context('reporter-options', function () {
+      it('uses {} as default value', function () {
         // given
-        const argv = this.argv.concat(parameter.given);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
         assert.property(parsedArgv, 'reporterOptions');
-        assert.deepEqual(parsedArgv.reporterOptions, parameter.expected);
+        assert.deepEqual(parsedArgv.reporterOptions, {});
       });
-    }
-  });
 
-  context('reporter', function () {
-    it('uses "spec" as default value', function () {
-      // given
-      const argv = this.argv;
+      const parameters = [
+        { given: ['--reporter-options', 'foo=bar,quux'], expected: { foo: 'bar', quux: true } },
+        { given: ['--reporter-options', 'foo=bar,quux,bar=foo'], expected: { foo: 'bar', quux: true, bar: 'foo' } },
+        { given: ['--reporter-options', 'foo=bar,quux,bar=foo'], expected: { foo: 'bar', quux: true, bar: 'foo' } },
+        { given: ['--O', 'foo=bar'], expected: { foo: 'bar' } },
+        { given: ['-O', 'foo=bar'], expected: { foo: 'bar' } },
+      ];
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
 
-      // then
-      assert.propertyVal(parsedArgv, 'reporter', 'spec');
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.property(parsedArgv, 'reporterOptions');
+          assert.deepEqual(parsedArgv.reporterOptions, parameter.expected);
+        });
+      }
     });
 
-    const parameters = [
-      { given: ['--reporter', 'dot'], expected: 'dot' },
-      { given: ['--R', 'dot'], expected: 'dot' },
-      { given: ['-R', 'dot'], expected: 'dot' },
-    ];
-
-    for (const parameter of parameters) {
-      it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+    context('reporter', function () {
+      it('uses "spec" as default value', function () {
         // given
-        const argv = this.argv.concat(parameter.given);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'reporter', parameter.expected);
+        assert.propertyVal(parsedArgv, 'reporter', 'spec');
       });
-    }
-  });
 
-  context('bail', function () {
-    it('uses false as default value', function () {
-      // given
-      const argv = this.argv;
+      const parameters = [
+        { given: ['--reporter', 'dot'], expected: 'dot' },
+        { given: ['--R', 'dot'], expected: 'dot' },
+        { given: ['-R', 'dot'], expected: 'dot' },
+      ];
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
 
-      // then
-      assert.propertyVal(parsedArgv, 'bail', false);
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'reporter', parameter.expected);
+        });
+      }
     });
 
-
-    for (const parameter of ['--bail', '--b', '-b']) {
-      it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+    context('bail', function () {
+      it('uses false as default value', function () {
         // given
-        const argv = this.argv.concat([parameter]);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'bail', true);
+        assert.propertyVal(parsedArgv, 'bail', false);
       });
-    }
-  });
 
-  context('grep', function () {
-    it('has no default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of['--bail', '--b', '-b']) {
+        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
 
-      // then
-      assert.notProperty(parsedArgv, 'grep');
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'bail', true);
+        });
+      }
     });
 
-
-    const parameters = [
-      { given: ['--grep', 'test'], expected: 'test' },
-      { given: ['--g', 'test'], expected: 'test' },
-      { given: ['-g', 'test'], expected: 'test' },
-    ];
-
-    for (const parameter of parameters) {
-      it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+    context('grep', function () {
+      it('has no default value', function () {
         // given
-        const argv = this.argv.concat(parameter.given);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'grep', parameter.expected);
+        assert.notProperty(parsedArgv, 'grep');
       });
-    }
-  });
 
-  context('fgrep', function () {
-    it('has no default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      const parameters = [
+        { given: ['--grep', 'test'], expected: 'test' },
+        { given: ['--g', 'test'], expected: 'test' },
+        { given: ['-g', 'test'], expected: 'test' },
+      ];
 
-      // then
-      assert.notProperty(parsedArgv, 'fgrep');
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'grep', parameter.expected);
+        });
+      }
     });
 
-
-    const parameters = [
-      { given: ['--fgrep', 'test'], expected: 'test' },
-      { given: ['--f', 'test'], expected: 'test' },
-      { given: ['-f', 'test'], expected: 'test' },
-    ];
-
-    for (const parameter of parameters) {
-      it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+    context('fgrep', function () {
+      it('has no default value', function () {
         // given
-        const argv = this.argv.concat(parameter.given);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'fgrep', parameter.expected);
+        assert.notProperty(parsedArgv, 'fgrep');
       });
-    }
-  });
 
-  context('invert', function () {
-    it('uses false as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      const parameters = [
+        { given: ['--fgrep', 'test'], expected: 'test' },
+        { given: ['--f', 'test'], expected: 'test' },
+        { given: ['-f', 'test'], expected: 'test' },
+      ];
 
-      // then
-      assert.propertyVal(parsedArgv, 'invert', false);
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'fgrep', parameter.expected);
+        });
+      }
     });
 
-
-    for (const parameter of ['--invert', '--i', '-i']) {
-      it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+    context('invert', function () {
+      it('uses false as default value', function () {
         // given
-        const argv = this.argv.concat([parameter]);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'invert', true);
+        assert.propertyVal(parsedArgv, 'invert', false);
       });
-    }
-  });
 
-  context('require', function () {
-    it('uses [] as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of['--invert', '--i', '-i']) {
+        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
 
-      // then
-      assert.property(parsedArgv, 'require');
-      assert.deepEqual(parsedArgv.require, []);
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'invert', true);
+        });
+      }
     });
 
-
-    const parameters = [
-      { given: ['--require', 'test'], expected: ['test'] },
-      { given: ['--require', 'test', 'test2'], expected: ['test', 'test2'] },
-      { given: ['--r', 'test'], expected: ['test'] },
-      { given: ['-r', 'test'], expected: ['test'] },
-    ];
-
-    for (const parameter of parameters) {
-      it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+    context('require', function () {
+      it('uses [] as default value', function () {
         // given
-        const argv = this.argv.concat(parameter.given);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
         assert.property(parsedArgv, 'require');
-        assert.deepEqual(parsedArgv.require, parameter.expected);
+        assert.deepEqual(parsedArgv.require, []);
       });
-    }
-  });
 
-  context('slow', function () {
-    it('uses 75 as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      const parameters = [
+        { given: ['--require', 'test'], expected: ['test'] },
+        { given: ['--require', 'test', 'test2'], expected: ['test', 'test2'] },
+        { given: ['--r', 'test'], expected: ['test'] },
+        { given: ['-r', 'test'], expected: ['test'] },
+      ];
 
-      // then
-      assert.propertyVal(parsedArgv, 'slow', 75);
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.property(parsedArgv, 'require');
+          assert.deepEqual(parsedArgv.require, parameter.expected);
+        });
+      }
     });
 
-
-    const parameters = [
-      { given: ['--slow', '1000'], expected: 1000 },
-      { given: ['--s', '1000'], expected: 1000 },
-      { given: ['-s', '1000'], expected: 1000 },
-    ];
-
-    for (const parameter of parameters) {
-      it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+    context('slow', function () {
+      it('uses 75 as default value', function () {
         // given
-        const argv = this.argv.concat(parameter.given);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'slow', parameter.expected);
+        assert.propertyVal(parsedArgv, 'slow', 75);
       });
-    }
-  });
 
-  context('timeout', function () {
-    it('uses 2000 as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      const parameters = [
+        { given: ['--slow', '1000'], expected: 1000 },
+        { given: ['--s', '1000'], expected: 1000 },
+        { given: ['-s', '1000'], expected: 1000 },
+      ];
 
-      // then
-      assert.propertyVal(parsedArgv, 'timeout', 2000);
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'slow', parameter.expected);
+        });
+      }
     });
 
-
-    const parameters = [
-      { given: ['--timeout', '1000'], expected: 1000 },
-      { given: ['--t', '1000'], expected: 1000 },
-      { given: ['-t', '1000'], expected: 1000 },
-    ];
-
-    for (const parameter of parameters) {
-      it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+    context('timeout', function () {
+      it('uses 2000 as default value', function () {
         // given
-        const argv = this.argv.concat(parameter.given);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'timeout', parameter.expected);
+        assert.propertyVal(parsedArgv, 'timeout', 2000);
       });
-    }
-  });
 
-  context('ui', function () {
-    it('uses "bdd" as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      const parameters = [
+        { given: ['--timeout', '1000'], expected: 1000 },
+        { given: ['--t', '1000'], expected: 1000 },
+        { given: ['-t', '1000'], expected: 1000 },
+      ];
 
-      // then
-      assert.propertyVal(parsedArgv, 'ui', 'bdd');
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'timeout', parameter.expected);
+        });
+      }
     });
 
-
-    const parameters = [
-      { given: ['--ui', 'tdd'], expected: 'tdd' },
-      { given: ['--u', 'tdd'], expected: 'tdd' },
-      { given: ['-u', 'tdd'], expected: 'tdd' },
-    ];
-
-    for (const parameter of parameters) {
-      it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+    context('ui', function () {
+      it('uses "bdd" as default value', function () {
         // given
-        const argv = this.argv.concat(parameter.given);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'ui', parameter.expected);
+        assert.propertyVal(parsedArgv, 'ui', 'bdd');
       });
-    }
-  });
 
-  context('watch', function () {
-    it('uses false as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      const parameters = [
+        { given: ['--ui', 'tdd'], expected: 'tdd' },
+        { given: ['--u', 'tdd'], expected: 'tdd' },
+        { given: ['-u', 'tdd'], expected: 'tdd' },
+      ];
 
-      // then
-      assert.propertyVal(parsedArgv, 'watch', false);
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'ui', parameter.expected);
+        });
+      }
     });
 
-
-    for (const parameter of ['--watch', '--w', '-w']) {
-      it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+    context('watch', function () {
+      it('uses false as default value', function () {
         // given
-        const argv = this.argv.concat([parameter]);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'watch', true);
+        assert.propertyVal(parsedArgv, 'watch', false);
       });
-    }
-  });
 
-  context('check-leaks', function () {
-    it('uses false as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of['--watch', '--w', '-w']) {
+        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
 
-      // then
-      assert.propertyVal(parsedArgv, 'checkLeaks', false);
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'watch', true);
+        });
+      }
     });
 
-
-    for (const parameter of ['--check-leaks']) {
-      it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+    context('check-leaks', function () {
+      it('uses false as default value', function () {
         // given
-        const argv = this.argv.concat([parameter]);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'checkLeaks', true);
+        assert.propertyVal(parsedArgv, 'checkLeaks', false);
       });
-    }
-  });
 
-  context('full-trace', function () {
-    it('uses false as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of['--check-leaks']) {
+        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
 
-      // then
-      assert.propertyVal(parsedArgv, 'fullTrace', false);
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'checkLeaks', true);
+        });
+      }
     });
 
-
-    for (const parameter of ['--full-trace']) {
-      it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+    context('full-trace', function () {
+      it('uses false as default value', function () {
         // given
-        const argv = this.argv.concat([parameter]);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'fullTrace', true);
+        assert.propertyVal(parsedArgv, 'fullTrace', false);
       });
-    }
-  });
 
-  context('inline-diffs', function () {
-    it('uses false as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of['--full-trace']) {
+        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
 
-      // then
-      assert.propertyVal(parsedArgv, 'inlineDiffs', false);
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'fullTrace', true);
+        });
+      }
     });
 
-
-    for (const parameter of ['--inline-diffs']) {
-      it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+    context('inline-diffs', function () {
+      it('uses false as default value', function () {
         // given
-        const argv = this.argv.concat([parameter]);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'inlineDiffs', true);
+        assert.propertyVal(parsedArgv, 'inlineDiffs', false);
       });
-    }
-  });
 
-  context('exit', function () {
-    it('uses false as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of['--inline-diffs']) {
+        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
 
-      // then
-      assert.propertyVal(parsedArgv, 'exit', false);
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'inlineDiffs', true);
+        });
+      }
     });
 
-
-    for (const parameter of ['--exit']) {
-      it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+    context('exit', function () {
+      it('uses false as default value', function () {
         // given
-        const argv = this.argv.concat([parameter]);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'exit', true);
+        assert.propertyVal(parsedArgv, 'exit', false);
       });
-    }
-  });
 
-  context('retries', function () {
-    it('has no default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of['--exit']) {
+        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
 
-      // then
-      assert.notProperty(parsedArgv, 'retries');
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'exit', true);
+        });
+      }
     });
 
-
-    const parameters = [
-      { given: ['--retries', '2'], expected: 2 },
-    ];
-
-    for (const parameter of parameters) {
-      it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+    context('retries', function () {
+      it('has no default value', function () {
         // given
-        const argv = this.argv.concat(parameter.given);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'retries', parameter.expected);
+        assert.notProperty(parsedArgv, 'retries');
       });
-    }
-  });
 
-  context('delay', function () {
-    it('uses false as default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      const parameters = [
+        { given: ['--retries', '2'], expected: 2 },
+      ];
 
-      // then
-      assert.propertyVal(parsedArgv, 'delay', false);
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'retries', parameter.expected);
+        });
+      }
     });
 
-
-    for (const parameter of ['--delay']) {
-      it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+    context('delay', function () {
+      it('uses false as default value', function () {
         // given
-        const argv = this.argv.concat([parameter]);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'delay', true);
+        assert.propertyVal(parsedArgv, 'delay', false);
       });
-    }
-  });
 
-  context('webpack-config', function () {
-    it('has no default value', function () {
-      // given
-      const argv = this.argv;
 
-      // when
-      const parsedArgv = this.parseArgv(argv);
+      for (const parameter of['--delay']) {
+        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
 
-      // then
-      assert.notProperty(parsedArgv, 'webpackConfig');
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'delay', true);
+        });
+      }
     });
 
-
-    const parameters = [
-      { given: ['--webpack-config', 'webpack-config.js'], expected: 'webpack-config.js' },
-    ];
-
-    for (const parameter of parameters) {
-      it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+    context('webpack-config', function () {
+      it('has no default value', function () {
         // given
-        const argv = this.argv.concat(parameter.given);
+        const argv = this.argv;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'webpackConfig', parameter.expected);
+        assert.notProperty(parsedArgv, 'webpackConfig');
       });
-    }
+
+
+      const parameters = [
+        { given: ['--webpack-config', 'webpack-config.js'], expected: 'webpack-config.js' },
+      ];
+
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'webpackConfig', parameter.expected);
+        });
+      }
+    });
   });
 });

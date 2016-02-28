@@ -159,6 +159,11 @@ const options = {
   },
 };
 
+const paramList = (opts) => _.map(_.keys(opts), _.camelCase);
+const parameters = paramList(options); // camel case parameters
+const parametersWithSingleArg = paramList(_.pickBy(_.mapValues(options, (v) => !!v.requiresArg && v.type !== 'array'))); // eslint-disable-line max-len
+
+
 export default function parseArgv(argv) {
   const parsedArgs = yargs(argv)
     .help('help')
@@ -175,10 +180,22 @@ export default function parseArgv(argv) {
     files = ['./test'];
   }
 
-  const parameters = _.map(_.keys(options), _.camelCase); // camel case parameters
 
   const parsedOptions = _.pick(parsedArgs, parameters); // pick all parameters as new object
   const validOptions = _.omitBy(parsedOptions, _.isUndefined); // remove all undefined values
+
+  _.forOwn(validOptions, (value, key) => {
+    // validate all non-array options with required arg that it is not duplicated
+    // see https://github.com/yargs/yargs/issues/229
+    if (parametersWithSingleArg.indexOf(key) !== -1 && _.isArray(value)) {
+      const arg = _.kebabCase(key);
+      const provided = value.map((v) => `--${arg} ${v}`).join(' ');
+      const expected = `--${arg} ${value[0]}`;
+
+      throw new Error(`Duplicating arguments for "--${arg}" is not allowed. "${provided}" was provided, but expected "${expected}"`); // eslint-disable-line max-len
+    }
+  });
+
   validOptions.files = files;
 
   const reporterOptions = {};
