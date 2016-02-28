@@ -71,7 +71,7 @@ export default function prepareWebpack(options, cb) {
   const webpackInfoPlugin = new WebpackInfoPlugin({
     stats: {
       // pass options from http://webpack.github.io/docs/node.js-api.html#stats-tostring
-      //context: false,
+      // context: false,
       hash: false,
       version: false,
       timings: false,
