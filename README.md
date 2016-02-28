@@ -69,17 +69,11 @@ In addition, the defined command tells mocha-webpack to use the provided webpack
 
 **webpack.config-test.js** - example config
 ```javascript
-var path = require('path');
-var webpack = require('webpack');
 var nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  plugins: [
-    new webpack.BannerPlugin('require("source-map-support").install();', { raw: true, entryOnly: false }) // apply source-maps when running tests
-  ],
   target: 'node', // in order to ignore built-in modules like path, fs, etc.
   externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
-  devtool: "#source-map" // write source-maps
 };
 ```
 
@@ -108,6 +102,31 @@ then it's equivalent to
 ```bash
 $ mocha-webpack --growl --colors --webpack-config webpack.config-test.js "src/**/*.test.js"
 ```
+### Sourcemaps
+
+For using sourcemaps with mocha-webpack you just need to enable sourcemaps in your webpack config and use `source-map-support` to apply sourcemaps.
+
+**webpack.config-test.js**
+```javascript
+var nodeExternals = require('webpack-node-externals');
+
+module.exports = {
+  output: {
+    // sourcemap support for IntelliJ/Webstorm
+    devtoolModuleFilenameTemplate: '[absolute-resource-path]',
+    devtoolFallbackModuleFilenameTemplate: '[absolute-resource-path]?[hash]'
+  }
+  target: 'node', // in order to ignore built-in modules like path, fs, etc.
+  externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
+  devtool: "cheap-module-source-map" // faster than 'source-map'
+};
+```
+
+**mocha-webpack.opts**
+```
+--require source-map-support/register
+```
+
 
 ## Sample commands
 
