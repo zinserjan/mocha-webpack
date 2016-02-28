@@ -7,7 +7,7 @@ import { assert } from 'chai';
 import { stub } from 'sinon';
 import parseConfig from '../../src/cli/parseConfig';
 
-const configFileName = 'mochawebpack.opts';
+const configFileName = 'mocha-webpack.opts';
 
 describe('parseConfig', function () {
   it('returns empty object when not exists', function () {
