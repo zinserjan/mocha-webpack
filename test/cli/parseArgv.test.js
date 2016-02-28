@@ -39,6 +39,52 @@ describe('parseArgv', function () {
     });
   });
 
+  context('ignore default options', function () {
+    it('ignore default options when ignore=true', function () {
+      assert.deepEqual(this.parseArgv([], true), {});
+    });
+
+    it('dont ignore default options when ignore=false', function () {
+      assert.notDeepEqual(this.parseArgv([], false), {});
+    });
+
+    context('files must be parsed correctly', function () {
+      it('options without values & file when ignore=false', function () {
+        const argv = ['--recursive', 'test/bin/fixture'];
+
+        const parsed = this.parseArgv(argv, false);
+
+        assert.property(parsed, 'files');
+        assert.deepEqual(parsed.files, ['test/bin/fixture']);
+      });
+
+      it('options without values & file when ignore=true', function () {
+        const files = ['--recursive', 'test/bin/fixture'];
+        assert.deepEqual(this.parseArgv(files, true), {
+          recursive: true,
+          files: ['test/bin/fixture'],
+        });
+      });
+
+      it('options with values when ignore=true', function () {
+        const argv = ['--webpack-config', 'webpack-config.js'];
+
+        assert.deepEqual(this.parseArgv(argv, true), {
+          webpackConfig: 'webpack-config.js',
+        });
+      });
+
+      it('options with values & file when ignore=true', function () {
+        const argv = ['--webpack-config', 'webpack-config.js', 'test/bin/fixture'];
+
+        assert.deepEqual(this.parseArgv(argv, true), {
+          webpackConfig: 'webpack-config.js',
+          files: ['test/bin/fixture'],
+        });
+      });
+    });
+  });
+
   context('non-option as files', function () {
     it('uses "./test" as default', function () {
       // given

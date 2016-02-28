@@ -162,9 +162,10 @@ const options = {
 const paramList = (opts) => _.map(_.keys(opts), _.camelCase);
 const parameters = paramList(options); // camel case parameters
 const parametersWithSingleArg = paramList(_.pickBy(_.mapValues(options, (v) => !!v.requiresArg && v.type !== 'array'))); // eslint-disable-line max-len
+const groupedAliases = _.values(_.mapValues(options, (value, key) => [_.camelCase(key), key, value.alias].filter(_.identity))); // eslint-disable-line max-len
 
 
-export default function parseArgv(argv) {
+export default function parseArgv(argv, ignoreDefaults = false) {
   const parsedArgs = yargs(argv)
     .help('help')
     .alias('help', 'h', '?')
@@ -215,6 +216,20 @@ export default function parseArgv(argv) {
 
   validOptions.reporterOptions = reporterOptions;
   validOptions.require = validOptions.require || [];
+
+  if (ignoreDefaults) {
+    const userOptions = yargs(argv).argv;
+    const providedKeys = _.keys(userOptions);
+    const usedAliases = _.flatten(_.filter(groupedAliases, (aliases) =>
+      _.some(aliases, (alias) => providedKeys.indexOf(alias) !== -1)
+    ));
+
+    if (parsedArgs._.length) {
+      usedAliases.push('files');
+    }
+
+    return _.pick(validOptions, usedAliases);
+  }
 
   return validOptions;
 }

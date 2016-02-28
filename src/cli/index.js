@@ -1,11 +1,17 @@
 import path from 'path';
+import _ from 'lodash';
 
 import parseArgv from './parseArgv';
 import prepareWebpack from './prepareWebpack';
 import { run, watch } from './runner';
 import { existsFileSync } from '../util/exists';
+import parseConfig from './parseConfig';
 
-const options = parseArgv(process.argv.slice(2));
+const cliOptions = parseArgv(process.argv.slice(2), true);
+const configOptions = parseConfig();
+const defaultOptions = parseArgv([]);
+
+const options = _.defaults({}, cliOptions, configOptions, defaultOptions);
 
 options.require.forEach((mod) => {
   const absolute = existsFileSync(mod) || existsFileSync(`${mod}.js`);
