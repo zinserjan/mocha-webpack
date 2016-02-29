@@ -1,4 +1,6 @@
 #!/bin/bash -e
+set -e
+
 export RELEASE=1
 
 if ! [ -e scripts/release.sh ]; then
