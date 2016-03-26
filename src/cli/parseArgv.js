@@ -157,6 +157,13 @@ const options = {
     group: BASIC_GROUP,
     requiresArg: true,
   },
+  opts: {
+    type: 'string',
+    describe: 'path to webpack-mocha options file',
+    group: BASIC_GROUP,
+    requiresArg: true,
+    default: 'mocha-webpack.opts',
+  },
 };
 
 const paramList = (opts) => _.map(_.keys(opts), _.camelCase);

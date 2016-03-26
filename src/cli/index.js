@@ -8,7 +8,7 @@ import { existsFileSync } from '../util/exists';
 import parseConfig from './parseConfig';
 
 const cliOptions = parseArgv(process.argv.slice(2), true);
-const configOptions = parseConfig();
+const configOptions = parseConfig(cliOptions.opts);
 const defaultOptions = parseArgv([]);
 
 const options = _.defaults({}, cliOptions, configOptions, defaultOptions);

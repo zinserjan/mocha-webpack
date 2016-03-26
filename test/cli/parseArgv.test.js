@@ -765,5 +765,36 @@ describe('parseArgv', function () {
         });
       }
     });
+
+    context('opts', function () {
+      it('uses mocha-webpack.opts as default value', function () {
+        // given
+        const argv = this.argv;
+
+        // when
+        const parsedArgv = this.parseArgv(argv);
+
+        // then
+        assert.propertyVal(parsedArgv, 'opts', 'mocha-webpack.opts');
+      });
+
+
+      const parameters = [
+        { given: ['--opts', 'path/to/other.opts'], expected: 'path/to/other.opts' },
+      ];
+
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'opts', parameter.expected);
+        });
+      }
+    });
   });
 });

@@ -2,9 +2,7 @@ import fs from 'fs';
 import { existsFileSync } from '../util/exists';
 import parseArgv from './parseArgv';
 
-const config = 'mocha-webpack.opts';
-
-export default function parseConfig() {
+export default function parseConfig(config) {
   if (existsFileSync(config)) {
     const argv = fs.readFileSync(config, 'utf8')
       .replace(/\\\s/g, '%20')
