@@ -8,8 +8,17 @@ import parseConfig from '../../src/cli/parseConfig';
 const configFileName = path.join(__dirname, 'fixture', 'config', 'mocha-webpack.opts');
 
 describe('parseConfig', function () {
-  it('returns empty object when not exists', function () {
-    assert.deepEqual(parseConfig('missing-config-file.opts'), {});
+  it('returns empty object when default config file is missing', function () {
+    assert.deepEqual(parseConfig(), {});
+  });
+
+  it('throws an error when specified config file is missing', function () {
+    const fn = () => {
+      parseConfig('missing-config.opts');
+    };
+
+    // then
+    assert.throws(fn, /Options file 'missing-config.opts' not found/);
   });
 
   it(`parses ${configFileName} when exists and returns options`, function () {

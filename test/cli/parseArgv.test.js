@@ -767,7 +767,7 @@ describe('parseArgv', function () {
     });
 
     context('opts', function () {
-      it('uses mocha-webpack.opts as default value', function () {
+      it('has no default value', function () {
         // given
         const argv = this.argv;
 
@@ -775,7 +775,7 @@ describe('parseArgv', function () {
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'opts', 'mocha-webpack.opts');
+        assert.notProperty(parsedArgv, 'opts');
       });
 
 

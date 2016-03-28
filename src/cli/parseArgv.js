@@ -162,7 +162,6 @@ const options = {
     describe: 'path to webpack-mocha options file',
     group: BASIC_GROUP,
     requiresArg: true,
-    default: 'mocha-webpack.opts',
   },
 };
 
