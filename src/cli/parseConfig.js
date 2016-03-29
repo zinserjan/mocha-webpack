@@ -5,16 +5,18 @@ import parseArgv from './parseArgv';
 const defaultConfig = 'mocha-webpack.opts';
 
 function handleMissingConfig(config) {
-  if (config === defaultConfig) {
-    return {};
+  if (config) {
+    throw new Error(`Options file '${config}' not found`);
   }
 
-  throw new Error(`Options file '${config}' not found`);
+  return {};
 }
 
-export default function parseConfig(config = defaultConfig) {
+export default function parseConfig(explicitConfig) {
+  const config = explicitConfig || defaultConfig;
+
   if (!existsFileSync(config)) {
-    return handleMissingConfig(config);
+    return handleMissingConfig(explicitConfig);
   }
 
   const argv = fs.readFileSync(config, 'utf8')

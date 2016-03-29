@@ -12,6 +12,15 @@ describe('parseConfig', function () {
     assert.deepEqual(parseConfig(), {});
   });
 
+  it('throws an error when explicitly-specified default config file is missing', function () {
+    const fn = () => {
+      parseConfig('mocha-webpack.opts');
+    };
+
+    // then
+    assert.throws(fn, /Options file 'mocha-webpack.opts' not found/);
+  });
+
   it('throws an error when specified config file is missing', function () {
     const fn = () => {
       parseConfig('missing-config.opts');
