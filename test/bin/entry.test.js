@@ -34,10 +34,10 @@ function createCorruptedTest(filePath) {
   fs.outputFileSync(filePath, content);
 }
 
-const fixtureDir = path.relative(process.cwd(), path.join(__dirname, 'fixture'));
+const fixtureDir = path.relative(process.cwd(), path.join(__dirname, 'fixtureTmp'));
 const binPath = path.relative(process.cwd(), path.join('bin', '_mocha'));
 
-describe('cli', function () {
+describe('cli - entry', function () {
   context('single test file as option', function () {
     before(function () {
       this.passingTest = normalizePath(path.join(fixtureDir, 'passing-test.js'));
@@ -109,7 +109,7 @@ describe('cli', function () {
     });
 
     const corruptedPatterns = [
-      'test/bin/fixture/corrupted-*.js',
+      path.join(fixtureDir, 'corrupted-*.js'),
     ];
 
     corruptedPatterns.forEach((pattern) => {
@@ -123,10 +123,9 @@ describe('cli', function () {
     });
 
     const passingPatterns = [
-      'test/bin/fixture/passing-*.js',
-      'test/bin/fixture/passing-*-1.js',
-      'test/bin/fixture/passing-*-(1|3).js',
-      'test/bin/fixture/**/passing-*.js',
+      path.join(fixtureDir, 'passing-*.js'),
+      path.join(fixtureDir, 'passing-*-1.js'),
+      path.join(fixtureDir, '**/passing-*.js'),
     ];
 
     passingPatterns.forEach((pattern) => {
@@ -146,9 +145,9 @@ describe('cli', function () {
     });
 
     const failingPatterns = [
-      'test/bin/fixture/failing-*.js',
-      'test/bin/fixture/failing-*-7.js',
-      'test/bin/fixture/failing-*-(5|6).js',
+      path.join(fixtureDir, 'failing-*.js'),
+      path.join(fixtureDir, 'failing-*-7.js'),
+      path.join(fixtureDir, 'failing-*-(5|6).js'),
     ];
 
     failingPatterns.forEach((pattern) => {
