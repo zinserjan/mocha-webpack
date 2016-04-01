@@ -443,6 +443,40 @@ describe('parseArgv', function () {
       }
     });
 
+    context('include', function () {
+      it('uses [] as default value', function () {
+        // given
+        const argv = this.argv;
+
+        // when
+        const parsedArgv = this.parseArgv(argv);
+
+        // then
+        assert.property(parsedArgv, 'include');
+        assert.deepEqual(parsedArgv.include, []);
+      });
+
+
+      const parameters = [
+        { given: ['--include', 'test'], expected: ['test'] },
+        { given: ['--include', 'test', 'test2'], expected: ['test', 'test2'] },
+      ];
+
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.property(parsedArgv, 'include');
+          assert.deepEqual(parsedArgv.include, parameter.expected);
+        });
+      }
+    });
+
     context('slow', function () {
       it('uses 75 as default value', function () {
         // given
