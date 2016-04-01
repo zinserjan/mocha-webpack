@@ -85,6 +85,12 @@ const options = {
     group: ADVANCED_GROUP,
     requiresArg: true,
   },
+  include: {
+    type: 'array',
+    describe: 'include the given module into test bundle',
+    group: ADVANCED_GROUP,
+    requiresArg: true,
+  },
   slow: {
     alias: 's',
     describe: '"slow" test threshold in milliseconds',
@@ -222,6 +228,7 @@ export default function parseArgv(argv, ignoreDefaults = false) {
 
   validOptions.reporterOptions = reporterOptions;
   validOptions.require = validOptions.require || [];
+  validOptions.include = validOptions.include || [];
 
   if (ignoreDefaults) {
     const userOptions = yargs(argv).argv;

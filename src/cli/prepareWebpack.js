@@ -14,6 +14,8 @@ import prepareEntry from '../webpack/prepareEntry';
 
 const tmpPath = path.join(process.cwd(), '.tmp', 'mocha-webpack');
 
+const entryLoader = require.resolve('../webpack/includeFilesLoader');
+
 const defaultFilePattern = '*.js';
 
 function directoryToGlob(directory, options) {
@@ -44,7 +46,7 @@ function directoryToGlob(directory, options) {
 }
 
 
-function createWebpackConfig(webpackConfig, entryFilePath, outputFilePath, plugins = []) {
+function createWebpackConfig(webpackConfig, entryFilePath, outputFilePath, plugins = [], include = []) {  // eslint-disable-line max-len
   const entryFileName = path.basename(entryFilePath);
   const entryPath = path.dirname(entryFilePath);
 
@@ -53,6 +55,14 @@ function createWebpackConfig(webpackConfig, entryFilePath, outputFilePath, plugi
 
   const config = _.clone(webpackConfig);
   config.entry = `./${entryFileName}`;
+
+  if (include.length) {
+    const query = {
+      include,
+    };
+    config.entry = `${entryLoader}?${JSON.stringify(query)}!${config.entry}`;
+  }
+
   config.context = entryPath;
   config.output = _.extend({}, config.output, {
     filename: outputFileName,
@@ -119,7 +129,8 @@ export default function prepareWebpack(options, cb) {
       options.webpackConfig,
       entryFilePath,
       outputFilePath,
-      webpackPlugins
+      webpackPlugins,
+      options.include
     );
 
     const fileContent = prepareEntry(context, options.watch);
@@ -140,7 +151,8 @@ export default function prepareWebpack(options, cb) {
       options.webpackConfig,
       entryFilePath,
       outputFilePath,
-      webpackPlugins
+      webpackPlugins,
+      options.include
     );
     process.nextTick(() => {
       cb(null, webpackConfig);
