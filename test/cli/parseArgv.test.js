@@ -27,7 +27,7 @@ describe('parseArgv', function () {
 
     it('should not throw for arrays', function () {
       // given
-      const argv = ['--require', 'test', 'test2'];
+      const argv = ['--require', 'test', '--require', 'test2'];
 
       // when
       const fn = () => {
@@ -423,7 +423,7 @@ describe('parseArgv', function () {
 
       const parameters = [
         { given: ['--require', 'test'], expected: ['test'] },
-        { given: ['--require', 'test', 'test2'], expected: ['test', 'test2'] },
+        { given: ['--require', 'test', '--require', 'test2'], expected: ['test', 'test2'] },
         { given: ['--r', 'test'], expected: ['test'] },
         { given: ['-r', 'test'], expected: ['test'] },
       ];
@@ -459,7 +459,7 @@ describe('parseArgv', function () {
 
       const parameters = [
         { given: ['--include', 'test'], expected: ['test'] },
-        { given: ['--include', 'test', 'test2'], expected: ['test', 'test2'] },
+        { given: ['--include', 'test', '--include', 'test2'], expected: ['test', 'test2'] },
       ];
 
       for (const parameter of parameters) {

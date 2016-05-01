@@ -16,12 +16,17 @@ const helper1 = `${path.join(helperDir, 'test-helper.js')}`;
 const helper2 = `${path.join(helperDir, 'test-helper-2.js')}`;
 
 
-function testInclude(entry, include, cb) {
-  exec(`node ${binPath} \"${entry}\" --include ${include}`, cb);
+function test(entry, options, cb) {
+  exec(`node ${binPath} \"${entry}\" ${options.join(' ')}  `, cb);
+}
+
+function testInclude(entry, includes, cb) {
+  const options = includes.map((value) => `--include ${value}`);
+  test(entry, options, cb);
 }
 
 function testSingleInclude(entry, done) {
-  return testInclude(entry, helper1, (err, stdout) => {
+  return testInclude(entry, [helper1], (err, stdout) => {
     assert.isNull(err);
     assert.include(stdout, 'first --include works');
     done();
@@ -29,7 +34,7 @@ function testSingleInclude(entry, done) {
 }
 
 function testMultiInclude(entry, done) {
-  return testInclude(entry, `${helper1} ${helper2}`, (err, stdout) => {
+  return testInclude(entry, [helper1, helper2], (err, stdout) => {
     assert.isNull(err);
     assert.include(stdout, 'first --include works');
     assert.include(stdout, 'second --include works');
@@ -86,7 +91,7 @@ describe('cli --include', function () {
     });
 
     it('include node_module', function (done) {
-      testInclude(path.join(testDir, 'test.js'), 'chai', (err) => {
+      testInclude(path.join(testDir, 'test.js'), ['chai'], (err) => {
         assert.isNull(err);
         done();
       });
