@@ -80,16 +80,18 @@ const options = {
   },
   require: {
     alias: 'r',
-    type: 'array',
+    type: 'string',
     describe: 'require the given module',
     group: ADVANCED_GROUP,
     requiresArg: true,
+    multiple: true,
   },
   include: {
-    type: 'array',
+    type: 'string',
     describe: 'include the given module into test bundle',
     group: ADVANCED_GROUP,
     requiresArg: true,
+    multiple: true,
   },
   slow: {
     alias: 's',
@@ -173,7 +175,7 @@ const options = {
 
 const paramList = (opts) => _.map(_.keys(opts), _.camelCase);
 const parameters = paramList(options); // camel case parameters
-const parametersWithSingleArg = paramList(_.pickBy(_.mapValues(options, (v) => !!v.requiresArg && v.type !== 'array'))); // eslint-disable-line max-len
+const parametersWithMultipleArgs = paramList(_.pickBy(_.mapValues(options, (v) => !!v.requiresArg && v.multiple === true))); // eslint-disable-line max-len
 const groupedAliases = _.values(_.mapValues(options, (value, key) => [_.camelCase(key), key, value.alias].filter(_.identity))); // eslint-disable-line max-len
 
 
@@ -197,10 +199,19 @@ export default function parseArgv(argv, ignoreDefaults = false) {
   const parsedOptions = _.pick(parsedArgs, parameters); // pick all parameters as new object
   const validOptions = _.omitBy(parsedOptions, _.isUndefined); // remove all undefined values
 
+  _.forEach(parametersWithMultipleArgs, (key) => {
+    if (_.has(validOptions, key)) {
+      const value = validOptions[key];
+      if (!Array.isArray(value)) {
+        validOptions[key] = [value];
+      }
+    }
+  });
+
   _.forOwn(validOptions, (value, key) => {
     // validate all non-array options with required arg that it is not duplicated
     // see https://github.com/yargs/yargs/issues/229
-    if (parametersWithSingleArg.indexOf(key) !== -1 && _.isArray(value)) {
+    if (parametersWithMultipleArgs.indexOf(key) === -1 && _.isArray(value)) {
       const arg = _.kebabCase(key);
       const provided = value.map((v) => `--${arg} ${v}`).join(' ');
       const expected = `--${arg} ${value[0]}`;
