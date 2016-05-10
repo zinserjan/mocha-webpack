@@ -183,7 +183,7 @@ export default function parseArgv(argv, ignoreDefaults = false) {
   const parsedArgs = yargs(argv)
     .help('help')
     .alias('help', 'h', '?')
-    .version(() => require('../package').version)
+    .version(() => require('../../package.json').version)
     .demand(0, 1)
     .options(options)
     .strict()
