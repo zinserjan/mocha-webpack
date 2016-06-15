@@ -54,17 +54,22 @@ export function watch(options, webpackConfig) {
 
     runAgain = false;
 
-    mochaRunner = mocha.run((failures) => {
-      injectChangedFilesPlugin.testsCompleted(failures > 0);
+    try {
+      mochaRunner = mocha.run((failures) => {
+        injectChangedFilesPlugin.testsCompleted(failures > 0);
 
-      // need to wait until next tick, otherwise mochaRunner = null doesn't work..
-      process.nextTick(() => {
-        mochaRunner = null;
-        if (runAgain) {
-          runMocha();
-        }
+        // need to wait until next tick, otherwise mochaRunner = null doesn't work..
+        process.nextTick(() => {
+          mochaRunner = null;
+          if (runAgain) {
+            runMocha();
+          }
+        });
       });
-    });
+    } catch (e) {
+      injectChangedFilesPlugin.testsCompleted(true);
+      console.error(e.stack); // eslint-disable-line no-console
+    }
   }
 
   webpackWatch(webpackConfig, (err) => {
