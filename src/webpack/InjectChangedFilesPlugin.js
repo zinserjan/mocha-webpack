@@ -86,7 +86,8 @@ export default class InjectChangedFilesPlugin {
 
      const result = new ReplaceSource(original);
      const regex = /__webpackManifest__\s*=\s*\[\s*\]/g;
-     const changedFiles = JSON.stringify(this.hotFiles.concat(this.failedFiles));
+     const files = this.hotFiles.concat(this.failedFiles);
+     const changedFiles = `['${files.join("', '")}']`;
      const replacement = `__webpackManifest__ = ${changedFiles}`;
 
      let match;
