@@ -43,7 +43,7 @@ Congratulations, you are ready to run mocha-webpack for the first time in your p
 
 ```bash
 # display version of mocha-webpack
-$ node ./node_modules/mocha-webpack/bin/mocha-webpack -v
+$ node ./node_modules/mocha-webpack/bin/mocha-webpack --version
 
 # display available commands & options of mocha-webpack
 $ node ./node_modules/mocha-webpack/bin/mocha-webpack --help
