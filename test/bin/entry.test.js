@@ -186,7 +186,7 @@ describe('cli - entry', function () {
         this.testFiles.forEach((file) => createTest(file, true));
       });
 
-      it(`runs all tests in directory'`, function (done) {
+      it('runs all tests in directory\'', function (done) {
         const matcher = anymatch(`${fixtureDir}/*.js`);
         const files = this.testFiles.filter(matcher);
 
@@ -200,7 +200,7 @@ describe('cli - entry', function () {
         });
       });
 
-      it(`runs all tests matching file glob'`, function (done) {
+      it('runs all tests matching file glob\'', function (done) {
         const matcher = anymatch(`${fixtureDir}/*-test-3.js`);
         const files = this.testFiles.filter(matcher);
         exec(`node ${binPath} --glob "*-test-3.js" \"${fixtureDir}\"`, (err, stdout) => {
@@ -214,7 +214,7 @@ describe('cli - entry', function () {
       });
 
 
-      it(`runs all tests in directory & subdirectories'`, function (done) {
+      it('runs all tests in directory & subdirectories\'', function (done) {
         const matcher = anymatch(`${fixtureDir}/**/*.js`);
         const files = this.testFiles.filter(matcher);
 
@@ -242,7 +242,7 @@ describe('cli - entry', function () {
         this.testFiles.forEach((file) => createTest(file, false));
       });
 
-      it(`runs all tests in directory'`, function (done) {
+      it('runs all tests in directory\'', function (done) {
         const matcher = anymatch(`${fixtureDir}/*.js`);
         const files = this.testFiles.filter(matcher);
 
@@ -259,7 +259,7 @@ describe('cli - entry', function () {
         });
       });
 
-      it(`runs all tests in directory & subdirectories'`, function (done) {
+      it('runs all tests in directory & subdirectories\'', function (done) {
         const matcher = anymatch(`${fixtureDir}/**/*.js`);
         const files = this.testFiles.filter(matcher);
 
@@ -290,7 +290,7 @@ describe('cli - entry', function () {
         this.testFiles.forEach((file) => createCorruptedTest(file));
       });
 
-      it(`fails before running tests of directory`, function (done) {
+      it('fails before running tests of directory', function (done) {
         exec(`node ${binPath} \"${fixtureDir}\"`, (err) => {
           assert.isNotNull(err);
           assert.isAbove(err.code, 0);
@@ -298,7 +298,7 @@ describe('cli - entry', function () {
         });
       });
 
-      it(`fails before running tests of directory directory & subdirectories'`, function (done) {
+      it('fails before running tests of directory directory & subdirectories\'', function (done) {
         exec(`node ${binPath} --recursive \"${fixtureDir}\"`, (err) => {
           assert.isNotNull(err);
           assert.isAbove(err.code, 0);

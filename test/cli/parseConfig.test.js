@@ -31,6 +31,7 @@ describe('parseConfig', function () {
   });
 
   it(`parses ${configFileName} when exists and returns options`, function () {
+    // eslint-disable-next-line global-require
     const expectedResult = require(path.join(__dirname, 'fixture', 'config', 'expected.json'));
     const parsedOptions = parseConfig(configFileName);
 
