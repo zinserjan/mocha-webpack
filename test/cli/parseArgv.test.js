@@ -139,7 +139,7 @@ describe('parseArgv', function () {
     });
 
     context('colors', function () {
-      it('uses false as default value', function () {
+      it('uses undefined as default value', function () {
         // given
         const argv = this.argv;
 
@@ -147,7 +147,7 @@ describe('parseArgv', function () {
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'colors', false);
+        assert.notProperty(parsedArgv, 'colors');
       });
 
 
@@ -161,6 +161,20 @@ describe('parseArgv', function () {
 
           // then
           assert.propertyVal(parsedArgv, 'colors', true);
+        });
+      }
+
+
+      for (const parameter of['--no-colors', '--colors=false', '--no-c', '--c=false']) {
+        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat([parameter]);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'colors', false);
         });
       }
     });
