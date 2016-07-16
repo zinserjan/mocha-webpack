@@ -68,7 +68,7 @@ export default class InjectChangedFilesPlugin {
 
           // and finally set changed files
           chunk.files.forEach((file) => {
-            if (!chunk.initial) {
+            if (!(chunk.isInitial ? chunk.isInitial() : chunk.initial)) {
               return;
             }
             this.setChangedFiles(compilation, file);
