@@ -15,6 +15,7 @@ const options = {
   colors: {
     alias: 'c',
     type: 'boolean',
+    default: undefined,
     describe: 'force enabling of colors',
     group: OUTPUT_GROUP,
   },
