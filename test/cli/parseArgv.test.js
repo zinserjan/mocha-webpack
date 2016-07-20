@@ -2,10 +2,11 @@
 /* eslint-disable func-names, prefer-arrow-callback, no-loop-func, max-len */
 
 import { assert } from 'chai';
+import parseArgv from '../../src/cli/parseArgv';
 
 describe('parseArgv', function () {
   beforeEach(function () {
-    this.parseArgv = require('../../src/cli/parseArgv').default;
+    this.parseArgv = parseArgv;
     this.argv = [
       'src',
     ];
@@ -124,7 +125,7 @@ describe('parseArgv', function () {
         assert.propertyVal(parsedArgv, 'asyncOnly', false);
       });
 
-      for (const parameter of['--async-only', '--A', '-A']) {
+      for (const parameter of ['--async-only', '--A', '-A']) {
         it(`'parses ${parameter}'`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);
@@ -151,7 +152,7 @@ describe('parseArgv', function () {
       });
 
 
-      for (const parameter of['--colors', '--c', '-c']) {
+      for (const parameter of ['--colors', '--c', '-c']) {
         it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);
@@ -165,7 +166,7 @@ describe('parseArgv', function () {
       }
 
 
-      for (const parameter of['--no-colors', '--colors=false', '--no-c', '--c=false']) {
+      for (const parameter of ['--no-colors', '--colors=false', '--no-c', '--c=false']) {
         it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);
@@ -192,7 +193,7 @@ describe('parseArgv', function () {
       });
 
 
-      for (const parameter of['--growl', '--G', '-G']) {
+      for (const parameter of ['--growl', '--G', '-G']) {
         it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);
@@ -219,7 +220,7 @@ describe('parseArgv', function () {
       });
 
 
-      for (const parameter of['--recursive']) {
+      for (const parameter of ['--recursive']) {
         it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);
@@ -314,7 +315,7 @@ describe('parseArgv', function () {
       });
 
 
-      for (const parameter of['--bail', '--b', '-b']) {
+      for (const parameter of ['--bail', '--b', '-b']) {
         it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);
@@ -407,7 +408,7 @@ describe('parseArgv', function () {
       });
 
 
-      for (const parameter of['--invert', '--i', '-i']) {
+      for (const parameter of ['--invert', '--i', '-i']) {
         it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);
@@ -603,7 +604,7 @@ describe('parseArgv', function () {
       });
 
 
-      for (const parameter of['--watch', '--w', '-w']) {
+      for (const parameter of ['--watch', '--w', '-w']) {
         it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);
@@ -630,7 +631,7 @@ describe('parseArgv', function () {
       });
 
 
-      for (const parameter of['--check-leaks']) {
+      for (const parameter of ['--check-leaks']) {
         it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);
@@ -657,7 +658,7 @@ describe('parseArgv', function () {
       });
 
 
-      for (const parameter of['--full-trace']) {
+      for (const parameter of ['--full-trace']) {
         it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);
@@ -684,7 +685,7 @@ describe('parseArgv', function () {
       });
 
 
-      for (const parameter of['--inline-diffs']) {
+      for (const parameter of ['--inline-diffs']) {
         it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);
@@ -711,7 +712,7 @@ describe('parseArgv', function () {
       });
 
 
-      for (const parameter of['--exit']) {
+      for (const parameter of ['--exit']) {
         it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);
@@ -769,7 +770,7 @@ describe('parseArgv', function () {
       });
 
 
-      for (const parameter of['--delay']) {
+      for (const parameter of ['--delay']) {
         it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
           // given
           const argv = this.argv.concat([parameter]);

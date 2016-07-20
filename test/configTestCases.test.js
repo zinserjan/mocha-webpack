@@ -30,6 +30,7 @@ describe('ConfigTestCases', function () {
           this.timeout(30000);
           const testDirectory = path.join(casesPath, category.name, testName);
           const outputDirectory = path.join(tmpPath, category.name, testName);
+          // eslint-disable-next-line global-require
           const options = require(path.join(testDirectory, 'webpack.config.js'));
           const optionsArr = [].concat(options).map((opts, idx) => _.defaults(opts, {
             context: testDirectory,
@@ -47,13 +48,13 @@ describe('ConfigTestCases', function () {
               return done(err);
             }
 
-            function _it(title, fn) {
+            function testIt(title, fn) {
               const test = new Test(title, fn);
               suite.addTest(test);
               return test;
             }
 
-            function _require(module) {
+            function customRequire(module) {
               if (/^\.\.?\//.test(module)) {
                 const p = path.join(outputDirectory, module);
                 const fnStr = `(function(require, module, exports, __dirname, __filename, it) { ${fs.readFileSync(p, 'utf-8')} \n})`;
@@ -62,9 +63,10 @@ describe('ConfigTestCases', function () {
                 const mdl = {
                   exports: {},
                 };
-                fn.call(mdl.exports, _require, mdl, module.exports, outputDirectory, p, _it);
+                fn.call(mdl.exports, customRequire, mdl, module.exports, outputDirectory, p, testIt);
                 return mdl.exports;
               }
+              // eslint-disable-next-line global-require
               return require(module);
             }
 
@@ -73,17 +75,19 @@ describe('ConfigTestCases', function () {
               if (fs.existsSync(path.join(opts.output.path, bundleName))) {
                 return `./${bundleName}`;
               }
+              return undefined;
             };
 
             optionsArr.forEach((opts, idx) => {
               const bundlePath = findBundle(idx, opts);
               if (bundlePath) {
-                _require(bundlePath);
+                customRequire(bundlePath);
               }
             });
 
             // give a free pass to compilation that generated an error
             process.nextTick(done);
+            return undefined;
           });
         });
       });
