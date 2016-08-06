@@ -6,11 +6,13 @@ node_js:
   - "5"
 
 env:
-  - WEBPACK_VERSION=1
-  - WEBPACK_VERSION=beta
+  - WEBPACK_VERSION=1 MOCHA_VERSION=2
+  - WEBPACK_VERSION=1 MOCHA_VERSION=3
+  - WEBPACK_VERSION=beta MOCHA_VERSION=3
 
 before_script:
   - "npm install webpack@$WEBPACK_VERSION"
+  - "npm install mocha@$MOCHA_VERSION"
 
 script:
   - if [ "${TRAVIS_NODE_VERSION}" != "0.12" ]; then npm run lint; fi
