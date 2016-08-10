@@ -32,7 +32,7 @@
   "author": "Jan-André Zinser",
   "license": "MIT",
   "peerDependencies": {
-    "mocha": "^2.4.5",
+    "mocha": "^2.4.5 || ^3.0.0",
     "webpack": "^1.12.13 || ^2.1.0-beta.15"
   },
   "devDependencies": {
@@ -47,7 +47,7 @@
     "eslint": "^3.1.0",
     "eslint-config-airbnb-base": "^4.0.2",
     "eslint-plugin-import": "^1.11.0",
-    "mocha": "^2.4.5",
+    "mocha": "^3.0.0",
     "sinon": "^1.17.3",
     "webpack": "^1.12.13"
   },
