@@ -29,10 +29,18 @@ options.include = options.include.map(resolve);
 
 if (options.webpackConfig) {
   const webpackConfigPath = path.resolve(options.webpackConfig);
+
+  // Support Babel config format
+  if (/\.babel\.js$/.test(webpackConfigPath)) {
+    if (!_.includes(options.require, 'babel-core/register')) {
+      require(resolve('babel-core/register')); // eslint-disable-line global-require
+    }
+  }
+
   options.webpackConfig = require(webpackConfigPath); // eslint-disable-line global-require
 
-  // Support Babel 6 export default
-  if (/\.babel\.js$/.test(webpackConfigPath) && options.webpackConfig.default) {
+  // Babel 6 export default
+  if (options.webpackConfig.default) {
     options.webpackConfig = options.webpackConfig.default;
   }
 } else {
