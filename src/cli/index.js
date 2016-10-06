@@ -30,6 +30,11 @@ options.include = options.include.map(resolve);
 if (options.webpackConfig) {
   const webpackConfigPath = path.resolve(options.webpackConfig);
   options.webpackConfig = require(webpackConfigPath); // eslint-disable-line global-require
+
+  // Support Babel 6 export default
+  if (/\.babel\.js$/.test(webpackConfigPath) && options.webpackConfig.default) {
+    options.webpackConfig = options.webpackConfig.default;
+  }
 } else {
   options.webpackConfig = {};
 }
