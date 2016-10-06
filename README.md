@@ -81,6 +81,22 @@ Maybe you noticed that [entry](https://webpack.github.io/docs/configuration.html
 
 **Note:** mocha-webpack emits the generated files currently into `./tmp/mocha-webpack`. So you should make sure that this folder is ignored in your `.gitignore` file. In future versions this could be unnecessary.
 
+If you want to use [Babel](https://babeljs.io/) in your webpack config file then:
+
+- add `--require babel-core/register` argument to command line or to `mocha-webpack.opts` file;
+
+- give webpack config file a name ending with `.babel.js`.
+
+**webpack.config-test.babel.js** - example config
+```javascript
+import nodeExternals from 'webpack-node-externals';
+
+export default {
+  target: 'node', // in order to ignore built-in modules like path, fs, etc.
+  externals: [nodeExternals()], // in order to ignore all modules in node_modules folder    
+};
+```
+
 ### Shared configuration
 
 mocha-webpack will attempt to load `mocha-webpack.opts` as a configuration file in your working directory. The lines in this file are combined with any command-line arguments. The command-line arguments take precedence. Imagine you have the following mocha-webpack.opts file:
