@@ -81,11 +81,7 @@ Maybe you noticed that [entry](https://webpack.github.io/docs/configuration.html
 
 **Note:** mocha-webpack emits the generated files currently into `./tmp/mocha-webpack`. So you should make sure that this folder is ignored in your `.gitignore` file. In future versions this could be unnecessary.
 
-If you want to use [Babel](https://babeljs.io/) in your webpack config file then:
-
-- add `--require babel-core/register` argument to command line or to `mocha-webpack.opts` file;
-
-- give webpack config file a name ending with `.babel.js`.
+If you want to use [Babel](https://babeljs.io/) in your webpack config file then give it a name ending with `.babel.js`.
 
 **webpack.config-test.babel.js** - example config
 ```javascript
