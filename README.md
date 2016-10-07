@@ -81,9 +81,10 @@ Maybe you noticed that [entry](https://webpack.github.io/docs/configuration.html
 
 **Note:** mocha-webpack emits the generated files currently into `./tmp/mocha-webpack`. So you should make sure that this folder is ignored in your `.gitignore` file. In future versions this could be unnecessary.
 
-If you want to use [Babel](https://babeljs.io/) in your webpack config file then give it a name ending with `.babel.js`.
+If you want to use JavaScript preprocessor such as [Babel](https://babeljs.io/) or [CoffeeScript](http://coffeescript.org/)
+in your webpack config file then give it a name ending with corresponding extension:
 
-**webpack.config-test.babel.js** - example config
+**webpack.config-test.babel.js** - Babel example config
 ```javascript
 import nodeExternals from 'webpack-node-externals';
 
@@ -91,6 +92,15 @@ export default {
   target: 'node', // in order to ignore built-in modules like path, fs, etc.
   externals: [nodeExternals()], // in order to ignore all modules in node_modules folder    
 };
+```
+
+**webpack.config-test.coffee** - CoffeeScript example config
+```coffee
+nodeExternals = require 'webpack-node-externals'
+
+module.exports =
+  target: 'node'
+  externals: [nodeExternals()]
 ```
 
 ### Shared configuration
