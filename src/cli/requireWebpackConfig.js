@@ -45,7 +45,7 @@ function registerCompiler(moduleDescriptor) {
   }
 }
 
-export default function loadWebpackConfig(webpackConfig) {
+export default function requireWebpackConfig(webpackConfig) {
   if (!webpackConfig) {
     return {};
   }

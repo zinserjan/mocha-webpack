@@ -6,7 +6,7 @@ import prepareWebpack from './prepareWebpack';
 import { run, watch } from './runner';
 import { existsFileSync } from '../util/exists';
 import parseConfig from './parseConfig';
-import loadWebpackConfig from './loadWebpackConfig';
+import requireWebpackConfig from './requireWebpackConfig';
 
 
 function resolve(mod) {
@@ -28,7 +28,7 @@ options.require.forEach((mod) => {
 
 options.include = options.include.map(resolve);
 
-options.webpackConfig = loadWebpackConfig(options.webpackConfig);
+options.webpackConfig = requireWebpackConfig(options.webpackConfig);
 
 prepareWebpack(options, (err, webpackConfig) => {
   if (err) {
