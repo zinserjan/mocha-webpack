@@ -38,11 +38,7 @@ if (options.webpackConfig) {
   }
 
   options.webpackConfig = require(webpackConfigPath); // eslint-disable-line global-require
-
-  // Babel 6 export default
-  if (options.webpackConfig.default) {
-    options.webpackConfig = options.webpackConfig.default;
-  }
+  options.webpackConfig = options.webpackConfig.default || options.webpackConfig;
 } else {
   options.webpackConfig = {};
 }
