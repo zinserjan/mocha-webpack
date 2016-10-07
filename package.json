@@ -55,6 +55,7 @@
     "anymatch": "^1.3.0",
     "fs-extra": "^0.30.0",
     "glob-parent": "^2.0.0",
+    "interpret": "^1.0.1",
     "invariant": "^2.2.0",
     "is-glob": "^2.0.1",
     "loader-utils": "^0.2.13",

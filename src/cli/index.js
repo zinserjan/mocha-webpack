@@ -6,6 +6,7 @@ import prepareWebpack from './prepareWebpack';
 import { run, watch } from './runner';
 import { existsFileSync } from '../util/exists';
 import parseConfig from './parseConfig';
+import loadWebpackConfig from './loadWebpackConfig';
 
 
 function resolve(mod) {
@@ -27,21 +28,7 @@ options.require.forEach((mod) => {
 
 options.include = options.include.map(resolve);
 
-if (options.webpackConfig) {
-  const webpackConfigPath = path.resolve(options.webpackConfig);
-
-  // Support Babel config format
-  if (/\.babel\.js$/.test(webpackConfigPath)) {
-    if (!_.includes(options.require, 'babel-core/register')) {
-      require(resolve('babel-core/register')); // eslint-disable-line global-require
-    }
-  }
-
-  options.webpackConfig = require(webpackConfigPath); // eslint-disable-line global-require
-  options.webpackConfig = options.webpackConfig.default || options.webpackConfig;
-} else {
-  options.webpackConfig = {};
-}
+options.webpackConfig = loadWebpackConfig(options.webpackConfig);
 
 prepareWebpack(options, (err, webpackConfig) => {
   if (err) {
