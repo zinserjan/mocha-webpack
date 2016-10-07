@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import interpret from 'interpret';
 
 function sortExtensions(ext1, ext2) {
@@ -12,6 +13,25 @@ function sortExtensions(ext1, ext2) {
 }
 
 const extensions = Object.keys(interpret.extensions).sort(sortExtensions);
+
+function fileExists(filePath) {
+  try {
+    return fs.lstatSync(filePath).isFile();
+  }
+  catch (e) {
+    return false;
+  }
+}
+
+function findConfigFile(dirPath, baseName) {
+  for (var i = 0; i < extensions.length; i++) {
+    let filePath = path.resolve(dirPath, `${baseName}${extensions[i]}`);
+    if (fileExists(filePath)) {
+      return filePath;
+    }
+  }
+  return null;
+}
 
 function getConfigExtension(configPath) {
   for (let i = extensions.length - 1; i >= 0; i--) {
@@ -50,11 +70,27 @@ export default function requireWebpackConfig(webpackConfig) {
     return {};
   }
 
-  const webpackConfigPath = path.resolve(webpackConfig);
-  const webpackConfigExtension = getConfigExtension(webpackConfigPath);
+  let configPath = path.resolve(webpackConfig);
+  let configExtension = getConfigExtension(configPath);
 
-  registerCompiler(interpret.extensions[webpackConfigExtension]);
-  const config = require(webpackConfigPath); // eslint-disable-line global-require
+  if (!fileExists(configPath)) {
+    if (configExtension !== '.js') {
+      return {};
+    }
+
+    const configDirPath = path.dirname(configPath);
+    const configBaseName = path.basename(configPath, configExtension);
+
+    configPath = findConfigFile(configDirPath, configBaseName);
+    if (configPath === null) {
+      return {};
+    }
+    
+    configExtension = getConfigExtension(configPath);
+  }
+
+  registerCompiler(interpret.extensions[configExtension]);
+  const config = require(configPath); // eslint-disable-line global-require
 
   return config.default || config;
 }
