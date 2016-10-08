@@ -16,7 +16,10 @@
     "clean-tmp": "del-cli \".tmp/**\"",
     "build": "npm run clean-lib && babel ./src -d lib",
     "lint": "eslint src test bin",
-    "test": "npm run clean-tmp && npm run build && mocha --timeout 10000 --recursive --require test/setup.js \"test/**/*.test.js\""
+    "test": "npm run clean-tmp && npm run build && mocha --timeout 10000 --recursive --require test/setup.js \"test/**/*.test.js\"",
+    "posttest": "npm run lint",
+    "prepublish": "npm run build",
+    "release": "np"
   },
   "repository": {
     "type": "git",
@@ -49,6 +52,7 @@
     "eslint-config-airbnb-base": "^4.0.2",
     "eslint-plugin-import": "^1.11.0",
     "mocha": "^3.0.0",
+    "np": "^2.9.0",
     "sinon": "^1.17.3",
     "webpack": "^1.12.13"
   },
