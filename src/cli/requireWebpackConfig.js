@@ -17,15 +17,14 @@ const extensions = Object.keys(interpret.extensions).sort(sortExtensions);
 function fileExists(filePath) {
   try {
     return fs.lstatSync(filePath).isFile();
-  }
-  catch (e) {
+  } catch (e) {
     return false;
   }
 }
 
 function findConfigFile(dirPath, baseName) {
-  for (var i = 0; i < extensions.length; i++) {
-    let filePath = path.resolve(dirPath, `${baseName}${extensions[i]}`);
+  for (let i = 0; i < extensions.length; i++) {
+    const filePath = path.resolve(dirPath, `${baseName}${extensions[i]}`);
     if (fileExists(filePath)) {
       return filePath;
     }
@@ -85,7 +84,7 @@ export default function requireWebpackConfig(webpackConfig) {
     if (configPath === null) {
       return {};
     }
-    
+
     configExtension = getConfigExtension(configPath);
   }
 
