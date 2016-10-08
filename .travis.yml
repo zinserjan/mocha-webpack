@@ -15,5 +15,4 @@ before_script:
   - "npm install mocha@$MOCHA_VERSION"
 
 script:
-  - if [ "${TRAVIS_NODE_VERSION}" != "0.12" ]; then npm run lint; fi
   - npm run test
