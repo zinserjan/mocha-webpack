@@ -1,20 +1,10 @@
-import _ from 'lodash';
 import Mocha from 'mocha';
-import checkReporter from './checkReporter';
+import type { MochaWebpackOptions } from '../MochaWebpack';
 
-const defaults = {
-  reporterOptions: {},
-};
 
-export default function configureMocha(options = {}) {
+export default function configureMocha(options: MochaWebpackOptions) {
   // infinite stack traces
   Error.stackTraceLimit = Infinity;
-
-  // init defauls
-  _.defaults(options, defaults);
-
-  // check reporter
-  checkReporter(options.reporter);
 
   // init mocha
   const mocha = new Mocha();
@@ -58,19 +48,20 @@ export default function configureMocha(options = {}) {
   }
 
   // check-leaks
-  if (options.checkLeaks) {
+  if (options.ignoreLeaks === false) {
     mocha.checkLeaks();
   }
 
   // full-trace
-  if (options.fullTrace) {
+  if (options.fullStackTrace) {
     mocha.fullTrace();
   }
 
   // growl
-  if (options.growl) {
-    mocha.growl();
-  }
+  // todo add a way to use this also with webpack errors
+  // if (options.growl) {
+  //   mocha.growl();
+  // }
 
   // async-only
   if (options.asyncOnly) {
