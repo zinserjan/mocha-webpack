@@ -6,7 +6,7 @@ export default function createCompiler(webpackConfig: {}, cb: (err: ?{}) => void
   const compiler = webpack(webpackConfig);
 
   // const failedModules = [];
-  const failedModulesErrors = [];
+  // const failedModulesErrors = [];
 
   compiler.plugin('failed', cb);
 
@@ -37,9 +37,9 @@ export default function createCompiler(webpackConfig: {}, cb: (err: ?{}) => void
       const jsonStats = stats.toJson();
       const [err] = jsonStats.errors;
       cb(err);
-    } else if (failedModulesErrors.length) {
-      const [err] = failedModulesErrors;
-      cb(err);
+    // } else if (failedModulesErrors.length) {
+    //   const [err] = failedModulesErrors;
+    //   cb(err);
     } else {
       cb();
     }

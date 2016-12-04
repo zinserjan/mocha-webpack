@@ -25,9 +25,9 @@ function dependentModules(module: Module, affected: Affected = {}, cache: Cache 
   // mark module as inspected
   cache[idStr] = true; // eslint-disable-line no-param-reassign
 
-  if (!module.dependencies) {
-    return affected;
-  }
+  // if (!module.dependencies) {
+  //   return affected;
+  // }
 
   module.dependencies.forEach((dependency) => {
     const dependentModule = dependency.module;
