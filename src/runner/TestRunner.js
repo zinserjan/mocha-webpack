@@ -30,8 +30,8 @@ export default class TestRunner {
 
     this.options = options;
     this.tmpPath = path.join(this.options.cwd, '.tmp', 'mocha-webpack');
-    // this.outputFilePath = path.join(this.tmpPath, `${Date.now()}-bundle.js`);
-    this.outputFilePath = path.join(this.tmpPath, 'bundle.js');
+    this.outputFilePath = path.join(this.tmpPath, `${Date.now()}-bundle.js`);
+    // this.outputFilePath = path.join(this.tmpPath, 'bundle.js');
   }
 
   async run(cb: (failures: number) => void): void {
