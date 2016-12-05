@@ -1,8 +1,15 @@
 {
-  "presets": ["es2015"],
+  "presets": ["babel-preset-es2015"],
   "plugins": [
     "babel-plugin-transform-flow-strip-types",
-    "transform-class-properties"
+    "babel-plugin-transform-decorators-legacy",
+    "babel-plugin-transform-class-properties",
+    "babel-plugin-transform-object-rest-spread",
+    ["fast-async", {
+      "useRuntimeModule": true
+    }],
+    "babel-plugin-lodash",
+    "babel-plugin-transform-runtime"
   ],
   "env": {
     "coverage": {
