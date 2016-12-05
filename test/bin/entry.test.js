@@ -147,7 +147,7 @@ describe('cli - entry', function () {
     const failingPatterns = [
       path.join(fixtureDir, 'failing-*.js'),
       path.join(fixtureDir, 'failing-*-7.js'),
-      path.join(fixtureDir, 'failing-*-(5|6).js'),
+      path.join(fixtureDir, 'failing-*-@(5|6).js'),
     ];
 
     failingPatterns.forEach((pattern) => {
