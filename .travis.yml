@@ -16,4 +16,7 @@ before_script:
   - "npm install mocha@$MOCHA_VERSION"
 
 script:
-  - npm run test
+  - npm run cover
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

@@ -12,5 +12,9 @@ lib/*
 lib/reporters/*
 !lib/reporters/base.js
 
+# Code Coverage
+.nyc_output
+coverage
+
 # Temp
 .tmp
