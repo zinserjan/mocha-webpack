@@ -15,7 +15,7 @@
     "clean-lib": "del-cli \"lib/**\" \"!lib\" \"!lib/reporters\" \"!lib/utils.js\" \"!lib/reporters/base.js\"",
     "clean-tmp": "del-cli \".tmp/**\"",
     "build": "npm run clean-lib && babel ./src -d lib",
-    "lint": "node-version-gte-4 && eslint src test bin || echo Node version too old to run linting",
+    "lint": "eslint src test bin",
     "test": "npm run clean-tmp && npm run build && mocha --timeout 10000 --recursive --require test/setup.js \"test/**/*.test.js\"",
     "posttest": "npm run lint",
     "prepublish": "npm run build",
@@ -52,7 +52,6 @@
     "eslint-config-airbnb-base": "^4.0.2",
     "eslint-plugin-import": "^1.11.0",
     "mocha": "^3.0.0",
-    "node-version-check": "^2.1.1",
     "np": "^2.9.0",
     "sinon": "^1.17.3",
     "webpack": "^1.12.13"
