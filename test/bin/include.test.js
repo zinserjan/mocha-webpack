@@ -17,7 +17,7 @@ const helper2 = `${path.join(helperDir, 'test-helper-2.js')}`;
 
 
 function test(entry, options, cb) {
-  exec(`node ${binPath} \"${entry}\" ${options.join(' ')}  `, cb);
+  exec(`node ${binPath} "${entry}" ${options.join(' ')}  `, cb);
 }
 
 function testInclude(entry, includes, cb) {

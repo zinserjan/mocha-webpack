@@ -85,7 +85,7 @@ export default class InjectChangedFilesPlugin {
     const originalMap = original.map();
 
     const result = new ReplaceSource(original);
-    const regex = /__webpackManifest__\s*=\s*\[\s*\]/g;
+    const regex = /__webpackManifest__\s*=\s*\[\s*\]/g; // eslint-disable-line
     const files = this.hotFiles.concat(this.failedFiles);
     const changedFiles = `['${files.join("', '")}']`;
     const replacement = `__webpackManifest__ = ${changedFiles}`;
