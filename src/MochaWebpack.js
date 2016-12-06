@@ -94,6 +94,7 @@ export default class MochaWebpack {
    *
    * @public
    * @param {string} cwd absolute working directory path
+   * @return {MochaWebpack}
    */
   cwd(cwd: string): MochaWebpack {
     this.options = {
@@ -330,12 +331,13 @@ export default class MochaWebpack {
   /**
    * Delay root suite execution.
    *
+   * @public
    * @return {MochaWebpack}
    */
   delay(): MochaWebpack {
     this.options = {
       ...this.options,
-      delay: false,
+      delay: true,
     };
     return this;
   }
