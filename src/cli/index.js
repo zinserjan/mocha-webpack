@@ -15,14 +15,14 @@ function resolve(mod) {
   return file;
 }
 
-function exitLater(code) {
-  process.on('exit', () => {
+function exit(lazy, code) {
+  if (lazy) {
+    process.on('exit', () => {
+      process.exit(code);
+    });
+  } else {
     process.exit(code);
-  });
-}
-
-function exit(code) {
-  process.exit(code);
+  }
 }
 
 const cliOptions = parseArgv(process.argv.slice(2), true);
@@ -95,18 +95,10 @@ Promise
       return mochaWebpack.watch();
     }
     return mochaWebpack.run((failures) => {
-      if (options.exit) {
-        exit(failures);
-      } else {
-        exitLater(failures);
-      }
+      exit(options.exit, failures);
     });
   })
   .catch((e) => {
     console.error(e.stack); // eslint-disable-line
-    if (options.exit) {
-      exit(1);
-    } else {
-      exitLater(1);
-    }
+    exit(options.exit, 1);
   });
