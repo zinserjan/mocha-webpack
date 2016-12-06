@@ -4,8 +4,12 @@ export default function checkReporter(reporter) {
   } catch (errModule) {
     try {
       require(reporter); // eslint-disable-line global-require
-    } catch (errLocal) {
-      throw new Error(`reporter "${reporter}" does not exist`);
+    } catch (errModule) {
+      try {
+        require(`mocha/../../${reporter}`); // eslint-disable-line global-require
+      } catch (errLocal) {
+        throw new Error(`reporter "${reporter}" does not exist`);
+      }
     }
   }
 }
