@@ -81,6 +81,57 @@ describe('cli - entry', function () {
     });
   });
 
+  context('multiple test files as option', function () {
+    before(function () {
+      this.passingTest = normalizePath(path.join(fixtureDir, 'passing-test.js'));
+      this.passingTest2 = normalizePath(path.join(fixtureDir, 'passing-test2.js'));
+      this.failingTest = normalizePath(path.join(fixtureDir, 'failing-test.js'));
+      this.failingTest2 = normalizePath(path.join(fixtureDir, 'failing-test2.js'));
+      this.corruptedTest = normalizePath(path.join(fixtureDir, 'corrupted-test.js'));
+      this.corruptedTest2 = normalizePath(path.join(fixtureDir, 'corrupted-test2.js'));
+      createTest(this.passingTest, true);
+      createTest(this.passingTest2, true);
+      createTest(this.failingTest, false);
+      createTest(this.failingTest2, false);
+      createCorruptedTest(this.corruptedTest);
+      createCorruptedTest(this.corruptedTest2);
+    });
+
+    it('handles failed module with syntax errors', function (done) {
+      exec(`node ${binPath} "${this.corruptedTest}" "${this.corruptedTest2}"`, (err) => {
+        assert.isNotNull(err);
+        assert.isAbove(err.code, 0);
+        done();
+      });
+    });
+
+    it('runs successfull test', function (done) {
+      exec(`node ${binPath} "${this.passingTest}" "${this.passingTest2}"`, (err, stdout) => {
+        assert.isNull(err);
+        assert.include(stdout, this.passingTest);
+        assert.include(stdout, this.passingTest2);
+        assert.include(stdout, '2 passing');
+        done();
+      });
+    });
+
+    it('runs failing test', function (done) {
+      exec(`node ${binPath} "${this.failingTest}" "${this.failingTest2}"`, (err, stdout) => {
+        assert.isNotNull(err);
+        assert.strictEqual(err.code, 2);
+        assert.include(stdout, this.failingTest);
+        assert.include(stdout, this.failingTest2);
+        assert.include(stdout, '0 passing');
+        assert.include(stdout, '2 failing');
+        done();
+      });
+    });
+
+    after(function () {
+      return del([this.passingTest, this.passingTest2, this.failingTest, this.failingTest2, this.corruptedTest, this.corruptedTest2]);
+    });
+  });
+
   context('glob pattern as option', function () {
     const testFiles = _.range(1, 30).map((x) => {
       if (parseInt(x / 10, 10) === 0) {
@@ -166,6 +217,27 @@ describe('cli - entry', function () {
           assert.include(stdout, `${files.length} failing`);
           done();
         });
+      });
+    });
+
+    const multiPassingPatterns = [
+      path.join(fixtureDir, 'passing-*-1.js'),
+      path.join(fixtureDir, 'passing-*-2.js'),
+      path.join(fixtureDir, 'passing-*-3.js'),
+    ];
+
+    const pattern = multiPassingPatterns.map((str) => `"${str}"`).join(' ');
+    const matcher = anymatch(multiPassingPatterns);
+    const files = testFiles.filter(matcher);
+
+    it(`runs ${files.length} passing tests of ${testFiles.length} with pattern '${pattern}'`, function (done) {
+      exec(`node ${binPath} ${pattern}`, (err, stdout) => {
+        assert.isNull(err);
+        files.forEach((file) => {
+          assert.include(stdout, file);
+        });
+        assert.include(stdout, `${files.length} passing`);
+        done();
       });
     });
 

@@ -110,6 +110,18 @@ describe('parseArgv', function () {
       assert.property(parsedArgv, 'files');
       assert.deepEqual(parsedArgv.files, argv);
     });
+
+    it('parses non-options as files (multiple)', function () {
+      // given
+      const argv = ['./test', './test2'];
+
+      // when
+      const parsedArgv = this.parseArgv(argv);
+
+      // then
+      assert.property(parsedArgv, 'files');
+      assert.deepEqual(parsedArgv.files, argv);
+    });
   });
 
   context('options', function () {
