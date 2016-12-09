@@ -185,7 +185,6 @@ export default function parseArgv(argv, ignoreDefaults = false) {
     .help('help')
     .alias('help', 'h', '?')
     .version(() => version)
-    .demand(0, 1)
     .options(options)
     .strict()
     .argv;
