@@ -34,15 +34,16 @@ function createCorruptedTest(filePath) {
   fs.outputFileSync(filePath, content);
 }
 
-const fixtureDir = path.relative(process.cwd(), path.join(__dirname, 'fixtureTmp'));
+const fixtureDir = path.relative(process.cwd(), path.join(__dirname, 'fixture'));
+const fixtureDirTmp = path.relative(process.cwd(), path.join(__dirname, 'fixtureTmp'));
 const binPath = path.relative(process.cwd(), path.join('bin', '_mocha'));
 
 describe('cli - entry', function () {
   context('single test file as option', function () {
     before(function () {
-      this.passingTest = normalizePath(path.join(fixtureDir, 'passing-test.js'));
-      this.failingTest = normalizePath(path.join(fixtureDir, 'failing-test.js'));
-      this.corruptedTest = normalizePath(path.join(fixtureDir, 'corrupted-test.js'));
+      this.passingTest = normalizePath(path.join(fixtureDirTmp, 'passing-test.js'));
+      this.failingTest = normalizePath(path.join(fixtureDirTmp, 'failing-test.js'));
+      this.corruptedTest = normalizePath(path.join(fixtureDirTmp, 'corrupted-test.js'));
       createTest(this.passingTest, true);
       createTest(this.failingTest, false);
       createCorruptedTest(this.corruptedTest);
@@ -83,12 +84,12 @@ describe('cli - entry', function () {
 
   context('multiple test files as option', function () {
     before(function () {
-      this.passingTest = normalizePath(path.join(fixtureDir, 'passing-test.js'));
-      this.passingTest2 = normalizePath(path.join(fixtureDir, 'passing-test2.js'));
-      this.failingTest = normalizePath(path.join(fixtureDir, 'failing-test.js'));
-      this.failingTest2 = normalizePath(path.join(fixtureDir, 'failing-test2.js'));
-      this.corruptedTest = normalizePath(path.join(fixtureDir, 'corrupted-test.js'));
-      this.corruptedTest2 = normalizePath(path.join(fixtureDir, 'corrupted-test2.js'));
+      this.passingTest = normalizePath(path.join(fixtureDirTmp, 'passing-test.js'));
+      this.passingTest2 = normalizePath(path.join(fixtureDirTmp, 'passing-test2.js'));
+      this.failingTest = normalizePath(path.join(fixtureDirTmp, 'failing-test.js'));
+      this.failingTest2 = normalizePath(path.join(fixtureDirTmp, 'failing-test2.js'));
+      this.corruptedTest = normalizePath(path.join(fixtureDirTmp, 'corrupted-test.js'));
+      this.corruptedTest2 = normalizePath(path.join(fixtureDirTmp, 'corrupted-test2.js'));
       createTest(this.passingTest, true);
       createTest(this.passingTest2, true);
       createTest(this.failingTest, false);
@@ -136,15 +137,15 @@ describe('cli - entry', function () {
     const testFiles = _.range(1, 30).map((x) => {
       if (parseInt(x / 10, 10) === 0) {
         if (x <= 4) {
-          return path.join(fixtureDir, `passing-test-${x}.js`);
+          return path.join(fixtureDirTmp, `passing-test-${x}.js`);
         } else if (x <= 8) {
-          return path.join(fixtureDir, `failing-test-${x}.js`);
+          return path.join(fixtureDirTmp, `failing-test-${x}.js`);
         }
-        return path.join(fixtureDir, `corrupted-test-${x}.js`);
+        return path.join(fixtureDirTmp, `corrupted-test-${x}.js`);
       } else if (parseInt(x / 10, 10) === 1) {
-        return path.join(fixtureDir, 'sub1', `passing-test-${x}.js`);
+        return path.join(fixtureDirTmp, 'sub1', `passing-test-${x}.js`);
       }
-      return path.join(fixtureDir, 'sub2', `passing-test-${x}.js`);
+      return path.join(fixtureDirTmp, 'sub2', `passing-test-${x}.js`);
     }).map((file) => normalizePath(file));
 
     before(function () {
@@ -160,7 +161,7 @@ describe('cli - entry', function () {
     });
 
     const corruptedPatterns = [
-      path.join(fixtureDir, 'corrupted-*.js'),
+      path.join(fixtureDirTmp, 'corrupted-*.js'),
     ];
 
     corruptedPatterns.forEach((pattern) => {
@@ -174,9 +175,9 @@ describe('cli - entry', function () {
     });
 
     const passingPatterns = [
-      path.join(fixtureDir, 'passing-*.js'),
-      path.join(fixtureDir, 'passing-*-1.js'),
-      path.join(fixtureDir, '**/passing-*.js'),
+      path.join(fixtureDirTmp, 'passing-*.js'),
+      path.join(fixtureDirTmp, 'passing-*-1.js'),
+      path.join(fixtureDirTmp, '**/passing-*.js'),
     ];
 
     passingPatterns.forEach((pattern) => {
@@ -196,9 +197,9 @@ describe('cli - entry', function () {
     });
 
     const failingPatterns = [
-      path.join(fixtureDir, 'failing-*.js'),
-      path.join(fixtureDir, 'failing-*-7.js'),
-      path.join(fixtureDir, 'failing-*-@(5|6).js'),
+      path.join(fixtureDirTmp, 'failing-*.js'),
+      path.join(fixtureDirTmp, 'failing-*-7.js'),
+      path.join(fixtureDirTmp, 'failing-*-@(5|6).js'),
     ];
 
     failingPatterns.forEach((pattern) => {
@@ -221,9 +222,9 @@ describe('cli - entry', function () {
     });
 
     const multiPassingPatterns = [
-      path.join(fixtureDir, 'passing-*-1.js'),
-      path.join(fixtureDir, 'passing-*-2.js'),
-      path.join(fixtureDir, 'passing-*-3.js'),
+      path.join(fixtureDirTmp, 'passing-*-1.js'),
+      path.join(fixtureDirTmp, 'passing-*-2.js'),
+      path.join(fixtureDirTmp, 'passing-*-3.js'),
     ];
 
     const pattern = multiPassingPatterns.map((str) => `"${str}"`).join(' ');
@@ -253,16 +254,16 @@ describe('cli - entry', function () {
       before(function () {
         this.testFiles = _.range(1, 10).map((x) => {
           const subdir = subdirectories[x % 3];
-          return path.join(fixtureDir, subdir, `passing-test-${x}.js`);
+          return path.join(fixtureDirTmp, subdir, `passing-test-${x}.js`);
         }).map((file) => normalizePath(file));
         this.testFiles.forEach((file) => createTest(file, true));
       });
 
       it('runs all tests in directory\'', function (done) {
-        const matcher = anymatch(`${fixtureDir}/*.js`);
+        const matcher = anymatch(`${fixtureDirTmp}/*.js`);
         const files = this.testFiles.filter(matcher);
 
-        exec(`node ${binPath} "${fixtureDir}"`, (err, stdout) => {
+        exec(`node ${binPath} "${fixtureDirTmp}"`, (err, stdout) => {
           assert.isNull(err);
           files.forEach((file) => {
             assert.include(stdout, file);
@@ -273,9 +274,9 @@ describe('cli - entry', function () {
       });
 
       it('runs all tests matching file glob\'', function (done) {
-        const matcher = anymatch(`${fixtureDir}/*-test-3.js`);
+        const matcher = anymatch(`${fixtureDirTmp}/*-test-3.js`);
         const files = this.testFiles.filter(matcher);
-        exec(`node ${binPath} --glob "*-test-3.js" "${fixtureDir}"`, (err, stdout) => {
+        exec(`node ${binPath} --glob "*-test-3.js" "${fixtureDirTmp}"`, (err, stdout) => {
           assert.isNull(err);
           files.forEach((file) => {
             assert.include(stdout, file);
@@ -287,10 +288,10 @@ describe('cli - entry', function () {
 
 
       it('runs all tests in directory & subdirectories\'', function (done) {
-        const matcher = anymatch(`${fixtureDir}/**/*.js`);
+        const matcher = anymatch(`${fixtureDirTmp}/**/*.js`);
         const files = this.testFiles.filter(matcher);
 
-        exec(`node ${binPath} --recursive "${fixtureDir}"`, (err, stdout) => {
+        exec(`node ${binPath} --recursive "${fixtureDirTmp}"`, (err, stdout) => {
           assert.isNull(err);
           files.forEach((file) => {
             assert.include(stdout, file);
@@ -309,16 +310,16 @@ describe('cli - entry', function () {
       before(function () {
         this.testFiles = _.range(1, 10).map((x) => {
           const subdir = subdirectories[x % 3];
-          return path.join(fixtureDir, subdir, `failing-test-${x}.js`);
+          return path.join(fixtureDirTmp, subdir, `failing-test-${x}.js`);
         }).map((file) => normalizePath(file));
         this.testFiles.forEach((file) => createTest(file, false));
       });
 
       it('runs all tests in directory\'', function (done) {
-        const matcher = anymatch(`${fixtureDir}/*.js`);
+        const matcher = anymatch(`${fixtureDirTmp}/*.js`);
         const files = this.testFiles.filter(matcher);
 
-        exec(`node ${binPath} "${fixtureDir}"`, (err, stdout) => {
+        exec(`node ${binPath} "${fixtureDirTmp}"`, (err, stdout) => {
           assert.isNotNull(err);
           assert.strictEqual(err.code, files.length);
           files.forEach((file) => {
@@ -332,10 +333,10 @@ describe('cli - entry', function () {
       });
 
       it('runs all tests in directory & subdirectories\'', function (done) {
-        const matcher = anymatch(`${fixtureDir}/**/*.js`);
+        const matcher = anymatch(`${fixtureDirTmp}/**/*.js`);
         const files = this.testFiles.filter(matcher);
 
-        exec(`node ${binPath} --recursive "${fixtureDir}"`, (err, stdout) => {
+        exec(`node ${binPath} --recursive "${fixtureDirTmp}"`, (err, stdout) => {
           assert.isNotNull(err);
           assert.strictEqual(err.code, files.length);
           files.forEach((file) => {
@@ -357,13 +358,13 @@ describe('cli - entry', function () {
       before(function () {
         this.testFiles = _.range(1, 10).map((x) => {
           const subdir = subdirectories[x % 3];
-          return path.join(fixtureDir, subdir, `corrupted-test-${x}.js`);
+          return path.join(fixtureDirTmp, subdir, `corrupted-test-${x}.js`);
         }).map((file) => normalizePath(file));
         this.testFiles.forEach((file) => createCorruptedTest(file));
       });
 
       it('fails before running tests of directory', function (done) {
-        exec(`node ${binPath} "${fixtureDir}"`, (err) => {
+        exec(`node ${binPath} "${fixtureDirTmp}"`, (err) => {
           assert.isNotNull(err);
           assert.isAbove(err.code, 0);
           done();
@@ -371,7 +372,7 @@ describe('cli - entry', function () {
       });
 
       it('fails before running tests of directory directory & subdirectories\'', function (done) {
-        exec(`node ${binPath} --recursive "${fixtureDir}"`, (err) => {
+        exec(`node ${binPath} --recursive "${fixtureDirTmp}"`, (err) => {
           assert.isNotNull(err);
           assert.isAbove(err.code, 0);
           done();
@@ -381,6 +382,56 @@ describe('cli - entry', function () {
       after(function () {
         return del(this.testFiles);
       });
+    });
+  });
+
+
+  context('respect file extensions in webpack config via resolve.extensions for directory entries', function () {
+    before(function () {
+      this.index = 0;
+      this.configPath = path.join(fixtureDir, 'config', 'config.resolve-extensions.js');
+      this.testDir = path.join(fixtureDirTmp, 'resolve-test');
+      this.testFiles = ['ts', 'tsx', 'js', 'jsx']
+        .map((ext) => path.join(this.testDir, `passing-test-${this.index++}.${ext}`))
+        .map((file) => normalizePath(file));
+
+      this.ignoredFiles = ['coffee']
+        .map((ext) => path.join(this.testDir, `passing-test-${this.index++}.${ext}`))
+        .map((file) => normalizePath(file));
+
+      this.testFiles.forEach((file) => createTest(file, true));
+      this.ignoredFiles.forEach((file) => createTest(file, true));
+    });
+
+    it('resolve.extensions will be used for module resolution when no --glob is given', function (done) {
+      exec(`node ${binPath} --webpack-config "${this.configPath}" "${this.testDir}"`, (err, stdout) => {
+        assert.isNull(err);
+        this.testFiles.forEach((file) => {
+          assert.include(stdout, file);
+        });
+        this.ignoredFiles.forEach((file) => {
+          assert.notInclude(stdout, file);
+        });
+        assert.include(stdout, `${this.testFiles.length} passing`);
+        done();
+      });
+    });
+
+    it('resolve.extensions will not be used for module resolution when --glob is given', function (done) {
+      const matcher = anymatch(`${this.testDir}/*.js`);
+      const files = this.testFiles.filter(matcher);
+      exec(`node ${binPath} --webpack-config "${this.configPath}" --glob "*.js" "${this.testDir}"`, (err, stdout) => {
+        assert.isNull(err);
+        files.forEach((file) => {
+          assert.include(stdout, file);
+        });
+        assert.include(stdout, `${files.length} passing`);
+        done();
+      });
+    });
+
+    after(function () {
+      return del([].concat(this.testFiles, this.ignoredFiles));
     });
   });
 });

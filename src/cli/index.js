@@ -5,7 +5,7 @@ import parseArgv from './parseArgv';
 import { existsFileSync } from '../util/exists';
 import parseConfig from './parseConfig';
 import requireWebpackConfig from './requireWebpackConfig';
-import { ensureGlob } from '../util/glob';
+import { ensureGlob, extensionsToGlob } from '../util/glob';
 import MochaWebpack from '../MochaWebpack';
 
 
@@ -42,7 +42,12 @@ options.webpackConfig = requireWebpackConfig(options.webpackConfig);
 const mochaWebpack = new MochaWebpack();
 
 options.include.forEach((f) => mochaWebpack.addInclude(f));
-options.files.forEach((f) => mochaWebpack.addEntry(ensureGlob(f, options.recursive, options.glob)));
+
+const extensions = _.get(options.webpackConfig, 'resolve.extensions', ['.js']);
+const fallbackFileGlob = extensionsToGlob(extensions);
+const fileGlob = options.glob != null ? options.glob : fallbackFileGlob;
+
+options.files.forEach((f) => mochaWebpack.addEntry(ensureGlob(f, options.recursive, fileGlob)));
 
 mochaWebpack.cwd(process.cwd());
 mochaWebpack.webpackConfig(options.webpackConfig);

@@ -1,7 +1,7 @@
 /* eslint-env node, mocha */
 /* eslint-disable func-names, prefer-arrow-callback, no-loop-func, max-len */
 import { assert } from 'chai';
-import { ensureGlob } from '../../../src/util/glob';
+import { ensureGlob, extensionsToGlob } from '../../../src/util/glob';
 
 describe('glob', function () {
   context('ensureGlob', function () {
@@ -64,6 +64,36 @@ describe('glob', function () {
       assert.throws(() => ensureGlob(path, true, '**/*.js'), errorNonFilePattern);
       assert.throws(() => ensureGlob(path, true, 'test/*.js'), errorNonFilePattern);
       assert.doesNotThrow(() => ensureGlob(path, true, '*.js'));
+    });
+  });
+
+  context('extensionsToGlob', function () {
+    it('handles ["", ".js", ".coffee"]', function () {
+      const given = ['', '.js', '.coffee'];
+      const expected = '*{.js,.coffee}';
+      const result = extensionsToGlob(given);
+      assert.strictEqual(result, expected);
+    });
+
+    it('handles ["", ".js"]', function () {
+      const given = ['', '.js'];
+      const expected = '*.js';
+      const result = extensionsToGlob(given);
+      assert.strictEqual(result, expected);
+    });
+
+    it('handles [""] - js fallback', function () {
+      const given = [''];
+      const expected = '*.js';
+      const result = extensionsToGlob(given);
+      assert.strictEqual(result, expected);
+    });
+
+    it('handles [] - js fallback', function () {
+      const given = [];
+      const expected = '*.js';
+      const result = extensionsToGlob(given);
+      assert.strictEqual(result, expected);
     });
   });
 });

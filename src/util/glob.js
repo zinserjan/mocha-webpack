@@ -33,3 +33,14 @@ export const ensureGlob = (entry: string, recursive: boolean = false, pattern: s
   }
   return normalized;
 };
+
+export const extensionsToGlob = (extensions: Array<string>) => {
+  const filtered = extensions.filter(Boolean);
+
+  if (filtered.length === 0) {
+    return '*.js';
+  } else if (filtered.length === 1) {
+    return `*${filtered[0]}`;
+  }
+  return `*{${filtered.join(',')}}`;
+};
