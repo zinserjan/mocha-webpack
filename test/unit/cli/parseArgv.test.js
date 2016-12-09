@@ -2,7 +2,7 @@
 /* eslint-disable func-names, prefer-arrow-callback, no-loop-func, max-len */
 
 import { assert } from 'chai';
-import parseArgv from '../../src/cli/parseArgv';
+import parseArgv from '../../../src/cli/parseArgv';
 
 describe('parseArgv', function () {
   beforeEach(function () {

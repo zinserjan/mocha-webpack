@@ -3,7 +3,7 @@
 
 import path from 'path';
 import { assert } from 'chai';
-import parseConfig from '../../src/cli/parseConfig';
+import parseConfig from '../../../src/cli/parseConfig';
 
 const configFileName = path.join(__dirname, 'fixture', 'config', 'mocha-webpack.opts');
 

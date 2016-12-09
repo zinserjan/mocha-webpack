@@ -4,7 +4,7 @@
 import { assert } from 'chai';
 import path from 'path';
 import { exec } from 'child_process';
-import { version } from '../../package.json';
+import { version } from '../../../package.json';
 
 const binPath = path.relative(process.cwd(), path.join('bin', '_mocha'));
 
