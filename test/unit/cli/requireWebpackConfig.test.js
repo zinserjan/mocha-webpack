@@ -2,7 +2,7 @@
 
 import path from 'path';
 import { assert } from 'chai';
-import requireWebpackConfig from '../../src/cli/requireWebpackConfig';
+import requireWebpackConfig from '../../../src/cli/requireWebpackConfig';
 
 describe('requireWebpackConfig', () => {
   const getConfigPath = extension =>

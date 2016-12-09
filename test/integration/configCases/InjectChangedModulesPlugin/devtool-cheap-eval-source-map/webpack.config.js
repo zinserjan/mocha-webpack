@@ -1,4 +1,4 @@
-import InjectChangedModulesPlugin from '../../../../src/webpack/plugin/InjectChangedModulesPlugin';
+import InjectChangedModulesPlugin from '../../../../../src/webpack/plugin/InjectChangedModulesPlugin';
 
 module.exports = {
   plugins: [
