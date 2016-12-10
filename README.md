@@ -142,7 +142,7 @@ $ mocha-webpack --growl --colors --webpack-config webpack.config-test.js "src/**
 
 Sourcemap support is already applied for you via [source-map-support](https://github.com/evanw/node-source-map-support) by mocha-webpack. You just need to enable them in your webpack config via the `devtool` setting.
 
-**Note**: For a proper debug experience in your IDE (setting breakpoints right into your code) you need to use a `devtool` which inlines the sourcemaps like `inline-source-map`.
+**Note**: For a proper debug experience in your IDE (setting breakpoints right into your code) you need to use a `devtool` which inlines the sourcemaps like `inline-cheap-module-source-map`.
 
 **webpack.config-test.js**
 ```javascript
@@ -156,7 +156,7 @@ module.exports = {
   },
   target: 'node', // in order to ignore built-in modules like path, fs, etc.
   externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
-  devtool: "inline-source-map"
+  devtool: "inline-cheap-module-source-map"
 };
 ```
 
