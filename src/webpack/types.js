@@ -13,6 +13,7 @@ export type Compiler = {
   plugin: (hook: string, fn: () => void) => void,
   run: (cb: () => void) => void,
   watch: (watchOptions: {}, cb: () => void) => void,
+  outputFileSystem: any,
 }
 
 /**

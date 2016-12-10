@@ -3,7 +3,7 @@ import path from 'path';
 import WebpackInfoPlugin from 'webpack-info-plugin';
 
 import { glob } from '../util/glob';
-import createCompiler from '../webpack/compiler/createCompiler';
+import createInMemoryCompiler from '../webpack/compiler/createInMemoryCompiler';
 import InjectChangedModulesPlugin from '../webpack/plugin/InjectChangedModulesPlugin';
 import { EntryConfig, KEY as ENTRY_CONFIG_KEY } from '../webpack/loader/entryLoader';
 import type { MochaWebpackOptions } from '../MochaWebpack';
@@ -38,7 +38,7 @@ export default class TestRunner {
     const config = await this.createWebpackConfig();
     const mocha = configureMocha(this.options);
 
-    const compiler = createCompiler(config, (err) => {
+    const compiler = createInMemoryCompiler(config, (err) => {
       if (err) {
         cb(1);
         return;
@@ -84,7 +84,7 @@ export default class TestRunner {
       }
     };
 
-    const compiler = createCompiler(config, (err) => {
+    const compiler = createInMemoryCompiler(config, (err) => {
       if (err) {
         // wait for fixed tests
         return;
