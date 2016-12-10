@@ -23,6 +23,7 @@ Seems pretty easy. But there are some disadvantages with this approach:
 
 This project is a optimized version of this simple approach with following features:
 - precompiles your test files automatically with webpack before executing tests
+- no files are written to disk
 - define tests to execute like mocha:
   - run a single test file
   - run all tests in the desired directory & if desired in all subdirectories
@@ -78,8 +79,6 @@ module.exports = {
 ```
 
 Maybe you noticed that [entry](https://webpack.github.io/docs/configuration.html#entry), [output.filename](https://webpack.github.io/docs/configuration.html#output-filename) and [output.path](https://webpack.github.io/docs/configuration.html#output-path) are completely missing in this config. mocha-webpack does this automatically for you and if you would specify it anyway, it will be overridden by mocha-webpack.
-
-**Note:** mocha-webpack emits the generated files currently into `./tmp/mocha-webpack`. So you should make sure that this folder is ignored in your `.gitignore` file. In future versions this could be unnecessary.
 
 If you want to use JavaScript preprocessor such as [Babel](https://babeljs.io/) or [CoffeeScript](http://coffeescript.org/)
 in your webpack config file then give it a name ending with corresponding extension:
@@ -143,6 +142,8 @@ $ mocha-webpack --growl --colors --webpack-config webpack.config-test.js "src/**
 
 Sourcemap support is already applied for you via [source-map-support](https://github.com/evanw/node-source-map-support) by mocha-webpack. You just need to enable them in your webpack config via the `devtool` setting.
 
+**Note**: For a proper debug experience in your IDE (setting breakpoints right into your code) you need to use a `devtool` which inlines the sourcemaps like `inline-source-map`.
+
 **webpack.config-test.js**
 ```javascript
 var nodeExternals = require('webpack-node-externals');
@@ -155,7 +156,7 @@ module.exports = {
   },
   target: 'node', // in order to ignore built-in modules like path, fs, etc.
   externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
-  devtool: "cheap-module-source-map" // faster than 'source-map'
+  devtool: "inline-source-map"
 };
 ```
 
