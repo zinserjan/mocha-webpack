@@ -141,11 +141,7 @@ $ mocha-webpack --growl --colors --webpack-config webpack.config-test.js "src/**
 ```
 ### Sourcemaps
 
-For using sourcemaps with mocha-webpack you just need to enable sourcemaps in your webpack config and use [source-map-support] to apply sourcemaps.
-
-```bash
-$ npm install --save-dev source-map-support
-```
+Sourcemap support is already applied for you via [source-map-support](https://github.com/evanw/node-source-map-support) by mocha-webpack. You just need to enable them in your webpack config via the `devtool` setting.
 
 **webpack.config-test.js**
 ```javascript
@@ -161,11 +157,6 @@ module.exports = {
   externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
   devtool: "cheap-module-source-map" // faster than 'source-map'
 };
-```
-
-**mocha-webpack.opts**
-```
---require source-map-support/register
 ```
 
 

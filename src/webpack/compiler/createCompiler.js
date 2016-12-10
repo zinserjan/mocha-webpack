@@ -1,5 +1,6 @@
 // @flow
 import webpack from 'webpack';
+import registerSourcemapSupport from '../util/registerSourcemapSupport';
 import type { Compiler } from '../types';
 
 export default function createCompiler(webpackConfig: {}, cb: (err: ?{}) => void): Compiler {
@@ -44,5 +45,8 @@ export default function createCompiler(webpackConfig: {}, cb: (err: ?{}) => void
       cb();
     }
   });
+
+  registerSourcemapSupport(compiler);
+
   return compiler;
 }
