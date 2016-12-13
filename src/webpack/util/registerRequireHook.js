@@ -1,4 +1,6 @@
 /*  eslint-disable no-underscore-dangle */
+
+// see https://github.com/nodejs/node/blob/master/lib/module.js
 import Module from 'module';
 
 // the module in which the require() call originated
