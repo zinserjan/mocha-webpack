@@ -70,7 +70,6 @@ export default function registerRequireHook(dotExt: string, resolve: (path: stri
   const resolveSource = (path) => {
     const source = sourceCache[path];
     delete sourceCache[path];
-    affectedFiles[path] = true;
     return source;
   };
 
@@ -88,6 +87,8 @@ export default function registerRequireHook(dotExt: string, resolve: (path: stri
       (originalLoader || Module._extensions['.js'])(module, filename);
       return;
     }
+
+    affectedFiles[filename] = true;
 
     // compile javascript module from its source
     module._compile(source, filename);
