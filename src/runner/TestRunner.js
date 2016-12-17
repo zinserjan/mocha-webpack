@@ -110,6 +110,7 @@ export default class TestRunner {
 
     const watchOptions = config.watchOptions || {};
     compiler.watch(watchOptions, noop);
+    return new Promise(() => void 0); // never ending story
   }
 
   async createWebpackConfig(): {} {
