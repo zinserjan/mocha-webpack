@@ -45,6 +45,8 @@ Module._findPath = function _findPath(...parameters) {
 export default function registerRequireHook(dotExt: string, resolve: (path: string, parent: Module) => string): void {
   // cache source code after resolving to avoid another access to the fs
   const sourceCache = {};
+  // store all files that were affected by this hook
+  const affectedFiles = {};
 
   const resolvePath = (path, parent) => {
     // get CommonJS module source code for this require() call
@@ -68,6 +70,7 @@ export default function registerRequireHook(dotExt: string, resolve: (path: stri
   const resolveSource = (path) => {
     const source = sourceCache[path];
     delete sourceCache[path];
+    affectedFiles[path] = true;
     return source;
   };
 
@@ -93,9 +96,10 @@ export default function registerRequireHook(dotExt: string, resolve: (path: stri
   return function unmout() {
     pathResolvers = pathResolvers.filter((r) => r !== resolvePath);
     Module._extensions[dotExt] = originalLoader;
-    Object.keys(sourceCache).forEach((path) => {
+    Object.keys(affectedFiles).forEach((path) => {
       delete require.cache[path];
       delete sourceCache[path];
+      delete affectedFiles[path];
     });
   };
 }

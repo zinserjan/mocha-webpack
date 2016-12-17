@@ -1,7 +1,7 @@
 import path from 'path';
 import sourceMapSupport from 'source-map-support';
 import MemoryFileSystem from 'memory-fs';
-import registerRequireHook from '../util/registerRequireHook';
+import registerRequireHook from '../../util/registerRequireHook';
 import type { Compiler } from '../types';
 
 const noop = () => null;
