@@ -22,16 +22,17 @@ export default function registerInMemoryCompiler(compiler: Compiler): void {
   const resolveFile = (filePath, requireCaller) => {
     // try to read file from memory-fs as it is
     let code = readFile(filePath);
+    let resolvedPath = filePath;
 
     if (code === null && requireCaller != null) {
       const { filename } = requireCaller;
       if (filename != null) {
         // if that didn't work, resolve the file relative to it's parent
-        const resolvedPath = path.resolve(path.dirname(filename), filePath);
+        resolvedPath = path.resolve(path.dirname(filename), filePath);
         code = readFile(resolvedPath);
       }
     }
-    return code;
+    return { path: code !== null ? resolvedPath : null, source: code };
   };
 
   // install require hook to be able to require webpack bundles from memory

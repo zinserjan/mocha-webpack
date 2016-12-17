@@ -50,21 +50,21 @@ export default function registerRequireHook(dotExt: string, resolve: (path: stri
 
   const resolvePath = (path, parent) => {
     // get CommonJS module source code for this require() call
-    const source = resolve(path, parent);
+    const { path: resolvedPath, source } = resolve(path, parent);
 
     // if no CommonJS module source code returned - skip this require() hook
-    if (source === null) {
+    if (path === null) {
       return void 0;
     }
 
     // flush require() cache
-    delete require.cache[path];
+    delete require.cache[resolvedPath];
 
     // put the CommonJS module source code into the hash
-    sourceCache[path] = source;
+    sourceCache[resolvedPath] = source;
 
     // return the path to be require()d in order to get the CommonJS module source code
-    return path;
+    return resolvedPath;
   };
 
   const resolveSource = (path) => {
