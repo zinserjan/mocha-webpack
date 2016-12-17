@@ -99,9 +99,10 @@ Promise
     if (options.watch) {
       return mochaWebpack.watch();
     }
-    return mochaWebpack.run((failures) => {
-      exit(options.exit, failures);
-    });
+    return mochaWebpack.run();
+  })
+  .then((failures) => {
+    exit(options.exit, failures);
   })
   .catch((e) => {
     console.error(e.stack); // eslint-disable-line

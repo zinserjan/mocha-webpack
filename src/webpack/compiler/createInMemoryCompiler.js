@@ -5,6 +5,6 @@ import type { Compiler } from '../types';
 
 export default function createInMemoryCompiler(webpackConfig: {}, cb: (err: ?{}) => void): Compiler {
   const compiler: Compiler = createCompiler(webpackConfig, cb);
-  registerInMemoryCompiler(compiler);
+  compiler.mochaWebpackDispose = registerInMemoryCompiler(compiler);
   return compiler;
 }

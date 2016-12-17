@@ -21,7 +21,6 @@ export type MochaWebpackOptions = {
   delay: boolean,
 };
 
-const noop = () => void 0;
 
 export default class MochaWebpack {
 
@@ -346,11 +345,11 @@ export default class MochaWebpack {
    * Run tests
    *
    * @public
-   * @param {Function} cb callback invoked on ready
+   * @return {Promise<number>} a Promise that gets resolved with the number of failed tests or rejected with build error
    */
-  async run(cb: (failures: number) => void = noop): Promise<void> {
+  async run(): Promise<number> {
     const runner = new TestRunner(this.entries, this.includes, this.options);
-    await runner.run(cb);
+    return await runner.run();
   }
 
   /**

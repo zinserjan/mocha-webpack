@@ -6,7 +6,7 @@ import Module from 'module';
 // the module in which the require() call originated
 let requireCaller;
 // all custom registered resolvers
-const pathResolvers = [];
+let pathResolvers = [];
 
 // keep original Module._resolveFilename
 const originalResolveFilename = Module._resolveFilename;
@@ -88,5 +88,14 @@ export default function registerRequireHook(dotExt: string, resolve: (path: stri
 
     // compile javascript module from its source
     module._compile(source, filename);
+  };
+
+  return function unmout() {
+    pathResolvers = pathResolvers.filter((r) => r !== resolvePath);
+    Module._extensions[dotExt] = originalLoader;
+    Object.keys(sourceCache).forEach((path) => {
+      delete require.cache[path];
+      delete sourceCache[path];
+    });
   };
 }
