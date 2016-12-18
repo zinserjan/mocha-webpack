@@ -84,6 +84,7 @@
     "nodent-runtime": "^3.0.3",
     "normalize-path": "^2.0.1",
     "source-map-support": "^0.4.6",
+    "toposort": "^1.0.0",
     "webpack-info-plugin": "^0.1.0",
     "webpack-sources": "^0.1.1",
     "yargs": "^4.8.0"

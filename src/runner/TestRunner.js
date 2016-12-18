@@ -1,13 +1,13 @@
 import path from 'path';
 
 import WebpackInfoPlugin from 'webpack-info-plugin';
-
 import { glob } from '../util/glob';
 import createInMemoryCompiler from '../webpack/compiler/createInMemoryCompiler';
 import InjectChangedModulesPlugin from '../webpack/plugin/InjectChangedModulesPlugin';
 import { EntryConfig, KEY as ENTRY_CONFIG_KEY } from '../webpack/loader/entryLoader';
-import type { MochaWebpackOptions } from '../MochaWebpack';
 import configureMocha from './configureMocha';
+import type { MochaWebpackOptions } from '../MochaWebpack';
+import type { OutputChunks } from '../webpack/util/getOutputChunks';
 
 const entryPath = path.resolve(__dirname, '../entry.js');
 const entryLoaderPath = path.resolve(__dirname, '../webpack/loader/entryLoader.js');
@@ -15,6 +15,14 @@ const includeLoaderPath = path.resolve(__dirname, '../webpack/loader/includeFile
 
 const INJECT_CHANGED_MODULES_PLUGIN_KEY = Symbol('injectChangedModulesPlugin');
 const noop = () => void 0;
+
+
+type MochaRunner = {
+  abort: () => void,
+};
+type Mocha = {
+  run: (cb: (failures: number) => void) => MochaRunner,
+};
 
 export default class TestRunner {
 
@@ -33,19 +41,29 @@ export default class TestRunner {
     this.outputFilePath = path.join(this.tmpPath, 'bundle.js');
   }
 
+  prepareMocha(chunks: OutputChunks): Mocha {
+    const mocha: Mocha = configureMocha(this.options);
+    // clear up require cache to make sure that we get the latest changes
+    chunks.files.forEach((filePath) => {
+      delete require.cache[filePath];
+    });
+    // pass webpack's entry files to mocha
+    mocha.files = chunks.entries;
+    return mocha;
+  }
+
   async run(): Promise<number> {
     const config = await this.createWebpackConfig();
-    const mocha = configureMocha(this.options);
     let compiler;
     let failures = 0;
     try {
       failures = await new Promise((resolve, reject) => {
-        compiler = createInMemoryCompiler(config, (err) => {
+        compiler = createInMemoryCompiler(config, (err, chunks: OutputChunks) => {
           if (err) {
             reject(err);
             return;
           }
-          mocha.files = [this.outputFilePath];
+          const mocha = this.prepareMocha(chunks);
           mocha.run(resolve);
         });
 
@@ -66,14 +84,10 @@ export default class TestRunner {
 
     let runAgain = false;
     let mochaRunner = null;
+    let chunks = null;
 
     const runMocha = () => {
-      // clear up require cache to reload test bundle
-      delete require.cache[this.outputFilePath];
-
-      const mocha = configureMocha(this.options);
-      mocha.files = [this.outputFilePath];
-
+      const mocha = this.prepareMocha(chunks);
       runAgain = false;
 
       try {
@@ -94,12 +108,13 @@ export default class TestRunner {
       }
     };
 
-    const compiler = createInMemoryCompiler(config, (err) => {
+    const compiler = createInMemoryCompiler(config, (err, outputChunks: OutputChunks) => {
       if (err) {
         // wait for fixed tests
         return;
       }
 
+      chunks = outputChunks;
       runAgain = true;
       if (mochaRunner) {
         mochaRunner.abort();

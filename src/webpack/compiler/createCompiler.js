@@ -1,9 +1,19 @@
 // @flow
 import webpack from 'webpack';
 import type { Compiler } from '../types';
+import type { OutputChunks } from '../util/getOutputChunks';
+import getOutputChunks from '../util/getOutputChunks';
 
-export default function createCompiler(webpackConfig: {}, cb: (err: ?{}) => void): Compiler {
+type Config = {
+  output: {
+    path: string,
+    filename: string,
+  }
+};
+
+export default function createCompiler(webpackConfig: Config, cb: (err: ?{}, output: OutputChunks) => void): Compiler {
   const compiler = webpack(webpackConfig);
+  const outputPath = webpackConfig.output.path;
 
   // const failedModules = [];
   // const failedModulesErrors = [];
@@ -33,15 +43,16 @@ export default function createCompiler(webpackConfig: {}, cb: (err: ?{}) => void
   // });
 
   compiler.plugin('done', (stats) => {
+    const jsonStats = stats.toJson();
     if (stats.hasErrors()) {
-      const jsonStats = stats.toJson();
       const [err] = jsonStats.errors;
-      cb(err);
+      cb(err, null);
     // } else if (failedModulesErrors.length) {
     //   const [err] = failedModulesErrors;
     //   cb(err);
     } else {
-      cb();
+      const outputChunks: OutputChunks = getOutputChunks(jsonStats, outputPath);
+      cb(null, outputChunks);
     }
   });
 
