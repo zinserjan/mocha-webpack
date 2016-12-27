@@ -49,7 +49,7 @@ const buildModuleMap = (modules: Array<Module>): ModuleMap => {
  * @param modules Array<number>
  * @return ModuleUsageMap
  */
-const buildModuleUsageMap = (modules: Array<Module>): ModuleUsageMap => {
+const buildModuleUsageMap = (chunks: Array<Chunk>, modules: Array<Module>): ModuleUsageMap => {
   // build a map of all modules with their parent
   // {
   //    [childModuleId]: {
@@ -78,33 +78,37 @@ const buildModuleUsageMap = (modules: Array<Module>): ModuleUsageMap => {
   //      [moduleId]: Module
   //    }
   // }
-  //
-  const chunkModuleMap = modules.reduce((memo, module: Module) => {
+  const chunkModuleMap = chunks.reduce((memo, chunk: Chunk) => {
+    // build chunk map first to get also empty chunks (without modules)
+    memo[chunk.id] = {}; // eslint-disable-line no-param-reassign
+    return memo;
+  }, {});
+  modules.reduce((memo, module: Module) => {
     module.chunks.forEach((chunk: Chunk) => {
-      if (typeof memo[chunk.id] === 'undefined') {
-        memo[chunk.id] = {}; // eslint-disable-line no-param-reassign
-      }
       memo[chunk.id][module.id] = module; // eslint-disable-line no-param-reassign
     });
     return memo;
-  }, {});
+  }, chunkModuleMap);
 
   // detect modules with code split points (e.g. require.ensure) and enhance moduleUsageMap with that information
   modules.forEach((module) => {
-    module.blocks.forEach((block) => {
-      // loop through all generated chunks by this module
-      block.chunks.map(getId).forEach((chunkId) => {
-        // and mark all modules of this chunk as a direct dependency of the original module
-        Object
-          .values(chunkModuleMap[chunkId])
-          .forEach((childModule: Module) => {
-            if (typeof moduleUsageMap[childModule.id] === 'undefined') {
-              moduleUsageMap[childModule.id] = {}; // eslint-disable-line no-param-reassign
-            }
-            moduleUsageMap[childModule.id][module.id] = module; // eslint-disable-line no-param-reassign
-          });
+    module.blocks
+    // chunks can be invalid in in some cases
+      .filter((block) => Array.isArray(block.chunks))
+      .forEach((block) => {
+        // loop through all generated chunks by this module
+        block.chunks.map(getId).forEach((chunkId) => {
+          // and mark all modules of this chunk as a direct dependency of the original module
+          Object
+            .values(chunkModuleMap[chunkId])
+            .forEach((childModule: Module) => {
+              if (typeof moduleUsageMap[childModule.id] === 'undefined') {
+                moduleUsageMap[childModule.id] = {}; // eslint-disable-line no-param-reassign
+              }
+              moduleUsageMap[childModule.id][module.id] = module; // eslint-disable-line no-param-reassign
+            });
+        });
       });
-    });
   });
 
   return moduleUsageMap;
@@ -115,12 +119,13 @@ const buildModuleUsageMap = (modules: Array<Module>): ModuleUsageMap => {
  *  - affected directly by a file change
  *  - affected indirectly by a change of it's dependencies and so on
  *
- * @param modules
+ * @param chunks Array<Chunk>
+ * @param modules Array<Module>
  * @return {Array.<number>}
  */
-export default function getAffectedModuleIds(modules: Array<Module>): Array<number> {
+export default function getAffectedModuleIds(chunks: Array<Chunk>, modules: Array<Module>): Array<number> {
   const moduleMap: ModuleMap = buildModuleMap(modules);
-  const moduleUsageMap: ModuleUsageMap = buildModuleUsageMap(modules);
+  const moduleUsageMap: ModuleUsageMap = buildModuleUsageMap(chunks, modules);
 
   const builtModules = modules.filter(isBuilt);
   const affectedMap: ModuleMap = {};

@@ -46,7 +46,7 @@ export default class TestRunner {
     const outputPath = webpackConfig.output.path;
     const outputChunks: OutputChunks = getOutputChunks(stats.toJson(), outputPath);
     const compilation: Compilation = stats.compilation;
-    const affectedModuleIds = getAffectedModuleIds(compilation.modules);
+    const affectedModuleIds = getAffectedModuleIds(compilation.chunks, compilation.modules);
 
     global.__webpackManifest__ = affectedModuleIds; // eslint-disable-line
 
