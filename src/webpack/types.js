@@ -53,3 +53,14 @@ export type Chunk = {
   parents: Array<Chunk>,
   files: Array<string>,
 };
+
+/**
+ * webpack/lib/Stats.js
+ */
+export type Stats = {
+  compilation: Compilation,
+  toString: (options: Object) => string,
+  toJson: (options: Object) => Object,
+  hasWarnings: () => boolean,
+  hasErrors: () => boolean,
+};
