@@ -1,59 +1,114 @@
 // @flow
-import type { Module } from '../types';
+import type { Module, Chunk } from '../types';
 
-type Affected = { [key: string]: Module };
-type Cache = { [key: string]: boolean };
+type ModuleUsageMap = {
+  // child id
+  [key: string]: {
+    // parent id
+    [key: string]: Module,
+  },
+};
+type ModuleMap = { [key: string]: Module };
 
-function isBuilt(module: Module): boolean {
-  return module.built;
-}
+const isBuilt = (module: Module): boolean => module.built;
+const getId = (module: Module): number => module.id;
 
-function getId(module: Module): number {
-  return module.id;
-}
+const affectedModules = (map: ModuleMap, usageMap: ModuleUsageMap, affected: ModuleMap, moduleId: string): void => {
+  // module is identified as affected by this function call
+  const module = map[moduleId];
+  affected[module.id] = module;  // eslint-disable-line no-param-reassign
 
-
-function dependentModules(module: Module, affected: Affected = {}, cache: Cache = {}): Affected {
-  const id = getId(module);
-
-  const idStr = id.toString();
-
-  // check if module was already inspected
-  if (cache[idStr]) {
-    return affected;
+  // next we need to mark all usages aka parents also as affected
+  const usages = usageMap[module.id];
+  if (typeof usages !== 'undefined') {
+    const ids = Object.keys(usages);
+    ids.forEach((id: string) => affectedModules(map, usageMap, affected, id));
   }
-  // mark module as inspected
-  cache[idStr] = true; // eslint-disable-line no-param-reassign
+};
 
-  // if (!module.dependencies) {
-  //   return affected;
+/**
+ * Builds a map where all modules are indexed by it's id
+ * {
+ *   [moduleId]: Module
+ * }
+ */
+const buildModuleMap = (modules: Array<Module>): ModuleMap => {
+  const moduleMap = modules.reduce((memo, module: Module) => ({ ...memo, [module.id]: module }), {});
+  return moduleMap;
+};
+
+/**
+ * Builds a map with all modules that are used in other modules (child -> parent relation)
+ *
+ * {
+ *  [childModuleId]: {
+ *    [parentModuleId]: ParentModule
+ *  }
+ * }
+ *
+ * @param modules Array<number>
+ * @return ModuleUsageMap
+ */
+const buildModuleUsageMap = (modules: Array<Module>): ModuleUsageMap => {
+  // build a map of all modules with their parent
+  // {
+  //    [childModuleId]: {
+  //      [parentModuleId]: ParentModule
+  //    }
   // }
+  //
+  const moduleUsageMap: ModuleUsageMap = modules.reduce((memo, module: Module) => {
+    module.dependencies.forEach((dependency) => {
+      const dependentModule = dependency.module;
 
-  module.dependencies.forEach((dependency) => {
-    const dependentModule = dependency.module;
+      if (!dependentModule) {
+        return;
+      }
+      if (typeof memo[dependentModule.id] === 'undefined') {
+        memo[dependentModule.id] = {}; // eslint-disable-line no-param-reassign
+      }
+      memo[dependentModule.id][module.id] = module; // eslint-disable-line no-param-reassign
+    });
+    return memo;
+  }, {});
 
-    if (!dependentModule) {
-      return;
-    }
+  // build a map of all chunks with their modules
+  // {
+  //    [chunkId]: {
+  //      [moduleId]: Module
+  //    }
+  // }
+  //
+  const chunkModuleMap = modules.reduce((memo, module: Module) => {
+    module.chunks.forEach((chunk: Chunk) => {
+      if (typeof memo[chunk.id] === 'undefined') {
+        memo[chunk.id] = {}; // eslint-disable-line no-param-reassign
+      }
+      memo[chunk.id][module.id] = module; // eslint-disable-line no-param-reassign
+    });
+    return memo;
+  }, {});
 
-    const dependentModuleId = getId(dependentModule);
-    const dependentModuleIdStr = dependentModuleId.toString();
-
-    if (isBuilt(dependentModule)) {
-      // module was built, mark it as affected
-      affected[dependentModuleIdStr] = dependentModule; // eslint-disable-line no-param-reassign
-    }
-
-    // check dependencies of module for changes
-    dependentModules(dependentModule, affected, cache);
-
-    if (affected[dependentModuleIdStr]) {
-      // mark module as affected if one it's dependencies was detected as changed by recursive call
-      affected[idStr] = module; // eslint-disable-line no-param-reassign
-    }
+  // detect modules with code split points (e.g. require.ensure) and enhance moduleUsageMap with that information
+  modules.forEach((module) => {
+    module.blocks.forEach((block) => {
+      // loop through all generated chunks by this module
+      block.chunks.map(getId).forEach((chunkId) => {
+        // and mark all modules of this chunk as a direct dependency of the original module
+        Object
+          .values(chunkModuleMap[chunkId])
+          .forEach((childModule: Module) => {
+            if (typeof moduleUsageMap[childModule.id] === 'undefined') {
+              moduleUsageMap[childModule.id] = {}; // eslint-disable-line no-param-reassign
+            }
+            moduleUsageMap[childModule.id][module.id] = module; // eslint-disable-line no-param-reassign
+          });
+      });
+    });
   });
-  return affected;
-}
+
+  return moduleUsageMap;
+};
 
 /**
  * Builds a list with ids of all affected modules in the following way:
@@ -64,14 +119,12 @@ function dependentModules(module: Module, affected: Affected = {}, cache: Cache 
  * @return {Array.<number>}
  */
 export default function getAffectedModuleIds(modules: Array<Module>): Array<number> {
-  const builtModules: Array<Module> = modules.filter(isBuilt);
+  const moduleMap: ModuleMap = buildModuleMap(modules);
+  const moduleUsageMap: ModuleUsageMap = buildModuleUsageMap(modules);
 
-  const affected = builtModules.reduce((memo, module) => ({ ...memo, [module.id]: module }), {});
-  const affectedModules = Array.prototype.concat.apply(
-    builtModules,
-    builtModules.map((module: Module) => Object.values(dependentModules(module, affected)))
-  );
-  const ids: Array<number> = affectedModules.map(getId);
+  const builtModules = modules.filter(isBuilt);
+  const affectedMap: ModuleMap = {};
+  builtModules.forEach((module: Module) => affectedModules(moduleMap, moduleUsageMap, affectedMap, module.id));
 
-  return ids;
+  return Object.values(affectedMap).map(getId);
 }

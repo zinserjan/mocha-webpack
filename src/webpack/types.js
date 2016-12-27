@@ -42,3 +42,14 @@ export type Compilation = {
     },
   }
 }
+
+/**
+ * webpack/lib/Chunk.js
+ */
+export type Chunk = {
+  id: number | string,
+  modules: Array<Module>,
+  chunks: Array<Chunk>,
+  parents: Array<Chunk>,
+  files: Array<string>,
+};
