@@ -26,6 +26,16 @@ export type Module = {
   dependencies: Array<{ module: Module }>,
 };
 
+/**
+ * webpack/lib/Chunk.js
+ */
+export type Chunk = {
+  id: number | string,
+  modules: Array<Module>,
+  chunks: Array<Chunk>,
+  parents: Array<Chunk>,
+  files: Array<string>,
+};
 
 /**
  * webpack/lib/Compilation.js
@@ -34,6 +44,7 @@ export type Compilation = {
   compiler: Compiler,
   plugin: (hook: string, fn: () => void) => void,
   modules: Module[],
+  chunks: Chunk[],
   assets: {
     [key: string]: {
       size: () => number,
@@ -41,4 +52,16 @@ export type Compilation = {
       map: () => SourceMap,
     },
   }
-}
+};
+
+
+/**
+ * webpack/lib/Stats.js
+ */
+export type Stats = {
+  compilation: Compilation,
+  toString: (options: Object) => string,
+  toJson: (options: Object) => Object,
+  hasWarnings: () => boolean,
+  hasErrors: () => boolean,
+};

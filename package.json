@@ -65,6 +65,7 @@
     "eslint-plugin-import": "^1.11.0",
     "fast-async": "^6.1.2",
     "flow-bin": "^0.36.0",
+    "fs-extra": "^0.30.0",
     "mocha": "^3.0.0",
     "np": "^2.9.0",
     "nyc": "^10.0.0",
@@ -73,7 +74,6 @@
   },
   "dependencies": {
     "babel-runtime": "^6.18.0",
-    "fs-extra": "^0.30.0",
     "glob-parent": "^2.0.0",
     "globby": "^6.1.0",
     "interpret": "^1.0.1",
@@ -84,8 +84,8 @@
     "nodent-runtime": "^3.0.3",
     "normalize-path": "^2.0.1",
     "source-map-support": "^0.4.6",
+    "toposort": "^1.0.0",
     "webpack-info-plugin": "^0.1.0",
-    "webpack-sources": "^0.1.1",
     "yargs": "^4.8.0"
   },
   "nyc": {

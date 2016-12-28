@@ -1,20 +1,28 @@
 import path from 'path';
-
 import WebpackInfoPlugin from 'webpack-info-plugin';
 
 import { glob } from '../util/glob';
 import createInMemoryCompiler from '../webpack/compiler/createInMemoryCompiler';
-import InjectChangedModulesPlugin from '../webpack/plugin/InjectChangedModulesPlugin';
 import { EntryConfig, KEY as ENTRY_CONFIG_KEY } from '../webpack/loader/entryLoader';
-import type { MochaWebpackOptions } from '../MochaWebpack';
 import configureMocha from './configureMocha';
+import getBuildStats from '../webpack/util/getBuildStats';
+
+import type { MochaWebpackOptions } from '../MochaWebpack';
+import type { BuildStats } from '../webpack/util/getBuildStats';
+import type { Stats } from '../webpack/types';
 
 const entryPath = path.resolve(__dirname, '../entry.js');
 const entryLoaderPath = path.resolve(__dirname, '../webpack/loader/entryLoader.js');
 const includeLoaderPath = path.resolve(__dirname, '../webpack/loader/includeFilesLoader.js');
-
-const INJECT_CHANGED_MODULES_PLUGIN_KEY = Symbol('injectChangedModulesPlugin');
 const noop = () => void 0;
+
+
+type MochaRunner = {
+  abort: () => void,
+};
+type Mocha = {
+  run: (cb: (failures: number) => void) => MochaRunner,
+};
 
 export default class TestRunner {
 
@@ -33,19 +41,34 @@ export default class TestRunner {
     this.outputFilePath = path.join(this.tmpPath, 'bundle.js');
   }
 
+  prepareMocha(webpackConfig: Object, stats: Stats): Mocha {
+    const mocha: Mocha = configureMocha(this.options);
+    const outputPath = webpackConfig.output.path;
+    const buildStats: BuildStats = getBuildStats(stats, outputPath);
+
+    global.__webpackManifest__ = buildStats.affectedModules; // eslint-disable-line
+
+    // clear up require cache for changed files to make sure that we get the latest changes
+    buildStats.affectedFiles.forEach((filePath) => {
+      delete require.cache[filePath];
+    });
+    // pass webpack's entry files to mocha
+    mocha.files = buildStats.entries;
+    return mocha;
+  }
+
   async run(): Promise<number> {
     const config = await this.createWebpackConfig();
-    const mocha = configureMocha(this.options);
     let compiler;
     let failures = 0;
     try {
       failures = await new Promise((resolve, reject) => {
-        compiler = createInMemoryCompiler(config, (err) => {
+        compiler = createInMemoryCompiler(config, (err, stats: Stats) => {
           if (err) {
             reject(err);
             return;
           }
-          mocha.files = [this.outputFilePath];
+          const mocha = this.prepareMocha(config, stats);
           mocha.run(resolve);
         });
 
@@ -62,24 +85,17 @@ export default class TestRunner {
 
   async watch(): void {
     const config = await this.createWebpackConfig();
-    const injectChangedModulesPlugin = config[INJECT_CHANGED_MODULES_PLUGIN_KEY];
 
     let runAgain = false;
-    let mochaRunner = null;
+    let mochaRunner: MochaRunner = null;
+    let stats: Stats = null;
 
     const runMocha = () => {
-      // clear up require cache to reload test bundle
-      delete require.cache[this.outputFilePath];
-
-      const mocha = configureMocha(this.options);
-      mocha.files = [this.outputFilePath];
-
+      const mocha = this.prepareMocha(config, stats);
       runAgain = false;
 
       try {
-        mochaRunner = mocha.run((failures) => {
-          injectChangedModulesPlugin.keepChanges(failures > 0);
-
+        mochaRunner = mocha.run(() => {
           // need to wait until next tick, otherwise mochaRunner = null doesn't work..
           process.nextTick(() => {
             mochaRunner = null;
@@ -89,17 +105,17 @@ export default class TestRunner {
           });
         });
       } catch (e) {
-        injectChangedModulesPlugin.keepChanges(true);
         console.error(e.stack); // eslint-disable-line no-console
       }
     };
 
-    const compiler = createInMemoryCompiler(config, (err) => {
+    const compiler = createInMemoryCompiler(config, (err, webpackStats: Stats) => {
       if (err) {
         // wait for fixed tests
         return;
       }
 
+      stats = webpackStats;
       runAgain = true;
       if (mochaRunner) {
         mochaRunner.abort();
@@ -133,7 +149,6 @@ export default class TestRunner {
     const outputFileName = path.basename(this.outputFilePath);
     const outputPath = path.dirname(this.outputFilePath);
 
-    const injectChangedModulesPlugin = new InjectChangedModulesPlugin();
     const webpackInfoPlugin = new WebpackInfoPlugin({
       stats: {
         // pass options from http://webpack.github.io/docs/node.js-api.html#stats-tostring
@@ -157,14 +172,12 @@ export default class TestRunner {
     });
 
     const plugins = [
-      injectChangedModulesPlugin,
       webpackInfoPlugin,
     ];
 
     return {
       ...webpackConfig,
       [ENTRY_CONFIG_KEY]: entryConfig,
-      [INJECT_CHANGED_MODULES_PLUGIN_KEY]: injectChangedModulesPlugin,
       entry,
       output: {
         ...webpackConfig.output,
