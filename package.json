@@ -80,6 +80,7 @@
     "is-glob": "^2.0.1",
     "loader-utils": "^0.2.13",
     "lodash": "^4.3.0",
+    "memory-fs": "^0.4.1",
     "nodent-runtime": "^3.0.3",
     "normalize-path": "^2.0.1",
     "source-map-support": "^0.4.6",

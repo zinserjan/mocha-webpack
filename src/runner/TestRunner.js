@@ -3,7 +3,7 @@ import path from 'path';
 import WebpackInfoPlugin from 'webpack-info-plugin';
 
 import { glob } from '../util/glob';
-import createCompiler from '../webpack/compiler/createCompiler';
+import createInMemoryCompiler from '../webpack/compiler/createInMemoryCompiler';
 import InjectChangedModulesPlugin from '../webpack/plugin/InjectChangedModulesPlugin';
 import { EntryConfig, KEY as ENTRY_CONFIG_KEY } from '../webpack/loader/entryLoader';
 import type { MochaWebpackOptions } from '../MochaWebpack';
@@ -30,24 +30,34 @@ export default class TestRunner {
 
     this.options = options;
     this.tmpPath = path.join(this.options.cwd, '.tmp', 'mocha-webpack');
-    this.outputFilePath = path.join(this.tmpPath, `${Date.now()}-bundle.js`);
-    // this.outputFilePath = path.join(this.tmpPath, 'bundle.js');
+    this.outputFilePath = path.join(this.tmpPath, 'bundle.js');
   }
 
-  async run(cb: (failures: number) => void): void {
+  async run(): Promise<number> {
     const config = await this.createWebpackConfig();
     const mocha = configureMocha(this.options);
+    let compiler;
+    let failures = 0;
+    try {
+      failures = await new Promise((resolve, reject) => {
+        compiler = createInMemoryCompiler(config, (err) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          mocha.files = [this.outputFilePath];
+          mocha.run(resolve);
+        });
 
-    const compiler = createCompiler(config, (err) => {
-      if (err) {
-        cb(1);
-        return;
+        compiler.run(noop);
+      });
+    } finally {
+      // clean up single run
+      if (typeof compiler !== 'undefined' && typeof compiler.mochaWebpackDispose === 'function') {
+        compiler.mochaWebpackDispose();
       }
-      mocha.files = [this.outputFilePath];
-      mocha.run(cb);
-    });
-
-    compiler.run(noop);
+    }
+    return failures;
   }
 
   async watch(): void {
@@ -84,7 +94,7 @@ export default class TestRunner {
       }
     };
 
-    const compiler = createCompiler(config, (err) => {
+    const compiler = createInMemoryCompiler(config, (err) => {
       if (err) {
         // wait for fixed tests
         return;
@@ -100,6 +110,7 @@ export default class TestRunner {
 
     const watchOptions = config.watchOptions || {};
     compiler.watch(watchOptions, noop);
+    return new Promise(() => void 0); // never ending story
   }
 
   async createWebpackConfig(): {} {
