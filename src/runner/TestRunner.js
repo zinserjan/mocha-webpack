@@ -1,15 +1,15 @@
 import path from 'path';
-
 import WebpackInfoPlugin from 'webpack-info-plugin';
+
 import { glob } from '../util/glob';
 import createInMemoryCompiler from '../webpack/compiler/createInMemoryCompiler';
 import { EntryConfig, KEY as ENTRY_CONFIG_KEY } from '../webpack/loader/entryLoader';
 import configureMocha from './configureMocha';
+import getBuildStats from '../webpack/util/getBuildStats';
+
 import type { MochaWebpackOptions } from '../MochaWebpack';
-import getOutputChunks from '../webpack/util/getOutputChunks';
-import getAffectedModuleIds from '../webpack/util/getAffectedModuleIds';
-import type { OutputChunks } from '../webpack/util/getOutputChunks';
-import type { Compilation, Stats } from '../webpack/types';
+import type { BuildStats } from '../webpack/util/getBuildStats';
+import type { Stats } from '../webpack/types';
 
 const entryPath = path.resolve(__dirname, '../entry.js');
 const entryLoaderPath = path.resolve(__dirname, '../webpack/loader/entryLoader.js');
@@ -44,19 +44,16 @@ export default class TestRunner {
   prepareMocha(webpackConfig: Object, stats: Stats): Mocha {
     const mocha: Mocha = configureMocha(this.options);
     const outputPath = webpackConfig.output.path;
-    const outputChunks: OutputChunks = getOutputChunks(stats.toJson(), outputPath);
-    const compilation: Compilation = stats.compilation;
-    const affectedModuleIds = getAffectedModuleIds(compilation.chunks, compilation.modules);
+    const buildStats: BuildStats = getBuildStats(stats, outputPath);
 
-    global.__webpackManifest__ = affectedModuleIds; // eslint-disable-line
+    global.__webpackManifest__ = buildStats.affectedModules; // eslint-disable-line
 
-    // clear up require cache to make sure that we get the latest changes
-    outputChunks.files.forEach((filePath) => {
-      // todo only for really changed files
+    // clear up require cache for changed files to make sure that we get the latest changes
+    buildStats.affectedFiles.forEach((filePath) => {
       delete require.cache[filePath];
     });
     // pass webpack's entry files to mocha
-    mocha.files = outputChunks.entries;
+    mocha.files = buildStats.entries;
     return mocha;
   }
 
