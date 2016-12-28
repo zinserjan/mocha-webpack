@@ -87,8 +87,8 @@ export default class TestRunner {
     const config = await this.createWebpackConfig();
 
     let runAgain = false;
-    let mochaRunner = null;
-    let stats = null;
+    let mochaRunner: MochaRunner = null;
+    let stats: Stats = null;
 
     const runMocha = () => {
       const mocha = this.prepareMocha(config, stats);
@@ -109,13 +109,13 @@ export default class TestRunner {
       }
     };
 
-    const compiler = createInMemoryCompiler(config, (err, buildStats: Stats) => {
+    const compiler = createInMemoryCompiler(config, (err, webpackStats: Stats) => {
       if (err) {
         // wait for fixed tests
         return;
       }
 
-      stats = buildStats;
+      stats = webpackStats;
       runAgain = true;
       if (mochaRunner) {
         mochaRunner.abort();
