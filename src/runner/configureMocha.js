@@ -1,4 +1,5 @@
 import Mocha from 'mocha';
+import loadReporter from './loadReporter';
 import type { MochaWebpackOptions } from '../MochaWebpack';
 
 
@@ -10,7 +11,8 @@ export default function configureMocha(options: MochaWebpackOptions) {
   const mocha = new Mocha();
 
   // reporter
-  mocha.reporter(options.reporter, options.reporterOptions);
+  const reporter = loadReporter(options.reporter, options.cwd);
+  mocha.reporter(reporter, options.reporterOptions);
 
   // colors
   mocha.useColors(options.colors);
