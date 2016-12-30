@@ -105,7 +105,7 @@ describe('cli --watch', function () {
     ls.stderr.on('data', receiveData);
 
     // wait for initial test
-    waitUntil(() => data.includes('SyntaxError:'), (condition1) => {
+    waitUntil(() => data.includes('Unexpected token'), (condition1) => {
       assert.isTrue(condition1, 'expected condition1 should be true');
       assert.notInclude(data, testId);
       assert.notInclude(data, 'failing');
