@@ -6,7 +6,7 @@ import { existsFileSync } from '../util/exists';
 import parseConfig from './parseConfig';
 import requireWebpackConfig from './requireWebpackConfig';
 import { ensureGlob, extensionsToGlob } from '../util/glob';
-import MochaWebpack from '../MochaWebpack';
+import createMochaWebpack from '../createMochaWebpack';
 
 
 function resolve(mod) {
@@ -39,7 +39,7 @@ options.include = options.include.map(resolve);
 
 options.webpackConfig = requireWebpackConfig(options.webpackConfig);
 
-const mochaWebpack = new MochaWebpack();
+const mochaWebpack = createMochaWebpack();
 
 options.include.forEach((f) => mochaWebpack.addInclude(f));
 

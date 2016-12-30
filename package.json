@@ -5,6 +5,7 @@
   "bin": {
     "mocha-webpack": "./bin/mocha-webpack"
   },
+  "main": "./lib/createMochaWebpack.js",
   "files": [
     "*.md",
     "bin",
