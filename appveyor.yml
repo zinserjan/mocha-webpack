@@ -12,8 +12,6 @@ install:
   # Get the wanted version of Node
   - ps: Install-Product node $env:nodejs_version
   # Typical npm stuff.
-  - npm install -g npm@latest || (timeout 30 && npm install -g npm@latest)
-  - set PATH=%APPDATA%\npm;%PATH%
   - npm install || (timeout 30 && npm install)
 
 # test scripts
