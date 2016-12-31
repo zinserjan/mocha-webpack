@@ -4,7 +4,6 @@ build: off
 # Test against these versions of Node.js.
 environment:
   matrix:
-    - nodejs_version: "4"
     - nodejs_version: "6"
 
 # Install scripts. (runs after repo cloning)
