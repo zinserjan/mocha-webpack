@@ -1,4 +1,4 @@
-# mocha-webpack [![npm package][npm-badge]][npm]  [![Build Status][build-badge]][build] [![codecov][codecov-badge]][codecov]
+# mocha-webpack [![npm package][npm-badge]][npm]  [![Build Status Linux][build-badge]][build] [![Build Status Windows][build-badge-windows]][build-windows] [![codecov][codecov-badge]][codecov]
 
 Precompiles your server-side webpack bundles before running mocha.  Inspired by [karma-webpack] alternatives usage, but this is for Node.js!
 
@@ -206,6 +206,8 @@ MIT
 [karma-webpack]: https://github.com/webpack/karma-webpack
 [build-badge]: https://travis-ci.org/zinserjan/mocha-webpack.svg?branch=master
 [build]: https://travis-ci.org/zinserjan/mocha-webpack
+[build-badge-windows]: https://ci.appveyor.com/api/projects/status/pnik85hfqesxy7y9/branch/master?svg=true
+[build-windows]: https://ci.appveyor.com/project/zinserjan/mocha-webpack
 [npm-badge]: https://img.shields.io/npm/v/mocha-webpack.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/mocha-webpack
 [codecov-badge]:https://codecov.io/gh/zinserjan/mocha-webpack/branch/master/graph/badge.svg
