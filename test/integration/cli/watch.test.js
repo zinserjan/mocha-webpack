@@ -33,6 +33,19 @@ function createSyntaxErrorTest(fileName, testName) {
   fs.outputFileSync(path.join(fixtureDir, fileName), content);
 }
 
+function createUncaughtErrorTest(fileName, testName) {
+  const content = `
+    describe('${fileName} - ${testName}', function () {
+      it('runs test', function () {
+        setTimeout(function () {
+          done(); // done is undefined -> uncaught error
+        }, 1000);
+      });
+    });
+  `;
+  fs.outputFileSync(path.join(fixtureDir, fileName), content);
+}
+
 function createErrorFile(fileName, testName) {
   const content = `
     throw new Error('Error ${fileName} ${testName}');
@@ -162,6 +175,7 @@ describe('cli --watch', function () {
     // wait for initial test
     waitUntil(() => data.includes(`Error ${testFile}`), (condition1) => {
       assert.isTrue(condition1, 'expected condition1 should be true');
+      assert.include(data, 'An exception occurred while loading tests');
       assert.include(data, testFile);
       assert.include(data, testId);
       assert.notInclude(data, 'passing');
@@ -171,6 +185,50 @@ describe('cli --watch', function () {
       data = '';
 
       // update test
+      const updatedTestId = Date.now();
+      waitUntil(() => data.includes('passing'), (condition2) => {
+        assert.isTrue(condition2, 'expected condition2 should be true');
+
+        // check if fixed test was tested
+        assert.notInclude(data, testId);
+        assert.include(data, updatedTestId);
+        assert.include(data, '1 passing');
+
+        // kill watch process
+        ls.kill();
+        done();
+      }, 5000);
+      createTest(testFile, updatedTestId, true);
+    }, 5000);
+  });
+
+  it('should catch uncaught errors that occur after tests are done', function (done) {
+    this.timeout(10000);
+    const testFile = 'test1.js';
+    const testId = Date.now();
+    createUncaughtErrorTest(testFile, testId);
+
+    let data = '';
+    const ls = spawn('node', [binPath, '--watch', this.entryGlob]);
+    const receiveData = (d) => {
+      data += d;
+    };
+
+    ls.stdout.on('data', receiveData);
+    ls.stderr.on('data', receiveData);
+
+    // wait for initial test
+    waitUntil(() => data.includes('An uncaught exception occurred'), (condition1) => {
+      assert.isTrue(condition1, 'expected condition1 should be true');
+      assert.include(data, '1 passing');
+
+      assert.include(data, testFile);
+      assert.include(data, testId);
+
+      // reset data to receive only changes
+      data = '';
+
+      // update test to check if process is still alive
       const updatedTestId = Date.now();
       waitUntil(() => data.includes('passing'), (condition2) => {
         assert.isTrue(condition2, 'expected condition2 should be true');
