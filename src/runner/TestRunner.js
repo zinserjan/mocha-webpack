@@ -90,12 +90,26 @@ export default class TestRunner {
     let mochaRunner: MochaRunner = null;
     let stats: Stats = null;
 
+    const uncaughtExceptionListener = (err) => {
+      // mocha catches uncaughtException only while tests are running,
+      // that's why we register a custom error handler to keep this process alive
+      console.error('An uncaught exception occurred: %s', err.message); // eslint-disable-line no-console
+      console.error(err.stack); // eslint-disable-line no-console
+    };
+
     const runMocha = () => {
       const mocha = this.prepareMocha(config, stats);
       runAgain = false;
 
       try {
+        // unregister our custom exception handler (see declaration)
+        process.removeListener('uncaughtException', uncaughtExceptionListener);
+
+        // run tests
         mochaRunner = mocha.run(() => {
+          // register custom exception handler to catch all errors that may happen after mocha think tests are done
+          process.on('uncaughtException', uncaughtExceptionListener);
+
           // need to wait until next tick, otherwise mochaRunner = null doesn't work..
           process.nextTick(() => {
             mochaRunner = null;
@@ -104,8 +118,9 @@ export default class TestRunner {
             }
           });
         });
-      } catch (e) {
-        console.error(e.stack); // eslint-disable-line no-console
+      } catch (err) {
+        console.error('An exception occurred while loading tests: %s', err.message); // eslint-disable-line no-console
+        console.error(err.stack); // eslint-disable-line no-console
       }
     };
 
