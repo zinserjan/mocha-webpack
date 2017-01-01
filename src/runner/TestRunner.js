@@ -2,14 +2,16 @@ import path from 'path';
 import WebpackInfoPlugin from 'webpack-info-plugin';
 
 import { glob } from '../util/glob';
-import createInMemoryCompiler from '../webpack/compiler/createInMemoryCompiler';
+import createCompiler from '../webpack/compiler/createCompiler';
+import registerInMemoryCompiler from '../webpack/compiler/registerInMemoryCompiler';
+import registerReadyCallback from '../webpack/compiler/registerReadyCallback';
 import { EntryConfig, KEY as ENTRY_CONFIG_KEY } from '../webpack/loader/entryLoader';
 import configureMocha from './configureMocha';
 import getBuildStats from '../webpack/util/getBuildStats';
 
 import type { MochaWebpackOptions } from '../MochaWebpack';
 import type { BuildStats } from '../webpack/util/getBuildStats';
-import type { Stats } from '../webpack/types';
+import type { Compiler, Stats } from '../webpack/types';
 
 const entryPath = path.resolve(__dirname, '../entry.js');
 const entryLoaderPath = path.resolve(__dirname, '../webpack/loader/entryLoader.js');
@@ -59,11 +61,13 @@ export default class TestRunner {
 
   async run(): Promise<number> {
     const config = await this.createWebpackConfig();
-    let compiler;
+    let dispose;
     let failures = 0;
     try {
       failures = await new Promise((resolve, reject) => {
-        compiler = createInMemoryCompiler(config, (err, stats: Stats) => {
+        const compiler: Compiler = createCompiler(config);
+        dispose = registerInMemoryCompiler(compiler);
+        registerReadyCallback(compiler, (err?: Error, stats?: Stats) => {
           if (err) {
             reject(err);
             return;
@@ -71,13 +75,12 @@ export default class TestRunner {
           const mocha = this.prepareMocha(config, stats);
           mocha.run(resolve);
         });
-
         compiler.run(noop);
       });
     } finally {
       // clean up single run
-      if (typeof compiler !== 'undefined' && typeof compiler.mochaWebpackDispose === 'function') {
-        compiler.mochaWebpackDispose();
+      if (typeof dispose === 'function') {
+        dispose();
       }
     }
     return failures;
@@ -124,7 +127,9 @@ export default class TestRunner {
       }
     };
 
-    const compiler = createInMemoryCompiler(config, (err, webpackStats: Stats) => {
+    const compiler = createCompiler(config);
+    registerInMemoryCompiler(compiler);
+    registerReadyCallback(compiler, (err?: Error, webpackStats?: Stats) => {
       if (err) {
         // wait for fixed tests
         return;
