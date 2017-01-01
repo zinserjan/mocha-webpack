@@ -45,23 +45,35 @@ const createLongRunningTest = (fileName, testName) => {
     var assert = require('assert');
     describe('${fileName} - ${testName} - 1', function () {      
       it('runs test 1' , function (done) {
-        this.timeout(2000);
+        this.timeout(3000);
         console.log('starting ${testName} - 1');
         setTimeout(function() {
           console.log('finished ${testName} - 1');
           done();
-        }, 1000);
+        }, 2000);
       });
     });
     
     describe('${fileName} - ${testName}', function () {
       it('runs test 2' , function (done) {
-        this.timeout(2000);
+        this.timeout(3000);
         console.log('starting ${testName} - 2');
         setTimeout(function() {
           console.log('finished ${testName} - 2');
           done();
-        }, 1000);
+        }, 2000);
+      });
+    });
+  `;
+  fs.outputFileSync(path.join(fixtureDir, fileName), content);
+};
+
+const createNeverEndingTest = (fileName, testName) => {
+  const content = `
+    var assert = require('assert');
+    describe('${fileName} - ${testName} - 1', function () {      
+      it('runs test 1' , function (done) {
+        console.log('starting ${testName}');
       });
     });
   `;
@@ -204,7 +216,6 @@ describe('cli --watch', function () {
     }, 5000);
   });
 
-
   it('should run a test again when it changes', function (done) {
     this.timeout(15000);
     const testFile = 'test1.js';
@@ -298,7 +309,7 @@ describe('cli --watch', function () {
     }, 5000);
   });
 
-  it('should abort tests after current test suite when a file changes while running tests and then test again', function (done) {
+  it('should abort tests suite when a file changes while running tests and then test again', function (done) {
     this.timeout(15000);
     const testFile = 'test1.js';
     const testId = Date.now();
@@ -331,7 +342,8 @@ describe('cli --watch', function () {
 
         // check if tests were aborted
         assert.notInclude(data, `finished ${testId} - 2`);
-        assert.include(data, '1 passing', 'test suite should abort after first');
+        assert.include(data, '0 passing', 'test suite should abort current async test');
+        assert.include(data, '1 failing', 'test suite should mark async test as failed');
 
         // check if updated test was tested again
         assert.include(data, `starting ${updatedTestId} - 1`);
@@ -347,6 +359,54 @@ describe('cli --watch', function () {
       createLongRunningTest(testFile, updatedTestId);
     }, 6000);
   });
+
+  it('should also abort tests that will never finish (e.g. by mistake) when timeouts are disabled and run tests again', function (done) {
+    this.timeout(15000);
+    const testFile = 'test1.js';
+    const testId = Date.now();
+    createNeverEndingTest(testFile, testId);
+
+    let data = '';
+    const ls = spawn('node', [binPath, '--timeout', 0, '--watch', this.entryGlob]);
+    const receiveData = (d) => {
+      data += d;
+    };
+
+    ls.stdout.on('data', receiveData);
+    ls.stderr.on('data', receiveData);
+
+    // wait for initial test
+    waitUntil(() => data.includes(`starting ${testId}`), (condition1) => {
+      assert.isTrue(condition1, 'expected condition1 should be true');
+      assert.include(data, testId);
+      assert.include(data, `starting ${testId}`);
+      assert.notInclude(data, 'passing');
+      assert.notInclude(data, 'failing');
+
+      // reset data to receive only changes
+      data = '';
+
+      // update test
+      const updatedTestId = Date.now();
+      waitUntil(() => data.includes('1 passing'), (condition2) => {
+        assert.isTrue(condition2, 'expected condition2 should be true');
+
+        // check if tests were aborted
+        assert.include(data, '0 passing', 'test suite should abort current async test');
+        assert.include(data, '1 failing', 'test suite should mark async test as failed');
+
+        // check if updated test was tested again
+        assert.include(data, updatedTestId);
+        assert.include(data, '1 passing');
+
+        // kill watch process
+        ls.kill();
+        done();
+      }, 4000);
+      createTest(testFile, updatedTestId, true);
+    }, 4000);
+  });
+
 
   afterEach(function () {
     return del(this.testGlob);

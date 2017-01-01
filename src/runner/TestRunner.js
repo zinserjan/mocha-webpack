@@ -119,6 +119,13 @@ export default class TestRunner {
       runAgain = true;
       if (mochaRunner) {
         mochaRunner.abort();
+        // make sure that the current running test will be aborted when timeouts are disabled for async tests
+        if (mochaRunner.currentRunnable) {
+          mochaRunner.currentRunnable.retries(0);
+          mochaRunner.currentRunnable.enableTimeouts(true);
+          mochaRunner.currentRunnable.timeout(1);
+          mochaRunner.currentRunnable.resetTimeout(1);
+        }
       } else {
         runMocha();
       }
