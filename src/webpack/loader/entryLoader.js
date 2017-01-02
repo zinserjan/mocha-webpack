@@ -16,9 +16,9 @@ class EntryConfig {
     this.files.push(file);
   }
 
-  // removeFile(file: string): void {
-  //   this.files = this.files.filter((f) => f !== file);
-  // }
+  removeFile(file: string): void {
+    this.files = this.files.filter((f) => f !== file);
+  }
 
   getFiles(): Array<string> {
     return this.files;

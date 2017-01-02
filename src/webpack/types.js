@@ -14,6 +14,9 @@ export type Compiler = {
   run: (cb: () => void) => void,
   watch: (watchOptions: {}, cb: () => void) => void,
   outputFileSystem: any,
+  watchFileSystem: any,
+  fileTimestamps: {},
+  contextTimestamps: {},
 }
 
 /**
