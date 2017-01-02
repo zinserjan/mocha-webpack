@@ -65,12 +65,11 @@ export default class TestRunner {
 
   async run(): Promise<number> {
     const config = await this.createWebpackConfig();
-    let dispose;
     let failures = 0;
+    const compiler: Compiler = createCompiler(config);
+    const dispose = registerInMemoryCompiler(compiler);
     try {
       failures = await new Promise((resolve, reject) => {
-        const compiler: Compiler = createCompiler(config);
-        dispose = registerInMemoryCompiler(compiler);
         registerReadyCallback(compiler, (err?: Error, stats?: Stats) => {
           if (err) {
             reject(err);
@@ -83,9 +82,7 @@ export default class TestRunner {
       });
     } finally {
       // clean up single run
-      if (typeof dispose === 'function') {
-        dispose();
-      }
+      dispose();
     }
     return failures;
   }
