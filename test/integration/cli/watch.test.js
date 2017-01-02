@@ -10,6 +10,10 @@ import fs from 'fs-extra';
 const fixtureDir = path.join(process.cwd(), '.tmp/fixture');
 const binPath = path.relative(process.cwd(), path.join('bin', '_mocha'));
 
+const deleteTest = (fileName) => {
+  fs.unlinkSync(path.join(fixtureDir, fileName));
+};
+
 const createTest = (fileName, testName, passing) => {
   const content = `
     var assert = require('assert');
@@ -465,6 +469,161 @@ describe('cli --watch', function () {
     }, 4000);
   });
 
+  it('should recognize new test entries that match the pattern', function (done) {
+    this.timeout(15000);
+    const testFile1 = 'test1.js';
+    const testId1 = Date.now() + 1;
+    createTest(testFile1, testId1, true);
+
+    let data = '';
+    const ls = spawn('node', [binPath, '--watch', this.entryGlob]);
+    const receiveData = (d) => {
+      data += d;
+    };
+
+    ls.stdout.on('data', receiveData);
+    ls.stderr.on('data', receiveData);
+
+    // wait for initial test
+    waitUntil(() => data.includes(testId1), (condition1) => {
+      assert.isTrue(condition1, 'expected condition1 should be true');
+      assert.include(data, testId1);
+      assert.include(data, testFile1);
+      assert.include(data, '1 passing');
+
+      // reset data to receive only changes
+      data = '';
+
+      // create new test
+      const testFile2 = 'test2.js';
+      const testId2 = Date.now() + 2;
+      waitUntil(() => data.includes(testId2), (condition2) => {
+        assert.isTrue(condition2, 'expected condition2 should be true');
+        // check if updated test was tested again
+        assert.include(data, testId2);
+        assert.include(data, testFile2);
+        assert.include(data, '1 passing');
+
+        // check if just already tested test wasn't tested again
+        assert.notInclude(data, testFile1);
+        assert.notInclude(data, testId1);
+
+        // kill watch process
+        ls.kill();
+        done();
+      }, 5000);
+      createTest(testFile2, testId2, true);
+    }, 5000);
+  });
+
+  it('should recognize multiple new test entries that match the pattern', function (done) {
+    this.timeout(15000);
+    const testFile1 = 'test1.js';
+    const testId1 = Date.now() + 1;
+    createTest(testFile1, testId1, true);
+
+    let data = '';
+    const ls = spawn('node', [binPath, '--watch', this.entryGlob]);
+    const receiveData = (d) => {
+      data += d;
+    };
+
+    ls.stdout.on('data', receiveData);
+    ls.stderr.on('data', receiveData);
+
+    // wait for initial test
+    waitUntil(() => data.includes(testId1), (condition1) => {
+      assert.isTrue(condition1, 'expected condition1 should be true');
+      assert.include(data, testId1);
+      assert.include(data, testFile1);
+      assert.include(data, '1 passing');
+
+      // reset data to receive only changes
+      data = '';
+
+      // create new test
+      const testFile2 = 'test2.js';
+      const testId2 = Date.now() + 2;
+      const testFile3 = 'test3.js';
+      const testId3 = Date.now() + 3;
+      waitUntil(() => data.includes('2 passing'), (condition2) => {
+        assert.isTrue(condition2, 'expected condition2 should be true');
+        // check if updated test was tested again
+        assert.include(data, testFile2);
+        assert.include(data, testId2);
+        assert.include(data, testFile3);
+        assert.include(data, testId3);
+
+        assert.include(data, '2 passing');
+
+        // check if just the created tests were tested
+        assert.notInclude(data, '1 passing');
+        assert.notInclude(data, testFile1);
+        assert.notInclude(data, testId1);
+
+        // kill watch process
+        ls.kill();
+        done();
+      }, 5000);
+      createTest(testFile2, testId2, true);
+      createTest(testFile3, testId3, true);
+    }, 5000);
+  });
+
+  it('should recognize deleted test entries that match the pattern', function (done) {
+    this.timeout(15000);
+    const testFile1 = 'test1.js';
+    const testFile2 = 'test2.js';
+    const testId1 = Date.now() + 1;
+    const testId2 = Date.now() + 2;
+    createTest(testFile1, testId1, true);
+    createTest(testFile2, testId2, true);
+
+    // delay this until https://github.com/webpack/watchpack/releases/tag/v1.2.0 gets also into webpack 1
+    // watch events fires for files created before starting watcher...
+    setTimeout(() => {
+      let data = '';
+      const ls = spawn('node', [binPath, '--watch', this.entryGlob]);
+      const receiveData = (d) => {
+        data += d;
+      };
+
+      ls.stdout.on('data', receiveData);
+      ls.stderr.on('data', receiveData);
+
+      // wait for initial test
+      waitUntil(() => data.includes('2 passing'), (condition1) => {
+        assert.isTrue(condition1, 'expected condition1 should be true');
+        assert.include(data, '2 passing');
+        assert.include(data, testId1);
+        assert.include(data, testFile1);
+        assert.include(data, testId2);
+        assert.include(data, testFile2);
+
+        // reset data to receive only changes
+        data = '';
+
+        // delete new test
+        waitUntil(() => data.includes('0 passing'), (condition2) => {
+          assert.isTrue(condition2, 'expected condition2 should be true');
+          assert.include(data, '0 passing');
+
+          // check if nothing happens (no changed test)
+          assert.notInclude(data, testId1);
+          assert.notInclude(data, testFile1);
+          assert.notInclude(data, testId2);
+          assert.notInclude(data, testFile2);
+
+          // kill watch process
+          ls.kill();
+          done();
+        }, 5000);
+        setTimeout(() => {
+          deleteTest(testFile2);
+        }, 1000);
+      }, 5000);
+    }, 1000);
+  });
 
   afterEach(function () {
     return del(this.testGlob);

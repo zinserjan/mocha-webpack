@@ -1,15 +1,21 @@
 import path from 'path';
+import _ from 'lodash';
+import chokidar from 'chokidar';
 import WebpackInfoPlugin from 'webpack-info-plugin';
 
 import { glob } from '../util/glob';
-import createInMemoryCompiler from '../webpack/compiler/createInMemoryCompiler';
+import createCompiler from '../webpack/compiler/createCompiler';
+import createWatchCompiler from '../webpack/compiler/createWatchCompiler';
+import registerInMemoryCompiler from '../webpack/compiler/registerInMemoryCompiler';
+import registerReadyCallback from '../webpack/compiler/registerReadyCallback';
 import { EntryConfig, KEY as ENTRY_CONFIG_KEY } from '../webpack/loader/entryLoader';
 import configureMocha from './configureMocha';
 import getBuildStats from '../webpack/util/getBuildStats';
 
 import type { MochaWebpackOptions } from '../MochaWebpack';
 import type { BuildStats } from '../webpack/util/getBuildStats';
-import type { Stats } from '../webpack/types';
+import type { WatchCompiler } from '../webpack/compiler/createWatchCompiler';
+import type { Compiler, Stats } from '../webpack/types';
 
 const entryPath = path.resolve(__dirname, '../entry.js');
 const entryLoaderPath = path.resolve(__dirname, '../webpack/loader/entryLoader.js');
@@ -59,11 +65,12 @@ export default class TestRunner {
 
   async run(): Promise<number> {
     const config = await this.createWebpackConfig();
-    let compiler;
     let failures = 0;
+    const compiler: Compiler = createCompiler(config);
+    const dispose = registerInMemoryCompiler(compiler);
     try {
       failures = await new Promise((resolve, reject) => {
-        compiler = createInMemoryCompiler(config, (err, stats: Stats) => {
+        registerReadyCallback(compiler, (err?: Error, stats?: Stats) => {
           if (err) {
             reject(err);
             return;
@@ -71,20 +78,18 @@ export default class TestRunner {
           const mocha = this.prepareMocha(config, stats);
           mocha.run(resolve);
         });
-
         compiler.run(noop);
       });
     } finally {
       // clean up single run
-      if (typeof compiler !== 'undefined' && typeof compiler.mochaWebpackDispose === 'function') {
-        compiler.mochaWebpackDispose();
-      }
+      dispose();
     }
     return failures;
   }
 
   async watch(): void {
     const config = await this.createWebpackConfig();
+    const entryConfig: EntryConfig = config[ENTRY_CONFIG_KEY];
 
     let runAgain = false;
     let mochaRunner: MochaRunner = null;
@@ -124,7 +129,9 @@ export default class TestRunner {
       }
     };
 
-    const compiler = createInMemoryCompiler(config, (err, webpackStats: Stats) => {
+    const compiler = createCompiler(config);
+    registerInMemoryCompiler(compiler);
+    registerReadyCallback(compiler, (err?: Error, webpackStats?: Stats) => {
       if (err) {
         // wait for fixed tests
         return;
@@ -146,8 +153,44 @@ export default class TestRunner {
       }
     });
 
-    const watchOptions = config.watchOptions || {};
-    compiler.watch(watchOptions, noop);
+    const watchCompiler: WatchCompiler = createWatchCompiler(compiler, config.watchOptions);
+    // start webpack build immediately
+    watchCompiler.watch();
+
+    // webpack enhances watch options, that's why we use them instead
+    const watchOptions = watchCompiler.getWatchOptions();
+    // create own file watcher for entry files to detect created or deleted files
+    const watcher = chokidar.watch(this.entries, {
+      cwd: this.options.cwd,
+      // see https://github.com/webpack/watchpack/blob/e5305b53ac3cf2a70d49a772912b115fa77665c2/lib/DirectoryWatcher.js
+      ignoreInitial: true,
+      persistent: true,
+      followSymlinks: false,
+      ignorePermissionErrors: true,
+      ignored: watchOptions.ignored,
+      usePolling: watchOptions.poll ? true : undefined,
+      interval: typeof watchOptions.poll === 'number' ? watchOptions.poll : undefined,
+    });
+
+    const restartWebpackBuild = _.debounce(() => watchCompiler.watch(), watchOptions.aggregateTimeout);
+    const fileDeletedOrAdded = (file, deleted) => {
+      const filePath = path.join(this.options.cwd, file);
+      if (deleted) {
+        entryConfig.removeFile(filePath);
+      } else {
+        entryConfig.addFile(filePath);
+      }
+
+      // pause webpack watch immediately before webpack will be notified
+      watchCompiler.pause();
+      // call debounced webpack runner to rebuild files
+      restartWebpackBuild();
+    };
+
+    // add listener for entry creation & deletion events
+    watcher.on('add', file => fileDeletedOrAdded(file, false));
+    watcher.on('unlink', file => fileDeletedOrAdded(file, true));
+
     return new Promise(() => void 0); // never ending story
   }
 
