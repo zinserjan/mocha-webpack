@@ -91,9 +91,9 @@ export default class TestRunner {
     const config = await this.createWebpackConfig();
     const entryConfig: EntryConfig = config[ENTRY_CONFIG_KEY];
 
-    let runAgain = false;
     let mochaRunner: MochaRunner = null;
     let stats: Stats = null;
+    let compilationScheduler: () => void = null;
 
     const uncaughtExceptionListener = (err) => {
       // mocha catches uncaughtException only while tests are running,
@@ -104,7 +104,6 @@ export default class TestRunner {
 
     const runMocha = () => {
       const mocha = this.prepareMocha(config, stats);
-      runAgain = false;
 
       try {
         // unregister our custom exception handler (see declaration)
@@ -118,8 +117,9 @@ export default class TestRunner {
           // need to wait until next tick, otherwise mochaRunner = null doesn't work..
           process.nextTick(() => {
             mochaRunner = null;
-            if (runAgain) {
-              runMocha();
+            if (compilationScheduler !== null) {
+              compilationScheduler();
+              compilationScheduler = null;
             }
           });
         });
@@ -131,15 +131,14 @@ export default class TestRunner {
 
     const compiler = createCompiler(config);
     registerInMemoryCompiler(compiler);
-    registerReadyCallback(compiler, (err?: Error, webpackStats?: Stats) => {
-      if (err) {
-        // wait for fixed tests
-        return;
-      }
-
-      stats = webpackStats;
-      runAgain = true;
+    // register webpack start callback
+    compiler.plugin('watch-run', (w, cb) => {
+      // check if mocha tests are still running, abort them and start compiling
       if (mochaRunner) {
+        compilationScheduler = () => {
+          cb();
+        };
+
         mochaRunner.abort();
         // make sure that the current running test will be aborted when timeouts are disabled for async tests
         if (mochaRunner.currentRunnable) {
@@ -149,8 +148,17 @@ export default class TestRunner {
           mochaRunner.currentRunnable.resetTimeout(1);
         }
       } else {
-        runMocha();
+        cb();
       }
+    });
+    // register webpack ready callback
+    registerReadyCallback(compiler, (err?: Error, webpackStats?: Stats) => {
+      if (err) {
+        // wait for fixed tests
+        return;
+      }
+      stats = webpackStats;
+      runMocha();
     });
 
     const watchCompiler: WatchCompiler = createWatchCompiler(compiler, config.watchOptions);
