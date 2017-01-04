@@ -11,6 +11,7 @@ import registerReadyCallback from '../webpack/compiler/registerReadyCallback';
 import { EntryConfig, KEY as ENTRY_CONFIG_KEY } from '../webpack/loader/entryLoader';
 import configureMocha from './configureMocha';
 import getBuildStats from '../webpack/util/getBuildStats';
+import buildProgressPlugin from '../webpack/plugin/buildProgressPlugin';
 
 import type { MochaWebpackOptions } from '../MochaWebpack';
 import type { BuildStats } from '../webpack/util/getBuildStats';
@@ -38,10 +39,11 @@ export default class TestRunner extends EventEmitter {
   options: MochaWebpackOptions;
   outputFilePath: string;
 
-  constructor(entries: Array<string>, includes: Array<String>, options: MochaWebpackOptions) {
+  constructor(entries: Array<string>, includes: Array<String>, options: MochaWebpackOptions, interactive: boolean) {
     super();
     this.entries = entries;
     this.includes = includes;
+    this.interactive = interactive;
 
     this.options = options;
     this.tmpPath = path.join(this.options.cwd, '.tmp', 'mocha-webpack');
@@ -248,6 +250,10 @@ export default class TestRunner extends EventEmitter {
     const outputPath = path.dirname(this.outputFilePath);
 
     const plugins = [];
+
+    if (this.interactive) {
+      plugins.push(buildProgressPlugin());
+    }
 
     return {
       ...webpackConfig,

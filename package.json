@@ -86,6 +86,7 @@
     "memory-fs": "^0.4.1",
     "nodent-runtime": "^3.0.3",
     "normalize-path": "^2.0.1",
+    "progress": "^1.1.8",
     "source-map-support": "^0.4.6",
     "toposort": "^1.0.0",
     "yargs": "^4.8.0"

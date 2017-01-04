@@ -350,7 +350,7 @@ export default class MochaWebpack {
    * @return {Promise<number>} a Promise that gets resolved with the number of failed tests or rejected with build error
    */
   async run(): Promise<number> {
-    const runner = new TestRunner(this.entries, this.includes, this.options);
+    const runner = new TestRunner(this.entries, this.includes, this.options, interactive);
     testRunnerReporter({
       eventEmitter: runner,
       interactive,
@@ -363,7 +363,7 @@ export default class MochaWebpack {
    * @public
    */
   async watch(): Promise<void> {
-    const runner = new TestRunner(this.entries, this.includes, this.options);
+    const runner = new TestRunner(this.entries, this.includes, this.options, interactive);
     testRunnerReporter({
       eventEmitter: runner,
       interactive,

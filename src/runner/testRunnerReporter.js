@@ -13,6 +13,7 @@ class Reporter {
 
   added: Array<string>;
   removed: Array<string>;
+  interactive: boolean;
 
   constructor(options: ReporterOptions) {
     const { eventEmitter, interactive } = options;
