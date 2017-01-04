@@ -64,7 +64,12 @@ export type Compilation = {
 export type Stats = {
   compilation: Compilation,
   toString: (options: Object) => string,
-  toJson: (options: Object) => Object,
+  toJson: (options: Object) => {
+    startTime: number,
+    endTime: number,
+    errors: Array<Error>,
+    warnings: Array<Error>,
+  },
   hasWarnings: () => boolean,
   hasErrors: () => boolean,
 };

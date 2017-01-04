@@ -1,7 +1,7 @@
 import path from 'path';
+import { EventEmitter } from 'events';
 import _ from 'lodash';
 import chokidar from 'chokidar';
-import WebpackInfoPlugin from 'webpack-info-plugin';
 
 import { glob } from '../util/glob';
 import createCompiler from '../webpack/compiler/createCompiler';
@@ -30,7 +30,7 @@ type Mocha = {
   run: (cb: (failures: number) => void) => MochaRunner,
 };
 
-export default class TestRunner {
+export default class TestRunner extends EventEmitter {
 
   entries: Array<string>;
   includes: Array<string>;
@@ -39,6 +39,7 @@ export default class TestRunner {
   outputFilePath: string;
 
   constructor(entries: Array<string>, includes: Array<String>, options: MochaWebpackOptions) {
+    super();
     this.entries = entries;
     this.includes = includes;
 
@@ -67,16 +68,33 @@ export default class TestRunner {
     const config = await this.createWebpackConfig();
     let failures = 0;
     const compiler: Compiler = createCompiler(config);
+
+    compiler.plugin('run', (c, cb) => {
+      this.emit('webpack:start');
+      cb();
+    });
+
     const dispose = registerInMemoryCompiler(compiler);
     try {
       failures = await new Promise((resolve, reject) => {
-        registerReadyCallback(compiler, (err?: Error, stats?: Stats) => {
+        registerReadyCallback(compiler, (err?: Error, webpackStats?: Stats) => {
+          this.emit('webpack:ready', err, webpackStats);
           if (err) {
-            reject(err);
+            reject();
             return;
           }
-          const mocha = this.prepareMocha(config, stats);
-          mocha.run(resolve);
+          const mocha = this.prepareMocha(config, webpackStats);
+          this.emit('mocha:begin');
+          try {
+            mocha.run((fails) => {
+              this.emit('mocha:finished', fails);
+              resolve(fails);
+            });
+          } catch (e) {
+            this.emit('exception', e);
+            failures = 0;
+            resolve(1);
+          }
         });
         compiler.run(noop);
       });
@@ -98,8 +116,7 @@ export default class TestRunner {
     const uncaughtExceptionListener = (err) => {
       // mocha catches uncaughtException only while tests are running,
       // that's why we register a custom error handler to keep this process alive
-      console.error('An uncaught exception occurred: %s', err.message); // eslint-disable-line no-console
-      console.error(err.stack); // eslint-disable-line no-console
+      this.emit('uncaughtException', err);
     };
 
     const runMocha = () => {
@@ -110,7 +127,8 @@ export default class TestRunner {
         process.removeListener('uncaughtException', uncaughtExceptionListener);
 
         // run tests
-        mochaRunner = mocha.run(_.once(() => {
+        this.emit('mocha:begin');
+        mochaRunner = mocha.run(_.once((failures) => {
           // register custom exception handler to catch all errors that may happen after mocha think tests are done
           process.on('uncaughtException', uncaughtExceptionListener);
 
@@ -118,14 +136,16 @@ export default class TestRunner {
           process.nextTick(() => {
             mochaRunner = null;
             if (compilationScheduler !== null) {
+              this.emit('mocha:aborted');
               compilationScheduler();
               compilationScheduler = null;
+            } else {
+              this.emit('mocha:finished', failures);
             }
           });
         }));
       } catch (err) {
-        console.error('An exception occurred while loading tests: %s', err.message); // eslint-disable-line no-console
-        console.error(err.stack); // eslint-disable-line no-console
+        this.emit('exception', err);
       }
     };
 
@@ -136,6 +156,7 @@ export default class TestRunner {
       // check if mocha tests are still running, abort them and start compiling
       if (mochaRunner) {
         compilationScheduler = () => {
+          this.emit('webpack:start');
           cb();
         };
 
@@ -148,11 +169,13 @@ export default class TestRunner {
           mochaRunner.currentRunnable.resetTimeout(1);
         }
       } else {
+        this.emit('webpack:start');
         cb();
       }
     });
     // register webpack ready callback
     registerReadyCallback(compiler, (err?: Error, webpackStats?: Stats) => {
+      this.emit('webpack:ready', err, webpackStats);
       if (err) {
         // wait for fixed tests
         return;
@@ -184,8 +207,10 @@ export default class TestRunner {
     const fileDeletedOrAdded = (file, deleted) => {
       const filePath = path.join(this.options.cwd, file);
       if (deleted) {
+        this.emit('entry:removed', file);
         entryConfig.removeFile(filePath);
       } else {
+        this.emit('entry:added', file);
         entryConfig.addFile(filePath);
       }
 
@@ -222,31 +247,7 @@ export default class TestRunner {
     const outputFileName = path.basename(this.outputFilePath);
     const outputPath = path.dirname(this.outputFilePath);
 
-    const webpackInfoPlugin = new WebpackInfoPlugin({
-      stats: {
-        // pass options from http://webpack.github.io/docs/node.js-api.html#stats-tostring
-        // context: false,
-        hash: false,
-        version: false,
-        timings: false,
-        assets: false,
-        chunks: false,
-        chunkModules: false,
-        modules: false,
-        children: false,
-        cached: false,
-        reasons: false,
-        source: false,
-        errorDetails: true,
-        chunkOrigins: false,
-        colors: this.options.colors,
-      },
-      state: false, // show bundle valid / invalid
-    });
-
-    const plugins = [
-      webpackInfoPlugin,
-    ];
+    const plugins = [];
 
     return {
       ...webpackConfig,
@@ -263,5 +264,4 @@ export default class TestRunner {
       ],
     };
   }
-
 }

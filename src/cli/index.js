@@ -105,6 +105,8 @@ Promise
     exit(options.exit, failures);
   })
   .catch((e) => {
-    console.error(e.stack); // eslint-disable-line
+    if (e) {
+      console.error(e.stack); // eslint-disable-line
+    }
     exit(options.exit, 1);
   });

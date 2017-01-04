@@ -1,4 +1,5 @@
 import TestRunner from './runner/TestRunner';
+import testRunnerReporter from './runner/testRunnerReporter';
 
 export type MochaWebpackOptions = {
   cwd: string,
@@ -349,6 +350,9 @@ export default class MochaWebpack {
    */
   async run(): Promise<number> {
     const runner = new TestRunner(this.entries, this.includes, this.options);
+    testRunnerReporter({
+      eventEmitter: runner,
+    });
     return await runner.run();
   }
 
@@ -358,6 +362,9 @@ export default class MochaWebpack {
    */
   async watch(): Promise<void> {
     const runner = new TestRunner(this.entries, this.includes, this.options);
+    testRunnerReporter({
+      eventEmitter: runner,
+    });
     await runner.watch();
   }
 }
