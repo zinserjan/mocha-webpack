@@ -39,11 +39,10 @@ export default class TestRunner extends EventEmitter {
   options: MochaWebpackOptions;
   outputFilePath: string;
 
-  constructor(entries: Array<string>, includes: Array<String>, options: MochaWebpackOptions, interactive: boolean) {
+  constructor(entries: Array<string>, includes: Array<String>, options: MochaWebpackOptions) {
     super();
     this.entries = entries;
     this.includes = includes;
-    this.interactive = interactive;
 
     this.options = options;
     this.tmpPath = path.join(this.options.cwd, '.tmp', 'mocha-webpack');
@@ -251,7 +250,7 @@ export default class TestRunner extends EventEmitter {
 
     const plugins = [];
 
-    if (this.interactive) {
+    if (this.options.interactive) {
       plugins.push(buildProgressPlugin());
     }
 

@@ -20,6 +20,12 @@ const options = {
     describe: 'force enabling of colors',
     group: OUTPUT_GROUP,
   },
+  interactive: {
+    type: 'boolean',
+    default: !!(process.stdout.isTTY),
+    describe: 'force interactive mode (default enabled in terminal)',
+    group: OUTPUT_GROUP,
+  },
   growl: {
     alias: 'G',
     type: 'boolean',

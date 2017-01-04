@@ -30,6 +30,7 @@ describe('MochaWebpack', function () {
       slow: 75,
       asyncOnly: false,
       delay: false,
+      interactive: !!(process.stdout.isTTY),
     };
     assert.deepEqual(mochaWebpack.options, expected);
   });
@@ -261,6 +262,18 @@ describe('MochaWebpack', function () {
 
       assert.propertyVal(this.mochaWebpack.options, 'delay', true, 'delay should be changed');
       assert.notStrictEqual(this.mochaWebpack.options, oldOptions, 'delay() should not mutate');
+      assert.strictEqual(returnValue, this.mochaWebpack, 'api should be chainable');
+    });
+
+    it('interactive()', function () {
+      const oldOptions = this.mochaWebpack.options;
+      const oldValue = oldOptions.interactive;
+      const newValue = !oldValue;
+
+      const returnValue = this.mochaWebpack.interactive(newValue);
+
+      assert.propertyVal(this.mochaWebpack.options, 'interactive', newValue, 'interactive should be changed');
+      assert.notStrictEqual(this.mochaWebpack.options, oldOptions, 'interactive() should not mutate');
       assert.strictEqual(returnValue, this.mochaWebpack, 'api should be chainable');
     });
   });

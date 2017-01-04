@@ -54,6 +54,7 @@ mochaWebpack.webpackConfig(options.webpackConfig);
 mochaWebpack.bail(options.bail);
 mochaWebpack.reporter(options.reporter, options.reporterOptions);
 mochaWebpack.ui(options.ui);
+mochaWebpack.interactive(options.interactive);
 
 if (options.fgrep) {
   mochaWebpack.fgrep(options.fgrep);

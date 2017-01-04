@@ -20,9 +20,8 @@ export type MochaWebpackOptions = {
   slow: number,
   asyncOnly: boolean,
   delay: boolean,
+  interactive: boolean
 };
-
-const interactive = !!process.stdout.isTTY;
 
 export default class MochaWebpack {
 
@@ -58,6 +57,7 @@ export default class MochaWebpack {
     slow: 75,
     asyncOnly: false,
     delay: false,
+    interactive: !!(process.stdout.isTTY),
   };
 
   /**
@@ -344,16 +344,31 @@ export default class MochaWebpack {
   }
 
   /**
+   * Force interactive mode (default enabled in terminal)
+   *
+   * @public
+   * @param {boolean} interactive
+   * @return {MochaWebpack}
+   */
+  interactive(interactive: boolean): MochaWebpack {
+    this.options = {
+      ...this.options,
+      interactive,
+    };
+    return this;
+  }
+
+  /**
    * Run tests
    *
    * @public
    * @return {Promise<number>} a Promise that gets resolved with the number of failed tests or rejected with build error
    */
   async run(): Promise<number> {
-    const runner = new TestRunner(this.entries, this.includes, this.options, interactive);
+    const runner = new TestRunner(this.entries, this.includes, this.options);
     testRunnerReporter({
       eventEmitter: runner,
-      interactive,
+      interactive: this.options.interactive,
     });
     return await runner.run();
   }
@@ -363,10 +378,10 @@ export default class MochaWebpack {
    * @public
    */
   async watch(): Promise<void> {
-    const runner = new TestRunner(this.entries, this.includes, this.options, interactive);
+    const runner = new TestRunner(this.entries, this.includes, this.options);
     testRunnerReporter({
       eventEmitter: runner,
-      interactive,
+      interactive: this.options.interactive,
     });
     await runner.watch();
   }
