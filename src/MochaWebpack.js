@@ -22,6 +22,7 @@ export type MochaWebpackOptions = {
   delay: boolean,
 };
 
+const interactive = !!process.stdout.isTTY;
 
 export default class MochaWebpack {
 
@@ -352,6 +353,7 @@ export default class MochaWebpack {
     const runner = new TestRunner(this.entries, this.includes, this.options);
     testRunnerReporter({
       eventEmitter: runner,
+      interactive,
     });
     return await runner.run();
   }
@@ -364,6 +366,7 @@ export default class MochaWebpack {
     const runner = new TestRunner(this.entries, this.includes, this.options);
     testRunnerReporter({
       eventEmitter: runner,
+      interactive,
     });
     await runner.watch();
   }

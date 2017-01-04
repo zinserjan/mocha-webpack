@@ -1,11 +1,12 @@
 // @flow
-import { error, success, log, info, note, warn } from '../util/log';
+import { error, success, log, info, note, warn, clear } from '../util/log';
 import { Stats } from '../webpack/types';
 
 type ReporterOptions = {
   eventEmitter: {
     on: (event: string, callback: (...rest: Array<any>) => void) => void
-  }
+  },
+  interactive: boolean
 };
 
 class Reporter {
@@ -14,10 +15,11 @@ class Reporter {
   removed: Array<string>;
 
   constructor(options: ReporterOptions) {
-    const { eventEmitter } = options;
+    const { eventEmitter, interactive } = options;
 
     this.added = [];
     this.removed = [];
+    this.interactive = interactive;
 
     eventEmitter.on('uncaughtException', this.onUncaughtException);
     eventEmitter.on('exception', this.onLoadingException);
@@ -28,6 +30,12 @@ class Reporter {
     eventEmitter.on('mocha:finished', this.onMochaReady);
     eventEmitter.on('entry:added', this.onEntryAdded);
     eventEmitter.on('entry:removed', this.onEntryRemoved);
+  }
+
+  clearConsole() {
+    if (this.interactive) {
+      clear();
+    }
   }
 
   displayErrors(severity: string, errors: Array<any>) {
@@ -56,6 +64,7 @@ class Reporter {
   };
 
   onWebpackStart = () => {
+    this.clearConsole();
     if (this.added.length > 0) {
       info('The following test entry files were added:');
       log(this.added.map((f) => `+ ${f}`).join('\n'));
@@ -73,6 +82,7 @@ class Reporter {
   };
 
   onWebpackReady = (err?: Error, stats?: Stats) => {
+    this.clearConsole();
     if (stats != null) {
       // const { errors, warnings } = stats.toJson({}, true);
 
