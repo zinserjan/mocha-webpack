@@ -93,7 +93,6 @@ export default class TestRunner extends EventEmitter {
             });
           } catch (e) {
             this.emit('exception', e);
-            failures = 0;
             resolve(1);
           }
         });
