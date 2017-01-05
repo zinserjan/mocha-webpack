@@ -18,6 +18,10 @@ const logError = (...args: Array<any>) => {
   log(); // eslint-disable-line no-console
 };
 
+const formatTitleInfo = (title) => chalk.inverse('', title, '');
+const formatTitleWarn = (title) => chalk.black.bgYellow('', title, '');
+const formatTitleError = (title) => chalk.white.bold.bgRed('', title, '');
+
 class Reporter {
 
   added: Array<string>;
@@ -55,34 +59,34 @@ class Reporter {
       `Failed to compile with ${chalk.red(`${errorCount} ${severity}(s)`)}` :
       `Compiled with ${chalk.yellow(`${errorCount} ${severity}(s)`)}`;
 
-    const titleColor = severity === 'error' ? chalk.white.bold.bgRed : chalk.white.bold.bgYellow;
-    log(titleColor('', 'WEBPACK', ''), message);
+    const titleColor = severity === 'error' ? formatTitleError : formatTitleWarn;
+    log(titleColor('WEBPACK'), message);
     errors.forEach((err) => logError(err));
   }
 
   onUncaughtException = (err: Error) => {
-    log(chalk.white.bold.bgRed('', 'UNCAUGHT EXCEPTION', ''), 'Exception occurred after running tests');
+    log(formatTitleError('UNCAUGHT EXCEPTION'), 'Exception occurred after running tests');
     logError(err.stack);
   };
 
   onLoadingException = (err: Error) => {
-    log(chalk.white.bold.bgRed('', 'RUNTIME EXCEPTION', ''), 'Exception occurred while loading your tests');
+    log(formatTitleError('RUNTIME EXCEPTION'), 'Exception occurred while loading your tests');
     logError(err.stack);
   };
 
   onWebpackStart = () => {
     this.clearConsole();
     if (this.added.length > 0) {
-      log(chalk.inverse('', 'MOCHA', ''), 'The following test entry files were added:');
+      log(formatTitleInfo('MOCHA'), 'The following test entry files were added:');
       log(this.added.map((f) => `+ ${f}`).join('\n'));
     }
 
     if (this.removed.length > 0) {
-      log(chalk.inverse('', 'MOCHA', ''), 'The following test entry files were removed:');
+      log(formatTitleInfo('MOCHA'), 'The following test entry files were removed:');
       log(this.removed.map((f) => `- ${f}`).join('\n'));
     }
 
-    log(chalk.inverse('', 'WEBPACK', ''), 'Compiling...');
+    log(formatTitleInfo('WEBPACK'), 'Compiling...');
 
     this.added.length = 0;
     this.removed.length = 0;
@@ -96,7 +100,7 @@ class Reporter {
       if (errors.length === 0 && warnings.length === 0) {
         const { startTime, endTime } = stats;
         const compileTime = endTime - startTime;
-        log(chalk.inverse('', 'WEBPACK', ''), `Compiled successfully in ${chalk.green(`${compileTime}ms`)}`);
+        log(formatTitleInfo('WEBPACK'), `Compiled successfully in ${chalk.green(`${compileTime}ms`)}`);
         return;
       }
 
@@ -114,18 +118,18 @@ class Reporter {
   };
 
   onMochaStart = () => {
-    log(chalk.inverse('', 'MOCHA', ''), 'Testing...');
+    log(formatTitleInfo('MOCHA'), 'Testing...');
   };
 
   onMochaAbort = () => {
-    log(chalk.inverse('', 'MOCHA', ''), 'Tests aborted');
+    log(formatTitleInfo('MOCHA'), 'Tests aborted');
   };
 
   onMochaReady = (failures: number) => {
     if (failures === 0) {
-      log(chalk.inverse('', 'MOCHA', ''), `Tests completed ${chalk.green('successfully')}`);
+      log(formatTitleInfo('MOCHA'), `Tests completed ${chalk.green('successfully')}`);
     } else {
-      log(chalk.inverse('', 'MOCHA', ''), `Tests completed with ${chalk.red(`${failures} failure(s)`)}`);
+      log(formatTitleInfo('MOCHA'), `Tests completed with ${chalk.red(`${failures} failure(s)`)}`);
     }
   };
 
