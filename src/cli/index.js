@@ -54,6 +54,7 @@ mochaWebpack.webpackConfig(options.webpackConfig);
 mochaWebpack.bail(options.bail);
 mochaWebpack.reporter(options.reporter, options.reporterOptions);
 mochaWebpack.ui(options.ui);
+mochaWebpack.interactive(options.interactive);
 
 if (options.fgrep) {
   mochaWebpack.fgrep(options.fgrep);
@@ -105,6 +106,8 @@ Promise
     exit(options.exit, failures);
   })
   .catch((e) => {
-    console.error(e.stack); // eslint-disable-line
+    if (e) {
+      console.error(e.stack); // eslint-disable-line
+    }
     exit(options.exit, 1);
   });

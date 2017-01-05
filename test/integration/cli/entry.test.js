@@ -34,6 +34,19 @@ function createCorruptedTest(filePath) {
   fs.outputFileSync(filePath, content);
 }
 
+function createRuntimeErrorTest(filePath, passing) {
+  const content = `
+    var assert = require('assert');
+    throw new Error('error in ${filePath}');
+    describe('${filePath}', function () {
+      it('runs test', function () {
+        assert.ok(${passing});
+      });
+    });
+  `;
+  fs.outputFileSync(filePath, content);
+}
+
 const fixtureDir = path.relative(process.cwd(), path.join(__dirname, 'fixture'));
 const fixtureDirTmp = path.relative(process.cwd(), path.join(__dirname, 'fixtureTmp'));
 const binPath = path.relative(process.cwd(), path.join('bin', '_mocha'));
@@ -44,9 +57,11 @@ describe('cli - entry', function () {
       this.passingTest = normalizePath(path.join(fixtureDirTmp, 'passing-test.js'));
       this.failingTest = normalizePath(path.join(fixtureDirTmp, 'failing-test.js'));
       this.corruptedTest = normalizePath(path.join(fixtureDirTmp, 'corrupted-test.js'));
+      this.runtimeErrorTest = normalizePath(path.join(fixtureDirTmp, 'runtime-error-test.js'));
       createTest(this.passingTest, true);
       createTest(this.failingTest, false);
       createCorruptedTest(this.corruptedTest);
+      createRuntimeErrorTest(this.runtimeErrorTest);
     });
 
     it('handles failed module with syntax errors', function (done) {
@@ -56,6 +71,15 @@ describe('cli - entry', function () {
         done();
       });
     });
+
+    it('handles module with runtime errors', function (done) {
+      exec(`node ${binPath} "${this.runtimeErrorTest}"`, (err) => {
+        assert.isNotNull(err);
+        assert.isAbove(err.code, 0);
+        done();
+      });
+    });
+
 
     it('runs successfull test', function (done) {
       exec(`node ${binPath} "${this.passingTest}"`, (err, stdout) => {
@@ -78,7 +102,7 @@ describe('cli - entry', function () {
     });
 
     after(function () {
-      return del([this.passingTest, this.failingTest, this.corruptedTest]);
+      return del([this.passingTest, this.failingTest, this.corruptedTest, this.runtimeErrorTest]);
     });
   });
 

@@ -179,7 +179,7 @@ describe('cli --watch', function () {
     // wait for initial test
     waitUntil(() => data.includes(`Error ${testFile}`), (condition1) => {
       assert.isTrue(condition1, 'expected condition1 should be true');
-      assert.include(data, 'An exception occurred while loading tests');
+      assert.include(data, 'Exception occurred while loading your tests');
       assert.include(data, testFile);
       assert.include(data, testId);
       assert.notInclude(data, 'passing');
@@ -222,8 +222,9 @@ describe('cli --watch', function () {
     ls.stderr.on('data', receiveData);
 
     // wait for initial test
-    waitUntil(() => data.includes('An uncaught exception occurred'), (condition1) => {
+    waitUntil(() => data.includes('UNCAUGHT EXCEPTION'), (condition1) => {
       assert.isTrue(condition1, 'expected condition1 should be true');
+      assert.include(data, 'Exception occurred after running tests');
       assert.include(data, '1 passing');
 
       assert.include(data, testFile);
@@ -607,12 +608,6 @@ describe('cli --watch', function () {
         waitUntil(() => data.includes('0 passing'), (condition2) => {
           assert.isTrue(condition2, 'expected condition2 should be true');
           assert.include(data, '0 passing');
-
-          // check if nothing happens (no changed test)
-          assert.notInclude(data, testId1);
-          assert.notInclude(data, testFile1);
-          assert.notInclude(data, testId2);
-          assert.notInclude(data, testFile2);
 
           // kill watch process
           ls.kill();

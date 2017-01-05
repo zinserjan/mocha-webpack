@@ -7,7 +7,7 @@ export default function registerReadyCallback(compiler: Compiler, cb: (err: ?{},
     if (stats.hasErrors()) {
       const jsonStats = stats.toJson();
       const [err] = jsonStats.errors;
-      cb(err, null);
+      cb(err, stats);
     } else {
       cb(null, stats);
     }

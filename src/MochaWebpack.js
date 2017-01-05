@@ -1,4 +1,5 @@
 import TestRunner from './runner/TestRunner';
+import testRunnerReporter from './runner/testRunnerReporter';
 
 export type MochaWebpackOptions = {
   cwd: string,
@@ -19,8 +20,8 @@ export type MochaWebpackOptions = {
   slow: number,
   asyncOnly: boolean,
   delay: boolean,
+  interactive: boolean
 };
-
 
 export default class MochaWebpack {
 
@@ -56,6 +57,7 @@ export default class MochaWebpack {
     slow: 75,
     asyncOnly: false,
     delay: false,
+    interactive: !!(process.stdout.isTTY),
   };
 
   /**
@@ -342,6 +344,21 @@ export default class MochaWebpack {
   }
 
   /**
+   * Force interactive mode (default enabled in terminal)
+   *
+   * @public
+   * @param {boolean} interactive
+   * @return {MochaWebpack}
+   */
+  interactive(interactive: boolean): MochaWebpack {
+    this.options = {
+      ...this.options,
+      interactive,
+    };
+    return this;
+  }
+
+  /**
    * Run tests
    *
    * @public
@@ -349,6 +366,10 @@ export default class MochaWebpack {
    */
   async run(): Promise<number> {
     const runner = new TestRunner(this.entries, this.includes, this.options);
+    testRunnerReporter({
+      eventEmitter: runner,
+      interactive: this.options.interactive,
+    });
     return await runner.run();
   }
 
@@ -358,6 +379,10 @@ export default class MochaWebpack {
    */
   async watch(): Promise<void> {
     const runner = new TestRunner(this.entries, this.includes, this.options);
+    testRunnerReporter({
+      eventEmitter: runner,
+      interactive: this.options.interactive,
+    });
     await runner.watch();
   }
 }
