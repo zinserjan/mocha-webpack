@@ -1,0 +1,25 @@
+{
+  "gitbook": "2.4.3",
+  "title": "mocha-webpack",
+  "description": "",
+  "structure": {
+    "summary": "docs/README.md",
+    "glossary": "docs/GLOSSARY.md"
+  },
+  "plugins": ["edit-link", "prism@2.0.0",  "-search", "-highlight", "github", "anchors"],
+  "pluginsConfig": {
+    "edit-link": {
+      "base": "https://github.com/zinserjan/mocha-webpack/tree/master",
+      "label": "Edit This Page"
+    },
+    "github": {
+      "url": "https://github.com/zinserjan/mocha-webpack"
+    }
+  },
+  "links": {
+    "sharing": {
+      "facebook": false,
+      "twitter": false
+    }
+  }
+}
