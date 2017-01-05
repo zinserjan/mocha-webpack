@@ -110,7 +110,7 @@ export default class TestRunner {
         process.removeListener('uncaughtException', uncaughtExceptionListener);
 
         // run tests
-        mochaRunner = mocha.run(() => {
+        mochaRunner = mocha.run(_.once(() => {
           // register custom exception handler to catch all errors that may happen after mocha think tests are done
           process.on('uncaughtException', uncaughtExceptionListener);
 
@@ -122,7 +122,7 @@ export default class TestRunner {
               compilationScheduler = null;
             }
           });
-        });
+        }));
       } catch (err) {
         console.error('An exception occurred while loading tests: %s', err.message); // eslint-disable-line no-console
         console.error(err.stack); // eslint-disable-line no-console
