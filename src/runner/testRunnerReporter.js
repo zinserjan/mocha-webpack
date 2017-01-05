@@ -10,12 +10,12 @@ type ReporterOptions = {
 };
 
 const log = (...args: Array<any>) => {
-  console.log(...args);
-  console.log();
+  console.log(...args); // eslint-disable-line no-console
+  console.log();// eslint-disable-line no-console
 };
 const logError = (...args: Array<any>) => {
-  console.error(...args);
-  log();
+  console.error(...args); // eslint-disable-line no-console
+  log(); // eslint-disable-line no-console
 };
 
 class Reporter {

@@ -179,7 +179,7 @@ describe('cli --watch', function () {
     // wait for initial test
     waitUntil(() => data.includes(`Error ${testFile}`), (condition1) => {
       assert.isTrue(condition1, 'expected condition1 should be true');
-      assert.include(data, 'Exception occurred while loading tests');
+      assert.include(data, 'Exception occurred while loading your tests');
       assert.include(data, testFile);
       assert.include(data, testId);
       assert.notInclude(data, 'passing');
