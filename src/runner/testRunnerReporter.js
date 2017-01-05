@@ -1,5 +1,5 @@
 // @flow
-import { error, success, log, info, note, warn, clear } from '../util/log';
+import chalk from 'chalk';
 import { Stats } from '../webpack/types';
 
 type ReporterOptions = {
@@ -7,6 +7,15 @@ type ReporterOptions = {
     on: (event: string, callback: (...rest: Array<any>) => void) => void
   },
   interactive: boolean
+};
+
+const log = (...args: Array<any>) => {
+  console.log(...args);
+  console.log();
+};
+const logError = (...args: Array<any>) => {
+  console.error(...args);
+  log();
 };
 
 class Reporter {
@@ -35,48 +44,45 @@ class Reporter {
 
   clearConsole() {
     if (this.interactive) {
-      clear();
+      process.stdout.write(process.platform === 'win32' ? '\x1Bc' : '\x1B[2J\x1B[3J\x1B[H');
     }
   }
 
   displayErrors(severity: string, errors: Array<any>) {
     const errorCount = errors.length;
 
-    const subtitle = severity === 'error' ?
-      `Failed to compile with ${errorCount} ${severity}(s)` :
-      `Compiled with ${errorCount} ${severity}(s)`;
+    const message = severity === 'error' ?
+      `Failed to compile with ${chalk.red(`${errorCount} ${severity}(s)`)}` :
+      `Compiled with ${chalk.yellow(`${errorCount} ${severity}(s)`)}`;
 
-    const logger = severity === 'error' ? error : warn;
-
-    logger('WEBPACK', subtitle);
-    errors.forEach((err) => log(err));
+    const titleColor = severity === 'error' ? chalk.white.bold.bgRed : chalk.white.bold.bgYellow;
+    log(titleColor('', 'WEBPACK', ''), message);
+    errors.forEach((err) => logError(err));
   }
 
   onUncaughtException = (err: Error) => {
-    warn('UNCAUGHT EXCEPTION', err.message);
-    log(err.stack);
-    note('Exception occurred after running tests maybe due to an failed async operation.');
+    log(chalk.white.bold.bgRed('', 'UNCAUGHT EXCEPTION', ''), 'Exception occurred after running tests');
+    logError(err.stack);
   };
 
   onLoadingException = (err: Error) => {
-    error('EXCEPTION', err.message);
-    log(err.stack);
-    note('Exception occurred while loading tests.');
+    log(chalk.white.bold.bgRed('', 'RUNTIME EXCEPTION', ''), 'Exception occurred while loading your tests');
+    logError(err.stack);
   };
 
   onWebpackStart = () => {
     this.clearConsole();
     if (this.added.length > 0) {
-      info('The following test entry files were added:');
+      log(chalk.inverse('', 'MOCHA', ''), 'The following test entry files were added:');
       log(this.added.map((f) => `+ ${f}`).join('\n'));
     }
 
     if (this.removed.length > 0) {
-      info('The following test entry files were removed:');
+      log(chalk.inverse('', 'MOCHA', ''), 'The following test entry files were removed:');
       log(this.removed.map((f) => `- ${f}`).join('\n'));
     }
 
-    info('Compiling...');
+    log(chalk.inverse('', 'WEBPACK', ''), 'Compiling...');
 
     this.added.length = 0;
     this.removed.length = 0;
@@ -85,14 +91,12 @@ class Reporter {
   onWebpackReady = (err?: Error, stats?: Stats) => {
     this.clearConsole();
     if (stats != null) {
-      // const { errors, warnings } = stats.toJson({}, true);
-
       const { errors, warnings } = stats.toJson({ errorDetails: false });
 
       if (errors.length === 0 && warnings.length === 0) {
         const { startTime, endTime } = stats;
         const compileTime = endTime - startTime;
-        success('WEBPACK', `Compiled successfully in ${compileTime}ms`);
+        log(chalk.inverse('', 'WEBPACK', ''), `Compiled successfully in ${chalk.green(`${compileTime}ms`)}`);
         return;
       }
 
@@ -102,7 +106,7 @@ class Reporter {
       }
 
       if (warnings.length > 0) {
-        this.displayErrors('warning', errors);
+        this.displayErrors('warning', warnings);
       }
     } else {
       this.displayErrors('error', [err]);
@@ -110,18 +114,18 @@ class Reporter {
   };
 
   onMochaStart = () => {
-    info('Testing...');
+    log(chalk.inverse('', 'MOCHA', ''), 'Testing...');
   };
 
   onMochaAbort = () => {
-    info('Testing aborted.');
+    log(chalk.inverse('', 'MOCHA', ''), 'Tests aborted');
   };
 
   onMochaReady = (failures: number) => {
     if (failures === 0) {
-      success('MOCHA', 'Tests completed successfully.');
+      log(chalk.inverse('', 'MOCHA', ''), `Tests completed ${chalk.green('successfully')}`);
     } else {
-      warn('MOCHA', `Tests completed with ${failures} failure(s).`);
+      log(chalk.inverse('', 'MOCHA', ''), `Tests completed with ${chalk.red(`${failures} failure(s)`)}`);
     }
   };
 
