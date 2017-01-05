@@ -14,6 +14,10 @@ const isBuilt = (module: Module): boolean => module.built;
 const getId = (module: Module): number => module.id;
 
 const affectedModules = (map: ModuleMap, usageMap: ModuleUsageMap, affected: ModuleMap, moduleId: string): void => {
+  if (typeof affected[moduleId] !== 'undefined') {
+    // module was already inspected, stop here otherwise we get into endless recursion
+    return;
+  }
   // module is identified as affected by this function call
   const module = map[moduleId];
   affected[module.id] = module;  // eslint-disable-line no-param-reassign

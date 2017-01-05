@@ -43,6 +43,23 @@ describe('code-splitting', function () {
     });
   });
 
+  context('with dynamic require (self referencing require statements)', function () {
+    before(function () {
+      this.passingTest = normalizePath(path.join(fixtureDir, 'code-splitting/test/cyclic-load-entry.js'));
+      this.webpackConfig = normalizePath(path.join(fixtureDir, 'code-splitting/webpack.config-test.js'));
+    });
+
+    it('runs successfull test with cylic dependencies (entry matches itself)', function (done) {
+      exec(`node ${binPath}  --webpack-config "${this.webpackConfig}" "${this.passingTest}"`, (err, stdout) => {
+        assert.isNull(err);
+        assert.include(stdout, 'entry1.js');
+        assert.notInclude(stdout, 'entry2.js');
+        assert.include(stdout, '1 passing');
+        done();
+      });
+    });
+  });
+
   context('without any require statements (empty require.ensure)', function () {
     before(function () {
       this.passingTest = normalizePath(path.join(fixtureDir, 'code-splitting/test/lazy-load-none.js'));
