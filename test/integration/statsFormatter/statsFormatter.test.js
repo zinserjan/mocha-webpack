@@ -40,6 +40,12 @@ const webpackConfig = {
 };
 
 describe('statFormatter', function () {
+  before(function () {
+    if (process.platform === 'win32') {
+      this.skip();
+    }
+  });
+
   tests.forEach((testName) => {
     const testDirPath = path.join(base, testName);
     const entryPath = path.join(testDirPath, 'entry.js');
