@@ -154,42 +154,50 @@ describe('cli --watch', function () {
     const testFile = 'test1.js';
     const testId = Date.now();
     createSyntaxErrorTest(testFile, testId);
-    const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
     return Promise
       .resolve()
-      // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('Unexpected token'), 5000))
-      // output matched our condition
+      // delay this until https://github.com/webpack/watchpack/releases/tag/v1.2.0 gets also into webpack 1
+      // watch events fires for files created before starting watcher...
+      .then(() => pause(1500))
       .then(() => {
-        assert.notInclude(mw.log, testId);
-        assert.notInclude(mw.log, 'failing');
-        assert.notInclude(mw.log, 'passing');
+        const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
-        // clear log to receive only changes
-        mw.clearLog();
+        return Promise
+          .resolve()
+          // wait until the output matches our condition
+          .then(() => waitFor(() => mw.log.includes('Unexpected token'), 5000))
+          // output matched our condition
+          .then(() => {
+            assert.notInclude(mw.log, testId);
+            assert.notInclude(mw.log, 'failing');
+            assert.notInclude(mw.log, 'passing');
 
-        // fix test
-        const updatedTestId = testId + 100;
-        createTest(testFile, updatedTestId, true);
-        return updatedTestId;
-      })
-      // wait until the output matches our condition
-      .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
-      // output matched our condition
-      .then(() => {
-        // check if test was updated
-        assert.notInclude(mw.log, testId);
-      })
-      .catch((e) => e)
-      .then((e) => {
-        // finally, kill watch process
-        mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
-        // maybe rethrow error
-        assert.ifError(e);
+            // clear log to receive only changes
+            mw.clearLog();
+
+            // fix test
+            const updatedTestId = testId + 100;
+            createTest(testFile, updatedTestId, true);
+            return updatedTestId;
+          })
+          // wait until the output matches our condition
+          .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+          // output matched our condition
+          .then(() => {
+            // check if test was updated
+            assert.notInclude(mw.log, testId);
+          })
+          .catch((e) => e)
+          .then((e) => {
+            // finally, kill watch process
+            mw.kill();
+            if (e) {
+              console.log(mw.log); // eslint-disable-line
+            }
+            // maybe rethrow error
+            assert.ifError(e);
+          });
       });
   });
 
@@ -198,43 +206,51 @@ describe('cli --watch', function () {
     const testFile = 'test1.js';
     const testId = Date.now();
     createErrorFile(testFile, testId);
-    const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
     return Promise
       .resolve()
-      // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes(`Error ${testFile}`), 5000))
-      // output matched our condition
+      // delay this until https://github.com/webpack/watchpack/releases/tag/v1.2.0 gets also into webpack 1
+      // watch events fires for files created before starting watcher...
+      .then(() => pause(1500))
       .then(() => {
-        assert.include(mw.log, 'Exception occurred while loading your tests');
-        assert.include(mw.log, testId);
-        assert.notInclude(mw.log, 'passing');
-        assert.notInclude(mw.log, 'failing');
+        const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
-        // clear log to receive only changes
-        mw.clearLog();
+        return Promise
+          .resolve()
+          // wait until the output matches our condition
+          .then(() => waitFor(() => mw.log.includes(`Error ${testFile}`), 5000))
+          // output matched our condition
+          .then(() => {
+            assert.include(mw.log, 'Exception occurred while loading your tests');
+            assert.include(mw.log, testId);
+            assert.notInclude(mw.log, 'passing');
+            assert.notInclude(mw.log, 'failing');
 
-        // fix test
-        const updatedTestId = testId + 100;
-        createTest(testFile, updatedTestId, true);
-        return updatedTestId;
-      })
-      // wait until the output matches our condition
-      .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
-      // output matched our condition
-      .then(() => {
-        // check if test was updated
-        assert.notInclude(mw.log, testId);
-      })
-      .catch((e) => e)
-      .then((e) => {
-        // finally, kill watch process
-        mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
-        // maybe rethrow error
-        assert.ifError(e);
+            // clear log to receive only changes
+            mw.clearLog();
+
+            // fix test
+            const updatedTestId = testId + 100;
+            createTest(testFile, updatedTestId, true);
+            return updatedTestId;
+          })
+          // wait until the output matches our condition
+          .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+          // output matched our condition
+          .then(() => {
+            // check if test was updated
+            assert.notInclude(mw.log, testId);
+          })
+          .catch((e) => e)
+          .then((e) => {
+            // finally, kill watch process
+            mw.kill();
+            if (e) {
+              console.log(mw.log); // eslint-disable-line
+            }
+            // maybe rethrow error
+            assert.ifError(e);
+          });
       });
   });
 
@@ -243,43 +259,51 @@ describe('cli --watch', function () {
     const testFile = 'test1.js';
     const testId = Date.now();
     createUncaughtErrorTest(testFile, testId);
-    const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
     return Promise
       .resolve()
-      // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('UNCAUGHT EXCEPTION'), 5000))
-      // output matched our condition
+      // delay this until https://github.com/webpack/watchpack/releases/tag/v1.2.0 gets also into webpack 1
+      // watch events fires for files created before starting watcher...
+      .then(() => pause(1500))
       .then(() => {
-        assert.include(mw.log, 'Exception occurred after running tests');
-        assert.include(mw.log, '1 passing');
-        assert.include(mw.log, testFile);
-        assert.include(mw.log, testId);
+        const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
-        // clear log to receive only changes
-        mw.clearLog();
+        return Promise
+          .resolve()
+          // wait until the output matches our condition
+          .then(() => waitFor(() => mw.log.includes('UNCAUGHT EXCEPTION'), 5000))
+          // output matched our condition
+          .then(() => {
+            assert.include(mw.log, 'Exception occurred after running tests');
+            assert.include(mw.log, '1 passing');
+            assert.include(mw.log, testFile);
+            assert.include(mw.log, testId);
 
-        // fix test
-        const updatedTestId = testId + 100;
-        createTest(testFile, updatedTestId, true);
-        return updatedTestId;
-      })
-      // wait until the output matches our condition
-      .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
-      // output matched our condition
-      .then(() => {
-        // check if test was updated
-        assert.notInclude(mw.log, testId);
-      })
-      .catch((e) => e)
-      .then((e) => {
-        // finally, kill watch process
-        mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
-        // maybe rethrow error
-        assert.ifError(e);
+            // clear log to receive only changes
+            mw.clearLog();
+
+            // fix test
+            const updatedTestId = testId + 100;
+            createTest(testFile, updatedTestId, true);
+            return updatedTestId;
+          })
+          // wait until the output matches our condition
+          .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+          // output matched our condition
+          .then(() => {
+            // check if test was updated
+            assert.notInclude(mw.log, testId);
+          })
+          .catch((e) => e)
+          .then((e) => {
+            // finally, kill watch process
+            mw.kill();
+            if (e) {
+              console.log(mw.log); // eslint-disable-line
+            }
+            // maybe rethrow error
+            assert.ifError(e);
+          });
       });
   });
 
@@ -289,21 +313,28 @@ describe('cli --watch', function () {
     const testId = Date.now();
     createTest(testFile, testId, true);
 
-    const mw = spawnMochaWebpack('--watch', this.entryGlob);
-
     return Promise
       .resolve()
-      // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes(testId) && mw.log.includes('1 passing'), 5000))
-      .catch((e) => e)
-      .then((e) => {
-        // finally, kill watch process
-        mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
-        // maybe rethrow error
-        assert.ifError(e);
+      // delay this until https://github.com/webpack/watchpack/releases/tag/v1.2.0 gets also into webpack 1
+      // watch events fires for files created before starting watcher...
+      .then(() => pause(1500))
+      .then(() => {
+        const mw = spawnMochaWebpack('--watch', this.entryGlob);
+
+        return Promise
+          .resolve()
+          // wait until the output matches our condition
+          .then(() => waitFor(() => mw.log.includes(testId) && mw.log.includes('1 passing'), 5000))
+          .catch((e) => e)
+          .then((e) => {
+            // finally, kill watch process
+            mw.kill();
+            if (e) {
+              console.log(mw.log); // eslint-disable-line
+            }
+            // maybe rethrow error
+            assert.ifError(e);
+          });
       });
   });
 
@@ -312,38 +343,46 @@ describe('cli --watch', function () {
     const testFile = 'test1.js';
     const testId = Date.now();
     createTest(testFile, testId, true);
-    const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
     return Promise
       .resolve()
-      // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes(testId) && mw.log.includes('1 passing'), 5000))
-      // output matched our condition
+      // delay this until https://github.com/webpack/watchpack/releases/tag/v1.2.0 gets also into webpack 1
+      // watch events fires for files created before starting watcher...
+      .then(() => pause(1500))
       .then(() => {
-        // clear log to receive only changes
-        mw.clearLog();
+        const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
-        // update test
-        const updatedTestId = testId + 100;
-        createTest(testFile, updatedTestId, true);
-        return updatedTestId;
-      })
-      // wait until the output matches our condition
-      .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
-      // output matched our condition
-      .then(() => {
-        // check if test was updated
-        assert.notInclude(mw.log, testId);
-      })
-      .catch((e) => e)
-      .then((e) => {
-        // finally, kill watch process
-        mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
-        // maybe rethrow error
-        assert.ifError(e);
+        return Promise
+          .resolve()
+          // wait until the output matches our condition
+          .then(() => waitFor(() => mw.log.includes(testId) && mw.log.includes('1 passing'), 5000))
+          // output matched our condition
+          .then(() => {
+            // clear log to receive only changes
+            mw.clearLog();
+
+            // update test
+            const updatedTestId = testId + 100;
+            createTest(testFile, updatedTestId, true);
+            return updatedTestId;
+          })
+          // wait until the output matches our condition
+          .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+          // output matched our condition
+          .then(() => {
+            // check if test was updated
+            assert.notInclude(mw.log, testId);
+          })
+          .catch((e) => e)
+          .then((e) => {
+            // finally, kill watch process
+            mw.kill();
+            if (e) {
+              console.log(mw.log); // eslint-disable-line
+            }
+            // maybe rethrow error
+            assert.ifError(e);
+          });
       });
   });
 
@@ -355,45 +394,53 @@ describe('cli --watch', function () {
     const testId2 = testId1 + 2;
     createTest(testFile1, testId1, true);
     createTest(testFile2, testId2, true);
-    const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
     return Promise
       .resolve()
-      // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('2 passing'), 5000))
-      // output matched our condition
+      // delay this until https://github.com/webpack/watchpack/releases/tag/v1.2.0 gets also into webpack 1
+      // watch events fires for files created before starting watcher...
+      .then(() => pause(1500))
       .then(() => {
-        // check if both tests were tested
-        assert.include(mw.log, testId1);
-        assert.include(mw.log, testFile1);
-        assert.include(mw.log, testId2);
-        assert.include(mw.log, testFile2);
+        const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
-        // clear log to receive only changes
-        mw.clearLog();
+        return Promise
+          .resolve()
+          // wait until the output matches our condition
+          .then(() => waitFor(() => mw.log.includes('2 passing'), 5000))
+          // output matched our condition
+          .then(() => {
+            // check if both tests were tested
+            assert.include(mw.log, testId1);
+            assert.include(mw.log, testFile1);
+            assert.include(mw.log, testId2);
+            assert.include(mw.log, testFile2);
 
-        // update test
-        const updatedTestId = testId2 + 100;
-        createTest(testFile2, updatedTestId, true);
-        return updatedTestId;
-      })
-      // wait until the output matches our condition
-      .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
-      // output matched our condition
-      .then(() => {
-        // check if just updated test was tested again
-        assert.notInclude(mw.log, testFile1);
-        assert.notInclude(mw.log, testId1);
-      })
-      .catch((e) => e)
-      .then((e) => {
-        // finally, kill watch process
-        mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
-        // maybe rethrow error
-        assert.ifError(e);
+            // clear log to receive only changes
+            mw.clearLog();
+
+            // update test
+            const updatedTestId = testId2 + 100;
+            createTest(testFile2, updatedTestId, true);
+            return updatedTestId;
+          })
+          // wait until the output matches our condition
+          .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+          // output matched our condition
+          .then(() => {
+            // check if just updated test was tested again
+            assert.notInclude(mw.log, testFile1);
+            assert.notInclude(mw.log, testId1);
+          })
+          .catch((e) => e)
+          .then((e) => {
+            // finally, kill watch process
+            mw.kill();
+            if (e) {
+              console.log(mw.log); // eslint-disable-line
+            }
+            // maybe rethrow error
+            assert.ifError(e);
+          });
       });
   });
 
@@ -403,42 +450,50 @@ describe('cli --watch', function () {
     const testId = Date.now();
     const updatedTestId = testId + 100;
     createLongRunningTest(testFile, testId);
-    const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
     return Promise
       .resolve()
-      // wait until the first async test start
-      .then(() => waitFor(() => mw.log.includes(`starting ${testId} - 1`), 5000))
+      // delay this until https://github.com/webpack/watchpack/releases/tag/v1.2.0 gets also into webpack 1
+      // watch events fires for files created before starting watcher...
+      .then(() => pause(1500))
       .then(() => {
-        // check if tests were not ready yet
-        assert.notInclude(mw.log, `starting ${testId} - 2`);
-        assert.notInclude(mw.log, `finished ${testId} - 2`);
+        const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
-        // clear log to receive only changes
-        mw.clearLog();
+        return Promise
+          .resolve()
+          // wait until the first async test start
+          .then(() => waitFor(() => mw.log.includes(`starting ${testId} - 1`), 5000))
+          .then(() => {
+            // check if tests were not ready yet
+            assert.notInclude(mw.log, `starting ${testId} - 2`);
+            assert.notInclude(mw.log, `finished ${testId} - 2`);
 
-        // update test
-        createLongRunningTest(testFile, updatedTestId);
-      })
-      // wait until tests were aborted
-      .then(() => waitFor(() => mw.log.includes('1 failing'), 3000))
-      .then(() => {
-        // check if tests were aborted
-        assert.notInclude(mw.log, `finished ${testId} - 2`);
-        assert.include(mw.log, '0 passing', 'test suite should abort current async test');
-        assert.include(mw.log, '1 failing', 'test suite should mark async test as failed');
-      })
-      // wait until tests were tested again
-      .then(() => waitFor(() => mw.log.includes(`finished ${updatedTestId}`) && mw.log.includes('2 passing'), 7000))
-      .catch((e) => e)
-      .then((e) => {
-        // finally, kill watch process
-        mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
-        // maybe rethrow error
-        assert.ifError(e);
+            // clear log to receive only changes
+            mw.clearLog();
+
+            // update test
+            createLongRunningTest(testFile, updatedTestId);
+          })
+          // wait until tests were aborted
+          .then(() => waitFor(() => mw.log.includes('1 failing'), 3000))
+          .then(() => {
+            // check if tests were aborted
+            assert.notInclude(mw.log, `finished ${testId} - 2`);
+            assert.include(mw.log, '0 passing', 'test suite should abort current async test');
+            assert.include(mw.log, '1 failing', 'test suite should mark async test as failed');
+          })
+          // wait until tests were tested again
+          .then(() => waitFor(() => mw.log.includes(`finished ${updatedTestId}`) && mw.log.includes('2 passing'), 7000))
+          .catch((e) => e)
+          .then((e) => {
+            // finally, kill watch process
+            mw.kill();
+            if (e) {
+              console.log(mw.log); // eslint-disable-line
+            }
+            // maybe rethrow error
+            assert.ifError(e);
+          });
       });
   });
 
@@ -448,38 +503,46 @@ describe('cli --watch', function () {
     const testId = Date.now();
     const updatedTestId = testId + 100;
     createNeverEndingTest(testFile, testId);
-    const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
     return Promise
       .resolve()
-      // wait until the first async test start
-      .then(() => waitFor(() => mw.log.includes(`starting ${testId}`), 5000))
+      // delay this until https://github.com/webpack/watchpack/releases/tag/v1.2.0 gets also into webpack 1
+      // watch events fires for files created before starting watcher...
+      .then(() => pause(1500))
       .then(() => {
-        // clear log to receive only changes
-        mw.clearLog();
+        const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
-        // update test
-        createTest(testFile, updatedTestId, true);
-      })
-      // wait until tests were aborted
-      .then(() => waitFor(() => mw.log.includes('1 failing'), 3000))
-      .then(() => {
-        // check if tests were aborted
-        assert.notInclude(mw.log, `finished ${testId} - 2`);
-        assert.include(mw.log, '0 passing', 'test suite should abort current async test');
-        assert.include(mw.log, '1 failing', 'test suite should mark async test as failed');
-      })
-      // wait until tests were tested again
-      .then(() => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
-      .catch((e) => e)
-      .then((e) => {
-        // finally, kill watch process
-        mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
-        // maybe rethrow error
-        assert.ifError(e);
+        return Promise
+          .resolve()
+          // wait until the first async test start
+          .then(() => waitFor(() => mw.log.includes(`starting ${testId}`), 5000))
+          .then(() => {
+            // clear log to receive only changes
+            mw.clearLog();
+
+            // update test
+            createTest(testFile, updatedTestId, true);
+          })
+          // wait until tests were aborted
+          .then(() => waitFor(() => mw.log.includes('1 failing'), 3000))
+          .then(() => {
+            // check if tests were aborted
+            assert.notInclude(mw.log, `finished ${testId} - 2`);
+            assert.include(mw.log, '0 passing', 'test suite should abort current async test');
+            assert.include(mw.log, '1 failing', 'test suite should mark async test as failed');
+          })
+          // wait until tests were tested again
+          .then(() => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+          .catch((e) => e)
+          .then((e) => {
+            // finally, kill watch process
+            mw.kill();
+            if (e) {
+              console.log(mw.log); // eslint-disable-line
+            }
+            // maybe rethrow error
+            assert.ifError(e);
+          });
       });
   });
 
@@ -490,37 +553,45 @@ describe('cli --watch', function () {
     const testFile2 = 'test2.js';
     const testId2 = testId1 + 2;
     createTest(testFile1, testId1, true);
-    const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
     return Promise
       .resolve()
-      // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes(testId1) && mw.log.includes('1 passing'), 5000))
-      // output matched our condition
+      // delay this until https://github.com/webpack/watchpack/releases/tag/v1.2.0 gets also into webpack 1
+      // watch events fires for files created before starting watcher...
+      .then(() => pause(1500))
       .then(() => {
-        // clear log to receive only changes
-        mw.clearLog();
+        const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
-        // create new test
-        createTest(testFile2, testId2, true);
-      })
-      // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes(testId2) && mw.log.includes('1 passing'), 5000))
-      // output matched our condition
-      .then(() => {
-        // check if already tested test wasn't tested again
-        assert.notInclude(mw.log, testFile1);
-        assert.notInclude(mw.log, testId1);
-      })
-      .catch((e) => e)
-      .then((e) => {
-        // finally, kill watch process
-        mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
-        // maybe rethrow error
-        assert.ifError(e);
+        return Promise
+          .resolve()
+          // wait until the output matches our condition
+          .then(() => waitFor(() => mw.log.includes(testId1) && mw.log.includes('1 passing'), 5000))
+          // output matched our condition
+          .then(() => {
+            // clear log to receive only changes
+            mw.clearLog();
+
+            // create new test
+            createTest(testFile2, testId2, true);
+          })
+          // wait until the output matches our condition
+          .then(() => waitFor(() => mw.log.includes(testId2) && mw.log.includes('1 passing'), 5000))
+          // output matched our condition
+          .then(() => {
+            // check if already tested test wasn't tested again
+            assert.notInclude(mw.log, testFile1);
+            assert.notInclude(mw.log, testId1);
+          })
+          .catch((e) => e)
+          .then((e) => {
+            // finally, kill watch process
+            mw.kill();
+            if (e) {
+              console.log(mw.log); // eslint-disable-line
+            }
+            // maybe rethrow error
+            assert.ifError(e);
+          });
       });
   });
 
@@ -533,46 +604,54 @@ describe('cli --watch', function () {
     const testFile3 = 'test3.js';
     const testId3 = testId2 + 3;
     createTest(testFile1, testId1, true);
-    const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
     return Promise
       .resolve()
-      // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('1 passing'), 5000))
-      // output matched our condition
+      // delay this until https://github.com/webpack/watchpack/releases/tag/v1.2.0 gets also into webpack 1
+      // watch events fires for files created before starting watcher...
+      .then(() => pause(1500))
       .then(() => {
-        assert.include(mw.log, testId1);
-        assert.include(mw.log, testFile1);
+        const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
-        // clear log to receive only changes
-        mw.clearLog();
+        return Promise
+          .resolve()
+          // wait until the output matches our condition
+          .then(() => waitFor(() => mw.log.includes('1 passing'), 5000))
+          // output matched our condition
+          .then(() => {
+            assert.include(mw.log, testId1);
+            assert.include(mw.log, testFile1);
 
-        // create new tests
-        createTest(testFile2, testId2, true);
-        createTest(testFile3, testId3, true);
-      })
-      // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('2 passing'), 5000))
-      // output matched our condition
-      .then(() => {
-        // check if only updated tests were tested again
-        assert.include(mw.log, testFile2);
-        assert.include(mw.log, testId2);
-        assert.include(mw.log, testFile3);
-        assert.include(mw.log, testId3);
+            // clear log to receive only changes
+            mw.clearLog();
 
-        assert.notInclude(mw.log, testFile1);
-        assert.notInclude(mw.log, testId1);
-      })
-      .catch((e) => e)
-      .then((e) => {
-        // finally, kill watch process
-        mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
-        // maybe rethrow error
-        assert.ifError(e);
+            // create new tests
+            createTest(testFile2, testId2, true);
+            createTest(testFile3, testId3, true);
+          })
+          // wait until the output matches our condition
+          .then(() => waitFor(() => mw.log.includes('2 passing'), 5000))
+          // output matched our condition
+          .then(() => {
+            // check if only updated tests were tested again
+            assert.include(mw.log, testFile2);
+            assert.include(mw.log, testId2);
+            assert.include(mw.log, testFile3);
+            assert.include(mw.log, testId3);
+
+            assert.notInclude(mw.log, testFile1);
+            assert.notInclude(mw.log, testId1);
+          })
+          .catch((e) => e)
+          .then((e) => {
+            // finally, kill watch process
+            mw.kill();
+            if (e) {
+              console.log(mw.log); // eslint-disable-line
+            }
+            // maybe rethrow error
+            assert.ifError(e);
+          });
       });
   });
 
@@ -584,39 +663,43 @@ describe('cli --watch', function () {
     const testId2 = Date.now() + 2;
     createTest(testFile1, testId1, true);
     createTest(testFile2, testId2, true);
-    const mw = spawnMochaWebpack('--watch', this.entryGlob);
 
     return Promise
       .resolve()
       // delay this until https://github.com/webpack/watchpack/releases/tag/v1.2.0 gets also into webpack 1
       // watch events fires for files created before starting watcher...
       .then(() => pause(1500))
-      // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('2 passing'), 5000))
-      // output matched our condition
       .then(() => {
-        assert.include(mw.log, testId1);
-        assert.include(mw.log, testFile1);
-        assert.include(mw.log, testId2);
-        assert.include(mw.log, testFile2);
+        const mw = spawnMochaWebpack('--watch', this.entryGlob);
+        return Promise
+          .resolve()
+          // wait until the output matches our condition
+          .then(() => waitFor(() => mw.log.includes('2 passing'), 5000))
+          // output matched our condition
+          .then(() => {
+            assert.include(mw.log, testId1);
+            assert.include(mw.log, testFile1);
+            assert.include(mw.log, testId2);
+            assert.include(mw.log, testFile2);
 
-        // clear log to receive only changes
-        mw.clearLog();
+            // clear log to receive only changes
+            mw.clearLog();
 
-        // delete test
-        return deleteTest(testFile2);
-      })
-      // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('0 passing'), 5000))
-      .catch((e) => e)
-      .then((e) => {
-        // finally, kill watch process
-        mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
-        // maybe rethrow error
-        assert.ifError(e);
+            // delete test
+            return deleteTest(testFile2);
+          })
+          // wait until the output matches our condition
+          .then(() => waitFor(() => mw.log.includes('0 passing'), 5000))
+          .catch((e) => e)
+          .then((e) => {
+            // finally, kill watch process
+            mw.kill();
+            if (e) {
+              console.log(mw.log); // eslint-disable-line
+            }
+            // maybe rethrow error
+            assert.ifError(e);
+          });
       });
   });
 
