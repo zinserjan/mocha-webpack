@@ -27,7 +27,18 @@ export type Module = {
   rawRequest: string,
   built: boolean,
   dependencies: Array<{ module: Module }>,
+  readableIdentifier: ?any,
 };
+
+/**
+ * Webpack build error or warning
+ */
+export type WebpackError = {
+  message: string,
+  file: ?string,
+  module: ?Module
+};
+
 
 /**
  * webpack/lib/Chunk.js
@@ -48,6 +59,8 @@ export type Compilation = {
   plugin: (hook: string, fn: () => void) => void,
   modules: Module[],
   chunks: Chunk[],
+  errors: Array<WebpackError>,
+  warnings: Array<WebpackError>,
   assets: {
     [key: string]: {
       size: () => number,

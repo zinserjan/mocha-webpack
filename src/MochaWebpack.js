@@ -369,6 +369,7 @@ export default class MochaWebpack {
     testRunnerReporter({
       eventEmitter: runner,
       interactive: this.options.interactive,
+      cwd: this.options.cwd,
     });
     return await runner.run();
   }
@@ -382,6 +383,7 @@ export default class MochaWebpack {
     testRunnerReporter({
       eventEmitter: runner,
       interactive: this.options.interactive,
+      cwd: this.options.cwd,
     });
     await runner.watch();
   }

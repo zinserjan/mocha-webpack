@@ -1,12 +1,14 @@
 // @flow
 import chalk from 'chalk';
 import { Stats } from '../webpack/types';
+import createStatsFormatter from '../webpack/util/createStatsFormatter';
 
 type ReporterOptions = {
   eventEmitter: {
     on: (event: string, callback: (...rest: Array<any>) => void) => void
   },
-  interactive: boolean
+  interactive: boolean,
+  cwd: string,
 };
 
 const log = (...args: Array<any>) => {
@@ -15,7 +17,7 @@ const log = (...args: Array<any>) => {
 };
 const logError = (...args: Array<any>) => {
   console.error(...args); // eslint-disable-line no-console
-  log(); // eslint-disable-line no-console
+  console.log();// eslint-disable-line no-console
 };
 
 const formatTitleInfo = (title) => chalk.inverse('', title, '');
@@ -27,13 +29,15 @@ class Reporter {
   added: Array<string>;
   removed: Array<string>;
   interactive: boolean;
+  formatStats: (stats: Stats) => { warnings: Array<string>, errors: Array<string> };
 
   constructor(options: ReporterOptions) {
-    const { eventEmitter, interactive } = options;
+    const { eventEmitter, interactive, cwd } = options;
 
     this.added = [];
     this.removed = [];
     this.interactive = interactive;
+    this.formatStats = createStatsFormatter(cwd);
 
     eventEmitter.on('uncaughtException', this.onUncaughtException);
     eventEmitter.on('exception', this.onLoadingException);
@@ -95,7 +99,7 @@ class Reporter {
   onWebpackReady = (err?: Error, stats?: Stats) => {
     this.clearConsole();
     if (stats != null) {
-      const { errors, warnings } = stats.toJson({ errorDetails: false });
+      const { errors, warnings } = this.formatStats(stats);
 
       if (errors.length === 0 && warnings.length === 0) {
         const { startTime, endTime } = stats;
