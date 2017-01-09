@@ -15,10 +15,6 @@ const log = (...args: Array<any>) => {
   console.log(...args); // eslint-disable-line no-console
   console.log();// eslint-disable-line no-console
 };
-const logError = (...args: Array<any>) => {
-  console.error(...args); // eslint-disable-line no-console
-  console.log();// eslint-disable-line no-console
-};
 
 const formatTitleInfo = (title) => chalk.inverse('', title, '');
 const formatTitleWarn = (title) => chalk.black.bgYellow('', title, '');
@@ -65,17 +61,17 @@ class Reporter {
 
     const titleColor = severity === 'error' ? formatTitleError : formatTitleWarn;
     log(titleColor('WEBPACK'), message);
-    errors.forEach((err) => logError(err));
+    errors.forEach((err) => log(err));
   }
 
   onUncaughtException = (err: Error) => {
     log(formatTitleError('UNCAUGHT EXCEPTION'), 'Exception occurred after running tests');
-    logError(err.stack);
+    log(err.stack);
   };
 
   onLoadingException = (err: Error) => {
     log(formatTitleError('RUNTIME EXCEPTION'), 'Exception occurred while loading your tests');
-    logError(err.stack);
+    log(err.stack);
   };
 
   onWebpackStart = () => {
