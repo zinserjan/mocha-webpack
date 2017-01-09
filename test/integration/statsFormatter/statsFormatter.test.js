@@ -12,6 +12,7 @@ import createStatsFormatter from '../../../src/webpack/util/createStatsFormatter
 
 const base = path.join(__dirname, 'statsCasesFixture');
 const tests = fs.readdirSync(base).filter((testName) => fs.existsSync(path.join(base, testName, 'entry.js')));
+const jsonLoaderPath = path.resolve(__dirname, './mock/json-loader.js');
 
 const webpackConfig = {
   output: {
@@ -29,7 +30,7 @@ const webpackConfig = {
       },
       {
         test: /.json$/,
-        loader: 'json-loader',
+        loader: jsonLoaderPath,
       },
       {
         test: /\.scss$/,

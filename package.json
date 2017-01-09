@@ -68,7 +68,6 @@
     "fast-async": "^6.1.2",
     "flow-bin": "^0.36.0",
     "fs-extra": "^0.30.0",
-    "json-loader": "^0.5.4",
     "mocha": "^3.0.0",
     "node-sass": "~4.1.1",
     "np": "^2.9.0",
