@@ -27,4 +27,11 @@ describe('cli --reporter', function () {
       done();
     });
   });
+
+  it('shows notifications with --growl', function (done) {
+    exec(`node ${binPath}  --growl "${test}"`, (err) => {
+      assert.isNull(err);
+      done();
+    });
+  });
 });
