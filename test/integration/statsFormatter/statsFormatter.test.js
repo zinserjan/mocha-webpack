@@ -35,6 +35,10 @@ const webpackConfig = {
         loader: jsonLoaderPath,
       },
       {
+        test: /\.css$/,
+        loaders: ['css-loader'],
+      },
+      {
         test: /\.scss$/,
         loaders: ['sass-loader'],
       },
