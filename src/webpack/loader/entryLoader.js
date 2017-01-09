@@ -27,10 +27,6 @@ class EntryConfig {
 }
 
 const entryLoader = function entryLoader() {
-  if (this.cacheable) {
-    this.cacheable();
-  }
-
   const config: EntryConfig = this.options[KEY];
 
   // Remove all dependencies of the loader result
