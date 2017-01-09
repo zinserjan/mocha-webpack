@@ -94,6 +94,10 @@ if (options.delay) {
   mochaWebpack.delay();
 }
 
+if (options.growl) {
+  mochaWebpack.growl();
+}
+
 Promise
   .resolve()
   .then(() => {

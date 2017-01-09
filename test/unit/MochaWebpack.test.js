@@ -276,5 +276,17 @@ describe('MochaWebpack', function () {
       assert.notStrictEqual(this.mochaWebpack.options, oldOptions, 'interactive() should not mutate');
       assert.strictEqual(returnValue, this.mochaWebpack, 'api should be chainable');
     });
+
+    it('growl()', function () {
+      const oldOptions = this.mochaWebpack.options;
+      const oldValue = oldOptions.growl;
+      assert.isNotOk(oldValue, 'growl should be falsy');
+
+      const returnValue = this.mochaWebpack.growl();
+
+      assert.propertyVal(this.mochaWebpack.options, 'growl', true, 'growl should be changed to true');
+      assert.notStrictEqual(this.mochaWebpack.options, oldOptions, 'growl() should not mutate');
+      assert.strictEqual(returnValue, this.mochaWebpack, 'api should be chainable');
+    });
   });
 });

@@ -60,10 +60,9 @@ export default function configureMocha(options: MochaWebpackOptions) {
   }
 
   // growl
-  // todo add a way to use this also with webpack errors
-  // if (options.growl) {
-  //   mocha.growl();
-  // }
+  if (options.growl) {
+    mocha.growl();
+  }
 
   // async-only
   if (options.asyncOnly) {

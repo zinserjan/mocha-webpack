@@ -20,7 +20,8 @@ export type MochaWebpackOptions = {
   slow: number,
   asyncOnly: boolean,
   delay: boolean,
-  interactive: boolean
+  interactive: boolean,
+  growl: ?boolean,
 };
 
 export default class MochaWebpack {
@@ -354,6 +355,21 @@ export default class MochaWebpack {
     this.options = {
       ...this.options,
       interactive,
+    };
+    return this;
+  }
+
+  /**
+   * Enable growl notification support
+   *
+   * @public
+   * @param {boolean} growl
+   * @return {MochaWebpack}
+   */
+  growl(): MochaWebpack {
+    this.options = {
+      ...this.options,
+      growl: true,
     };
     return this;
   }
