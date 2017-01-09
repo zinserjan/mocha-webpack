@@ -6,9 +6,11 @@ import path from 'path';
 import _ from 'lodash';
 import chalk from 'chalk';
 import webpack from 'webpack';
+import { version as WEBPACK_VERSION } from 'webpack/package.json';
 import MemoryFileSystem from 'memory-fs';
 import { assert } from 'chai';
 import createStatsFormatter from '../../../src/webpack/util/createStatsFormatter';
+const webpackMajorVersion = WEBPACK_VERSION.charAt(0);
 
 const base = path.join(__dirname, 'statsCasesFixture');
 const tests = fs.readdirSync(base).filter((testName) => fs.existsSync(path.join(base, testName, 'entry.js')));
@@ -90,8 +92,8 @@ describe('statFormatter', function () {
         const warningsContent = ensureConsistentCompare(warnings.join('\n'));
         const errorsContent = ensureConsistentCompare(errors.join('\n'));
 
-        const expectedWarningsPath = path.join(testDirPath, 'warnings.txt');
-        const expectedErrorsPath = path.join(testDirPath, 'errors.txt');
+        const expectedWarningsPath = path.join(testDirPath, `warnings.webpack-${webpackMajorVersion}.txt`);
+        const expectedErrorsPath = path.join(testDirPath, `errors.webpack-${webpackMajorVersion}.txt`);
 
         if (!fs.existsSync(expectedWarningsPath) || !fs.existsSync(expectedErrorsPath)) {
           fs.outputFileSync(expectedWarningsPath, warningsContent);
