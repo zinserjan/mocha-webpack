@@ -17,6 +17,7 @@ const cleanUpModuleNotFoundMessage = (message: string) => {
     return message
       .replace('Cannot resolve \'file\' or \'directory\' ', '')
       .replace('Cannot resolve module ', '')
+      .replace('Error: Can\'t resolve ', '')
       .replace('Error: ', '');
   }
   return message;
