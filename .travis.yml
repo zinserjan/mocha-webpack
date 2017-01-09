@@ -12,7 +12,7 @@ env:
   - WEBPACK_VERSION=beta MOCHA_VERSION=3
 
 before_script:
-  - "npm install webpack@$WEBPACK_VERSION"
+  - if [ "${WEBPACK_VERSION}" != "1" ]; then npm install "webpack@$WEBPACK_VERSION"; fi
   - "npm install mocha@$MOCHA_VERSION"
 
 script:
