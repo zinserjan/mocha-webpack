@@ -1,5 +1,6 @@
 // @flow
 import loaderUtils from 'loader-utils';
+import normalizePath from 'normalize-path';
 import createEntry from '../util/createEntry';
 
 const KEY = Symbol('entryConfig');
@@ -13,11 +14,13 @@ class EntryConfig {
   }
 
   addFile(file: string): void {
-    this.files.push(file);
+    const normalizedFile = normalizePath(file);
+    this.files.push(normalizedFile);
   }
 
   removeFile(file: string): void {
-    this.files = this.files.filter((f) => f !== file);
+    const normalizedFile = normalizePath(file);
+    this.files = this.files.filter((f) => f !== normalizedFile);
   }
 
   getFiles(): Array<string> {
