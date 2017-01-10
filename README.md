@@ -9,7 +9,7 @@ $ webpack test.js output.js && mocha output.js
 
 ... but in a much more *powerful* & *optimized* way.
 
-**TODO IMAGE HERE!!**
+![CLI](./docs/media/cli-test-success.png)
 
 mocha-webpack ...
 - precompiles your test files automatically with webpack before executing tests
@@ -18,26 +18,36 @@ mocha-webpack ...
 - understands globs & all other stuff as test entries like mocha
 
 Benefits over plain mocha
-- has nearly the same CLI as mocha (switchover is damn simple)
-- you can identify issues in your webpack build early with your tests
-- you don't rely on hacky solutions to get all benefits from webpack
+- has nearly the same CLI as mocha
+- you don't rely on hacky solutions to mock all benefits from webpack, like path resolution
 - mocha-webpack provides a much better watch mode than mocha
 
 ## Watch mode (`--watch`)
 
-Watch mode listens to changes in your files and test only the files that changed.
+Unlike mocha, mocha-webpack analyzes your dependency graph and run only those test files that were affected by this file change.
 
-Unlike mocha, mocha-webpack analyzes your dependency graph and run only those test files that were affected by this change.
-This allows you to write your tests first and code happily until all tests are green.
+You'll get continues feedback whenever you make changes as all tests that are related in any way to this change will be tested again. Isn't that awesome?
 
-You'll get continues feedback when you make changes as all tests that are related in any way to this change will be tested again. Isn't that awesome?
+If any build errors happens, they will be shown like below
+
+![CLI](./docs/media/cli-compile-failed.png)
+
+## Which version works with mocha-webpack?
+
+mocha-webpack works with
+- webpack in version `1.x.x` & `2.x.x`
+- mocha in version `2.x.x` & `3.x.x`
 
 ## Installation
 
+Install mocha-webpack via npm install
+```bash
+$ npm install webpack mocha mocha-webpack --save-dev
+```
 
-Installation and configuration instructions can be found here..
+and use it via npm scripts in your `package.json`
 
-**TODO Link to instructions + beta note here!!**
+Further installation and configuration instructions can be found in the [installation chapter](./docs/installation/instructions.md).
 
 
 ## Sample commands
@@ -45,44 +55,32 @@ Installation and configuration instructions can be found here..
 run a single test
 
 ```bash
-mocha-webpack --webpack-config webpack.config-test.js simple.test.js
+mocha-webpack simple.test.js
 ```
 
 run all tests by glob
 
 ```bash
-mocha-webpack --webpack-config webpack.config-test.js test/**/*.js
+mocha-webpack "test/**/*.js"
 ```
+**Note:** You may noticed the quotes around the glob pattern. That's unfortunately necessary as most terminals will resolve globs automatically.
 
-run all tests in directory "test" (add `--recursive` to include subdirectories)
+run all tests in directory "test" matching the file pattern *.test.js  (add `--recursive` to include subdirectories)
 
 ```bash
-mocha-webpack --webpack-config webpack.config-test.js test
-```
-
-run all tests in directory "test" matching the file pattern *.test.js
-
-```bash
-mocha-webpack --webpack-config webpack.config-test.js --glob "*.test.js" test
+mocha-webpack --glob "*.test.js" test
 ```
 
 Watch mode? just add `--watch`
 
 ```
-mocha-webpack --webpack-config webpack.config-test.js --watch test
+mocha-webpack --watch test
 ```
-
-
-### CLI options
-
-see `mocha-webpack --help`
 
 ### License
 
 MIT
 
-[source-map-support]: https://github.com/evanw/node-source-map-support
-[karma-webpack]: https://github.com/webpack/karma-webpack
 [build-badge]: https://travis-ci.org/zinserjan/mocha-webpack.svg?branch=master
 [build]: https://travis-ci.org/zinserjan/mocha-webpack
 [build-badge-windows]: https://ci.appveyor.com/api/projects/status/pnik85hfqesxy7y9/branch/master?svg=true
