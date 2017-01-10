@@ -8,5 +8,5 @@
     * [Watch mode](/docs/getting-started/watch.md)
     * [JSDOM](/docs/guides/jsdom.md)
     * [Code coverage](/docs/guides/code-coverage.md)
-    * [IDE Integration](/docs/getting-started/ide-integration.md)
+    * [IDE Integration](/docs/guides/ide-integration.md)
 * [Contributing Guide](/CONTRIBUTING.md)
