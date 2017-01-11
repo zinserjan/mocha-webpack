@@ -37,19 +37,19 @@ const options = {
     describe: 'include sub directories',
     group: ADVANCED_GROUP,
   },
-  'reporter-options': {
-    alias: 'O',
-    type: 'string',
-    describe: 'reporter-specific options, --reporter-options <k=v,k2=v2,...>',
-    group: OUTPUT_GROUP,
-    requiresArg: true,
-  },
   reporter: {
     alias: 'R',
     type: 'string',
     describe: 'specify the reporter to use',
     group: OUTPUT_GROUP,
     default: 'spec',
+    requiresArg: true,
+  },
+  'reporter-options': {
+    alias: 'O',
+    type: 'string',
+    describe: 'reporter-specific options, --reporter-options <k=v,k2=v2,...>',
+    group: OUTPUT_GROUP,
     requiresArg: true,
   },
   bail: {
@@ -61,7 +61,7 @@ const options = {
   },
   glob: {
     type: 'string',
-    describe: 'only run files matching <pattern> (only valid for directory entry)',
+    describe: 'only test files matching <pattern> (only valid for directory entry)',
     group: ADVANCED_GROUP,
     requiresArg: true,
   },
