@@ -25,6 +25,7 @@
     "docs:prepare": "gitbook install",
     "docs:build": "npm run docs:prepare && gitbook build",
     "docs:watch": "npm run docs:prepare && gitbook serve --port 3000",
+    "docs:deploy": "npm run docs:clean && npm run docs:build && gh-pages -d _book",
     "prepublish": "npm run build",
     "release": "np"
   },
@@ -73,6 +74,7 @@
     "fast-async": "^6.1.2",
     "flow-bin": "^0.36.0",
     "fs-extra": "^0.30.0",
+    "gh-pages": "^0.12.0",
     "gitbook-cli": "^2.3.0",
     "mocha": "^3.0.0",
     "node-sass": "~4.1.1",
