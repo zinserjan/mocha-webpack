@@ -15,11 +15,5 @@
     "github": {
       "url": "https://github.com/zinserjan/mocha-webpack"
     }
-  },
-  "links": {
-    "sharing": {
-      "facebook": false,
-      "twitter": false
-    }
   }
 }
