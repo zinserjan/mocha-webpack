@@ -113,6 +113,7 @@ then it's equivalent to
 $ mocha-webpack --growl --colors --webpack-config webpack.config-test.js "src/**/*.test.js"
 ```
 
+**Note:** Unlink in your terminal you have to avoid quotes in your *mocha-webpack.opts* file.
 
 ### --glob, --recursive
 
