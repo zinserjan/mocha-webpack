@@ -27,6 +27,7 @@
     "docs:watch": "npm run docs:prepare && gitbook serve --port 3000",
     "docs:deploy": "npm run docs:clean && npm run docs:build && gh-pages -d _book",
     "prepublish": "npm run build",
+    "postpublish": "npm run docs:deploy",
     "release": "np"
   },
   "repository": {
