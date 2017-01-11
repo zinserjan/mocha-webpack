@@ -1,6 +1,6 @@
 # Installation
 
-The recommended approach is to install mocha-webpack locally in your project's directory.
+The recommended approach to install mocha-webpack is to install it locally in your project's directory.
 
 ```bash
 # install mocha, webpack & mocha-webpack as devDependencies
