@@ -1,0 +1,394 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Introduction | mocha-webpack</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="mocha test runner with integrated webpack precompiler">
+        <meta name="generator" content="GitBook 2.4.3">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-edit-link/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-prism/prism.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+    
+
+        
+    
+    
+    <link rel="next" href="./docs/installation/setup.html" />
+    
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book" data-level="0" data-basepath="." data-revision="Wed Jan 11 2017 17:29:55 GMT+0100 (CET)">
+    
+
+<div class="book-summary">
+    <div class="book-search" role="search">
+        <input type="text" placeholder="Type to search" class="form-control" />
+    </div>
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter active" data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="docs/installation/setup.html">
+            
+                
+                    <a href="./docs/installation/setup.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Installation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1" data-path="docs/installation/cli-usage.html">
+            
+                
+                    <a href="./docs/installation/cli-usage.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.</b>
+                        
+                        CLI Usage
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="docs/installation/webpack-configuration.html">
+            
+                
+                    <a href="./docs/installation/webpack-configuration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.2.</b>
+                        
+                        Webpack Configuration
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="docs/guides.html">
+            
+            <span><b>2.</b> Guides</span>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1" data-path="docs/guides/jsdom.html">
+            
+                
+                    <a href="./docs/guides/jsdom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.</b>
+                        
+                        JSDOM
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="docs/guides/code-coverage.html">
+            
+            <span><b>2.2.</b> Code coverage</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="docs/guides/ide-integration.html">
+            
+                
+                    <a href="./docs/guides/ide-integration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.</b>
+                        
+                        IDE Integration
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="CONTRIBUTING.html">
+            
+                
+                    <a href="./CONTRIBUTING.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Contributing Guide
+                    </a>
+            
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    <a href="#" class="btn pull-left toggle-summary" aria-label="Table of Contents"><i class="fa fa-align-justify"></i></a>
+    <a href="#" class="btn pull-left toggle-search" aria-label="Search"><i class="fa fa-search"></i></a>
+    
+    <div id="font-settings-wrapper" class="dropdown pull-left">
+        <a href="#" class="btn toggle-dropdown" aria-label="Font Settings"><i class="fa fa-font"></i>
+        </a>
+        <div class="dropdown-menu font-settings">
+    <div class="dropdown-caret">
+        <span class="caret-outer"></span>
+        <span class="caret-inner"></span>
+    </div>
+
+    <div class="buttons">
+        <button type="button" id="reduce-font-size" class="button size-2">A</button>
+        <button type="button" id="enlarge-font-size" class="button size-2">A</button>
+    </div>
+
+    <div class="buttons font-family-list">
+        <button type="button" data-font="0" class="button">Serif</button>
+        <button type="button" data-font="1" class="button">Sans</button>
+    </div>
+
+    <div class="buttons color-theme-list">
+        <button type="button" id="color-theme-preview-0" class="button size-3" data-theme="0">White</button>
+        <button type="button" id="color-theme-preview-1" class="button size-3" data-theme="1">Sepia</button>
+        <button type="button" id="color-theme-preview-2" class="button size-3" data-theme="2">Night</button>
+    </div>
+</div>
+
+    </div>
+
+    <!-- Actions Right -->
+    
+    <div class="dropdown pull-right">
+        <a href="#" class="btn toggle-dropdown" aria-label="Share"><i class="fa fa-share-alt"></i>
+        </a>
+        <div class="dropdown-menu font-settings dropdown-left">
+            <div class="dropdown-caret">
+                <span class="caret-outer"></span>
+                <span class="caret-inner"></span>
+            </div>
+            <div class="buttons">
+                <button type="button" data-sharing="twitter" class="button">
+                    Share on Twitter
+                </button>
+                <button type="button" data-sharing="google-plus" class="button">
+                    Share on Google
+                </button>
+                <button type="button" data-sharing="facebook" class="button">
+                    Share on Facebook
+                </button>
+                <button type="button" data-sharing="weibo" class="button">
+                    Share on Weibo
+                </button>
+                <button type="button" data-sharing="instapaper" class="button">
+                    Share on Instapaper
+                </button>
+            </div>
+        </div>
+    </div>
+    
+
+    
+    <a href="#" target="_blank" class="btn pull-right google-plus-sharing-link sharing-link" data-sharing="google-plus" aria-label="Google"><i class="fa fa-google-plus"></i></a>
+    
+    
+    <a href="#" target="_blank" class="btn pull-right facebook-sharing-link sharing-link" data-sharing="facebook" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
+    
+    
+    <a href="#" target="_blank" class="btn pull-right twitter-sharing-link sharing-link" data-sharing="twitter" aria-label="Twitter"><i class="fa fa-twitter"></i></a>
+    
+    
+    
+
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >mocha-webpack</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <a id="edit-link" href="https://github.com/zinserjan/mocha-webpack/tree/master/README.md" class="btn fa fa-edit pull-left">&#xA0;&#xA0;Edit This Page</a><h1 id="mocha-webpack-npm-package-npm-badge-npm-build-status-linux-build-badge-build-build-status-windows-build-badge-windows-build-windows-codecov-codecov-badge-codecov"><a name="mocha-webpack-npm-package-npm-badge-npm-build-status-linux-build-badge-build-build-status-windows-build-badge-windows-build-windows-codecov-codecov-badge-codecov" class="plugin-anchor" href="#mocha-webpack-npm-package-npm-badge-npm-build-status-linux-build-badge-build-build-status-windows-build-badge-windows-build-windows-codecov-codecov-badge-codecov"><span class="fa fa-link"></span></a>mocha-webpack <a href="https://www.npmjs.org/package/mocha-webpack" target="_blank"><img src="https://img.shields.io/npm/v/mocha-webpack.svg?style=flat-square" alt="npm package"></a>  <a href="https://travis-ci.org/zinserjan/mocha-webpack" target="_blank"><img src="https://travis-ci.org/zinserjan/mocha-webpack.svg?branch=master" alt="Build Status Linux"></a> <a href="https://ci.appveyor.com/project/zinserjan/mocha-webpack" target="_blank"><img src="https://ci.appveyor.com/api/projects/status/pnik85hfqesxy7y9/branch/master?svg=true" alt="Build Status Windows"></a> <a href="https://codecov.io/gh/zinserjan/mocha-webpack" target="_blank"><img src="https://codecov.io/gh/zinserjan/mocha-webpack/branch/master/graph/badge.svg" alt="codecov"></a></h1>
+<blockquote>
+<p>mocha test runner with integrated webpack precompiler</p>
+</blockquote>
+<p>mocha-webpack is basically a wrapper around the following command...</p>
+<pre><code class="lang-bash">$ webpack test.js output.js <span class="token operator">&amp;&amp;</span> mocha output.js
+</code></pre>
+<p>... but in a much more <em>powerful</em> &amp; <em>optimized</em> way.</p>
+<p><img src="docs/media/cli-test-success.png" alt="CLI"></p>
+<p>mocha-webpack ...</p>
+<ul>
+<li>precompiles your test files automatically with webpack before executing tests</li>
+<li>handles source-maps automatically for you</li>
+<li>does not write any files to disk</li>
+<li>understands globs &amp; all other stuff as test entries like mocha</li>
+</ul>
+<p>Benefits over plain mocha</p>
+<ul>
+<li>has nearly the same CLI as mocha</li>
+<li>you don&apos;t rely on hacky solutions to mock all benefits from webpack, like path resolution</li>
+<li>mocha-webpack provides a much better watch mode than mocha</li>
+</ul>
+<h2 id="watch-mode-watch"><a name="watch-mode-watch" class="plugin-anchor" href="#watch-mode-watch"><span class="fa fa-link"></span></a>Watch mode (<code>--watch</code>)</h2>
+<p>Unlike mocha, mocha-webpack analyzes your dependency graph and run only those test files that were affected by this file change.</p>
+<p>You&apos;ll get continues feedback whenever you make changes as all tests that are related in any way to this change will be tested again. Isn&apos;t that awesome?</p>
+<p>If any build errors happens, they will be shown like below</p>
+<p><img src="docs/media/cli-compile-failed.png" alt="CLI"></p>
+<h2 id="which-version-works-with-mocha-webpack"><a name="which-version-works-with-mocha-webpack" class="plugin-anchor" href="#which-version-works-with-mocha-webpack"><span class="fa fa-link"></span></a>Which version works with mocha-webpack?</h2>
+<p>mocha-webpack works with</p>
+<ul>
+<li>webpack in version <code>1.x.x</code> &amp; <code>2.x.x</code></li>
+<li>mocha in version <code>2.x.x</code> &amp; <code>3.x.x</code></li>
+</ul>
+<h2 id="installation"><a name="installation" class="plugin-anchor" href="#installation"><span class="fa fa-link"></span></a>Installation</h2>
+<p><strong>Note:</strong> Version 1.0.0 is on the way and the latest pre-releases are available on npm under the <code>next</code> tag.</p>
+<p>Install mocha-webpack via npm install</p>
+<pre><code class="lang-bash">$ npm <span class="token function">install</span> webpack mocha mocha-webpack@next --save-dev
+</code></pre>
+<p>and use it via npm scripts in your <code>package.json</code></p>
+<p>Further installation and configuration instructions can be found in the <a href="docs/installation/setup.html">installation chapter</a>.</p>
+<h2 id="sample-commands"><a name="sample-commands" class="plugin-anchor" href="#sample-commands"><span class="fa fa-link"></span></a>Sample commands</h2>
+<p>run a single test</p>
+<pre><code class="lang-bash">mocha-webpack simple.test.js
+</code></pre>
+<p>run all tests by glob</p>
+<pre><code class="lang-bash">mocha-webpack <span class="token string">&quot;test/**/*.js&quot;</span>
+</code></pre>
+<p><strong>Note:</strong> You may noticed the quotes around the glob pattern. That&apos;s unfortunately necessary as most terminals will resolve globs automatically.</p>
+<p>run all tests in directory &quot;test&quot; matching the file pattern *.test.js  (add <code>--recursive</code> to include subdirectories)</p>
+<pre><code class="lang-bash">mocha-webpack --glob <span class="token string">&quot;*.test.js&quot;</span> <span class="token function">test</span>
+</code></pre>
+<p>Watch mode? just add <code>--watch</code></p>
+<pre><code>mocha-webpack --watch test
+</code></pre><h3 id="license"><a name="license" class="plugin-anchor" href="#license"><span class="fa fa-link"></span></a>License</h3>
+<p>MIT</p>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        
+        <a href="./docs/installation/setup.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Installation"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-github/plugin.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"fontSettings":{"theme":null,"family":"sans","size":2},"edit-link":{"base":"https://github.com/zinserjan/mocha-webpack/tree/master","label":"Edit This Page"},"github":{"url":"https://github.com/zinserjan/mocha-webpack"}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>
