@@ -40,15 +40,16 @@ mocha-webpack works with
 
 ## Installation
 
+**Note:** Version 1.0.0 is on the way and the latest pre-releases are available on npm under the `next` tag.
+
 Install mocha-webpack via npm install
 ```bash
-$ npm install webpack mocha mocha-webpack --save-dev
+$ npm install webpack mocha mocha-webpack@next --save-dev
 ```
 
 and use it via npm scripts in your `package.json`
 
 Further installation and configuration instructions can be found in the [installation chapter](./docs/installation/setup.md).
-
 
 ## Sample commands
 
