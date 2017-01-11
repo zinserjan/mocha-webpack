@@ -1,11 +1,10 @@
 ## Table of Contents
 
 * [Introduction](/README.md)
-* [Installation](/docs/installation/instructions.md)
-  * [Configuration](/docs/installation/configuration.md)
-  * [Test entries](/docs/installation/test-entries.md)
+* [Installation](/docs/installation/setup.md)
+  * [CLI Usage](/docs/installation/cli-usage.md)
+  * [Webpack Configuration](/docs/installation/webpack-configuration.md)
 * [Guides](/docs/guides.md)
-    * [Watch mode](/docs/getting-started/watch.md)
     * [JSDOM](/docs/guides/jsdom.md)
     * [Code coverage](/docs/guides/code-coverage.md)
     * [IDE Integration](/docs/guides/ide-integration.md)

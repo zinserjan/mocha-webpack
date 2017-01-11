@@ -18,7 +18,7 @@ $ node ./node_modules/mocha-webpack/bin/mocha-webpack --version
 $ node ./node_modules/mocha-webpack/bin/mocha-webpack --help
 ```
 
-### Configuring mocha-webpack
+### Using npm scripts
 
 Typing `node ./node_modules/mocha-webpack/bin/mocha-webpack ....` is just annoying and you might find it useful to configure your run commands as npm scripts inside your `package.json`.
 
