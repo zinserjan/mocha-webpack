@@ -9,7 +9,7 @@ import parseConfig from '../../../src/cli/parseConfig';
 const optsTestCasesPath = path.join(__dirname, 'fixture', 'config', 'optsTestCases');
 const optsTestCases = fs.readdirSync(optsTestCasesPath);
 
-describe.only('parseConfig', function () {
+describe('parseConfig', function () {
   it('returns empty object when default config file is missing', function () {
     assert.deepEqual(parseConfig(), {});
   });
@@ -37,7 +37,7 @@ describe.only('parseConfig', function () {
     const optsFilePath = path.join(testDirPath, 'mocha-webpack.opts');
     const expectedResultsPath = path.join(testDirPath, 'expected.json');
 
-    it(`parses ${optsFilePath} and returns options`, function () {
+    it(`parses '${testDirName}/mocha-webpack.opts' and returns options`, function () {
       // eslint-disable-next-line global-require
       const expectedResult = require(expectedResultsPath);
       const parsedOptions = parseConfig(optsFilePath);
