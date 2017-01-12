@@ -112,8 +112,6 @@ then it's equivalent to
 $ mocha-webpack --growl --colors --webpack-config webpack.config-test.js "src/**/*.test.js"
 ```
 
-**Note:** Unlink in your terminal you have to avoid quotes in your *mocha-webpack.opts* file.
-
 ### --glob, --recursive
 
 When you use a directory as a test entry `--glob` and `--recursive` can help you to control the files to test.
