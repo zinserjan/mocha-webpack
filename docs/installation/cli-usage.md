@@ -48,11 +48,11 @@ Default pattern when no arguments:
 
 ### --webpack-config
 
-Let's you use a webpack config for your tests. This allows you to define custom loaders and other webpack configuration settings.
+Allows you to use your own custom webpack config for your tests and  custom loaders and other webpack configuration settings.
 
 
-If you want to use JavaScript preprocessor such as [Babel](https://babeljs.io/) or [CoffeeScript](http://coffeescript.org/)
-in your webpack config file then give it a name ending with corresponding extension and call it without it:
+If you need to use a JavaScript preprocessor such as [Babel](https://babeljs.io/) or [CoffeeScript](http://coffeescript.org/)
+for your webpack config file then give it a name ending with corresponding extension and call it without it:
 
 `$ mocha-webpack --webpack-config webpack.config-test.js`
 
@@ -86,8 +86,7 @@ Please have a look at the [webpack configuration chapter](./webpack-configuratio
 
 ### --opts
 
-When there is no `--opts` given, mocha-webpack attempts to load `mocha-webpack.opts` in your working directory.
-It's basically the same like `mocha.opts` for mocha and appends common CLI options automatically to your commands.
+mocha-webpack attempts to load a configuration file named `mocha-webpack.opts` in your working directory. It's basically the same like `mocha.opts` for mocha and appends common CLI options automatically to your commands.
 
 `--opts` allows you to define a custom file path for this config file.
 
@@ -119,7 +118,7 @@ $ mocha-webpack --growl --colors --webpack-config webpack.config-test.js "src/**
 
 When you use a directory as a test entry `--glob` and `--recursive` can help you to control the files to test.
 
-- `--glob` affects only directory entries and allows you to specifiy a pattern for the files that should be tested
+- `--glob` affects only directory entries and allows you to specifiy a pattern (e.g. `*.test.js`) for the files that should be tested
 - `--recursive` searches also in subdirectories for tests to run
 
 
@@ -128,12 +127,12 @@ When you use a directory as a test entry `--glob` and `--recursive` can help you
 `--require` is a known mocha option that lets you execute files before your tests would be required.
 It's useful for setup stuff like initializing `jsdom`.
 
-`--include` does something similar, expect that the files will be included into the webpack bundle.
+`--include` does something similar, except that the files will be included into the webpack bundle.
 But like `--require` it will be executed before your tests.
 
 
 ### --watch
 
-Starts mocha-webpack in watch mode and automatically compiles & tests when a file change occur.
+Starts mocha-webpack in watch mode and compiles & run your tests automatically when a file change occur.
 Unlike mocha, mocha-webpack analyzes your dependency graph and run only those test files that were affected by this file change.
 
