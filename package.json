@@ -1,6 +1,6 @@
 {
   "name": "mocha-webpack",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "description": "mocha cli with webpack support",
   "bin": {
     "mocha-webpack": "./bin/mocha-webpack"
