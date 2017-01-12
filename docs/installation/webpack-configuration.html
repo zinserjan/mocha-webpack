@@ -48,7 +48,7 @@
     <body>
         
         
-    <div class="book" data-level="1.2" data-basepath="../.." data-revision="Thu Jan 12 2017 19:08:53 GMT+0100 (CET)">
+    <div class="book" data-level="1.2" data-basepath="../.." data-revision="Thu Jan 12 2017 20:10:15 GMT+0100 (CET)">
     
 
 <div class="book-summary">
@@ -310,7 +310,7 @@
                     <section class="normal" id="section-">
                     
                         <a id="edit-link" href="https://github.com/zinserjan/mocha-webpack/tree/master/docs/installation/webpack-configuration.md" class="btn fa fa-edit pull-left">&#xA0;&#xA0;Edit This Page</a><h1 id="webpack-configuration"><a name="webpack-configuration" class="plugin-anchor" href="#webpack-configuration"><span class="fa fa-link"></span></a>Webpack configuration</h1>
-<p>A really really basic webpack configuration for mocha-webpack should at least contain the following:</p>
+<p>A really basic webpack configuration for mocha-webpack should at least contain the following:</p>
 <p><strong>webpack.config-test.js</strong> - example config</p>
 <pre><code class="lang-javascript"><span class="token keyword">var</span> nodeExternals <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">&apos;webpack-node-externals&apos;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
@@ -321,7 +321,7 @@ module<span class="token punctuation">.</span>exports <span class="token operato
 </code></pre>
 <p>The most important option is the value of <code>target</code>, as it tells webpack to compile the code for Node.js. When you leave this empty, webpack compiles for web environment and features like code-splitting will not work.</p>
 <p>Another important thing is to <em>stop webpack from bundling your libraries</em> inside your node_modules folder.
-This can be easily done with the <a href="https://github.com/liady/webpack-node-externals" target="_blank">webpack-node-externals</a> plugin.
+This can be easily done by using the <a href="https://github.com/liady/webpack-node-externals" target="_blank">webpack-node-externals</a> plugin.
 The reason for this is that webpack isn&apos;t able to compile all node_modules like server only modules. Another reason is simply performance.</p>
 <p><em>Info</em>: You can install this plugin with <code>npm install --save-dev webpack-node-externals</code></p>
 <p>Maybe you noticed that <a href="https://webpack.github.io/docs/configuration.html#entry" target="_blank">entry</a>, <a href="https://webpack.github.io/docs/configuration.html#output-filename" target="_blank">output.filename</a> and <a href="https://webpack.github.io/docs/configuration.html#output-path" target="_blank">output.path</a> are completely missing in this config.
@@ -354,7 +354,7 @@ module<span class="token punctuation">.</span>exports <span class="token operato
 <p>When you never heard about <a href="https://github.com/css-modules/css-modules" target="_blank">CSS-Modules</a> you probably don&apos;t use it.</p>
 <h3 id="without-css-modules"><a name="without-css-modules" class="plugin-anchor" href="#without-css-modules"><span class="fa fa-link"></span></a>Without CSS-Modules</h3>
 <p>If you don&apos;t want to use CSS-Modules then you can replace all of your CSS loaders with <a href="https://github.com/webpack/null-loader" target="_blank">null-loader</a>:</p>
-<p>Your webpack-config might look like the following:</p>
+<p>Your webpack-config for the browser might look like the following:</p>
 <pre><code class="lang-javascript">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
     module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
         loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span>
@@ -386,7 +386,7 @@ module<span class="token punctuation">.</span>exports <span class="token operato
 <h3 id="with-css-modules"><a name="with-css-modules" class="plugin-anchor" href="#with-css-modules"><span class="fa fa-link"></span></a>With CSS-Modules</h3>
 <p>If you want to use CSS-Modules you have to make your loader definition compatible with the node environment.
 It&apos;s the same setup like for universal applications respectively pre-rendering of Single Page Applications.</p>
-<p>Your webpack-config might look like the following:</p>
+<p>Your webpack-config for the browser might look like the following:</p>
 <pre><code class="lang-javascript">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
     module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
         loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span>
@@ -403,7 +403,7 @@ It&apos;s the same setup like for universal applications respectively pre-render
 <li>remove <code>style-loader</code></li>
 <li>replace <code>css-loader</code> with <code>css-loader/locals</code></li>
 </ul>
-<p>Then your config looks finally like this:</p>
+<p>Then your config looks like this and you&apos;re ready to test:</p>
 <pre><code class="lang-javascript">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
     module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
         loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span>

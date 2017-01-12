@@ -48,7 +48,7 @@
     <body>
         
         
-    <div class="book" data-level="1.1" data-basepath="../.." data-revision="Thu Jan 12 2017 19:08:53 GMT+0100 (CET)">
+    <div class="book" data-level="1.1" data-basepath="../.." data-revision="Thu Jan 12 2017 20:10:15 GMT+0100 (CET)">
     
 
 <div class="book-summary">
@@ -351,9 +351,9 @@ Default pattern when no arguments:
 </code></pre>
 <h2 id="most-useful-options"><a name="most-useful-options" class="plugin-anchor" href="#most-useful-options"><span class="fa fa-link"></span></a>Most useful options</h2>
 <h3 id="-webpack-config"><a name="-webpack-config" class="plugin-anchor" href="#-webpack-config"><span class="fa fa-link"></span></a>--webpack-config</h3>
-<p>Allows you to use your own custom webpack config for your tests and  custom loaders and other webpack configuration settings.</p>
+<p>Allows you to use your own webpack configuration to define custom loaders and other webpack related stuff.</p>
 <p>If you need to use a JavaScript preprocessor such as <a href="https://babeljs.io/" target="_blank">Babel</a> or <a href="http://coffeescript.org/" target="_blank">CoffeeScript</a>
-for your webpack config file then give it a name ending with corresponding extension and call it without it:</p>
+for your webpack config file then give it a name that ends with corresponding extension and call it without it:</p>
 <p><code>$ mocha-webpack --webpack-config webpack.config-test.js</code></p>
 <p><strong>webpack.config-test.babel.js</strong> - Babel example config</p>
 <pre><code class="lang-javascript"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
@@ -400,10 +400,10 @@ src/**/*.test.js
 <li><code>--recursive</code> searches also in subdirectories for tests to run</li>
 </ul>
 <h3 id="-require-include"><a name="-require-include" class="plugin-anchor" href="#-require-include"><span class="fa fa-link"></span></a>--require, --include</h3>
-<p><code>--require</code> is a known mocha option that lets you execute files before your tests would be required.
+<p><code>--require</code> is a known mocha option that lets you execute files before your tests will be required.
 It&apos;s useful for setup stuff like initializing <code>jsdom</code>.</p>
 <p><code>--include</code> does something similar, except that the files will be included into the webpack bundle.
-But like <code>--require</code> it will be executed before your tests.</p>
+But like <code>--require</code> they will be executed before your tests.</p>
 <h3 id="-watch"><a name="-watch" class="plugin-anchor" href="#-watch"><span class="fa fa-link"></span></a>--watch</h3>
 <p>Starts mocha-webpack in watch mode and compiles &amp; run your tests automatically when a file change occur.
 Unlike mocha, mocha-webpack analyzes your dependency graph and run only those test files that were affected by this file change.</p>

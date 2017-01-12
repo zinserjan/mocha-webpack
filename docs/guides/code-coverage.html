@@ -48,7 +48,7 @@
     <body>
         
         
-    <div class="book" data-level="2.2" data-basepath="../.." data-revision="Thu Jan 12 2017 19:08:53 GMT+0100 (CET)">
+    <div class="book" data-level="2.2" data-basepath="../.." data-revision="Thu Jan 12 2017 20:10:15 GMT+0100 (CET)">
     
 
 <div class="book-summary">
@@ -406,14 +406,14 @@ module<span class="token punctuation">.</span>exports <span class="token operato
   devtool<span class="token punctuation">:</span> <span class="token string">&quot;inline-cheap-module-source-map&quot;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
 </code></pre>
-<p>In this config we add <code>istanbul-instrumenter-loader</code> only when we want coverage reports. The loader must be the first entry in the loaders array so ensure that it gets applied as last.
+<p>In this config we add <code>istanbul-instrumenter-loader</code> only when we want coverage reports. The loader must be the first entry in the loaders array to ensure that it gets applied as last.
 Alternatively you can also use the <a href="https://webpack.github.io/docs/configuration.html#module-preloaders-module-postloaders" target="_blank"><code>postLoaders</code> option</a> when you are using webpack@1 or for webpack@2 the <a href="https://webpack.js.org/configuration/module/#rule-enforce" target="_blank"><code>enforce</code> option</a>.</p>
 <p>Another important detail is that the <code>include</code> option should be configured in the same way (but webpack compatible) as in the <code>package.json</code>. <code>istanbul-instrumenter-loader</code> does not respect the value in the package.json, that&apos;s why you need to configure it again.</p>
 <p>When you run <code>npm run cover</code> again you should see something like this - dependent on your code:</p>
 <p><img src="../media/code-coverage-cli-success.png" alt="code coverage success"></p>
 <p>And you should get an html report (located at <code>./coverage/lcov-report/index.html</code>) that looks like the one from the intro.</p>
 <h2 id="generate-coverage-reports-for-the-whole-codebase"><a name="generate-coverage-reports-for-the-whole-codebase" class="plugin-anchor" href="#generate-coverage-reports-for-the-whole-codebase"><span class="fa fa-link"></span></a>Generate coverage reports for the whole codebase</h2>
-<p>Code coverage will only be measured for files that were executed within your test run. Normally you start your tests with just the test files as entries.</p>
+<p>Only files that were executed within your test run generate code coverage reports. Normally you start your tests with just the test files as entries.</p>
 <p>But when you want code coverage reports for the whole codebase, you need to import the rest of the code. It happens very often, that some files doesn&apos;t have any tests and doesn&apos;t impact the code coverage negatively.</p>
 <p>That&apos;s not the desired behavour.</p>
 <p>Let&apos;s assume that we have a directory for source files with name <code>src</code> and a folder for tests with name <code>test</code> in the project root, like the following:</p>
@@ -431,7 +431,7 @@ Alternatively you can also use the <a href="https://webpack.github.io/docs/confi
 <p>To fix this we add another entry to make sure that all source files are imported:</p>
 <pre><code class="lang-bash">$ mocha-webpack <span class="token string">&quot;src/**/*.js&quot;</span> <span class="token string">&quot;test/**/*.js&quot;</span>
 </code></pre>
-<p><strong>Note:</strong> It&apos;s recommended to have a CI configuration that imports all <em>source</em> + <em>test</em> files and for developing it&apos;s best to import only the tests as it costs performance to import code that will never execute.</p>
+<p><strong>Note:</strong> It&apos;s recommended to have a CI configuration that imports all <em>source</em> + <em>test</em> files and for developing it&apos;s best to import only the tests cause importing code that will never execute causes unnecessary compile time.</p>
 
                     
                     </section>
