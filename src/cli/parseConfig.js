@@ -12,12 +12,25 @@ function handleMissingConfig(config) {
   return {};
 }
 
-function removeSurroundingQuotes(str) {
-  if (str.indexOf('"') === 0 && str.lastIndexOf('"') === str.length - 1 && str.indexOf('"') !== str.lastIndexOf('"')) {
-    return str.substring(1, str.length - 1);
+const createStripSurroundingChar = (c) => (s) => {
+  if (s.indexOf(c) === 0 && s.lastIndexOf(c) === s.length - 1 && s.indexOf(c) !== s.lastIndexOf(c)) {
+    return s.substring(1, s.length - 1);
   }
-  return str;
-}
+  return s;
+};
+
+const stripSingleQuotes = createStripSurroundingChar("'");
+const stripDoubleQuotes = createStripSurroundingChar('"');
+
+const removeSurroundingQuotes = (str) => {
+  const stripped = stripDoubleQuotes(str);
+
+  if (stripped !== str) {
+    // strip only once
+    return stripped;
+  }
+  return stripSingleQuotes(str);
+};
 
 export default function parseConfig(explicitConfig) {
   const config = explicitConfig || defaultConfig;
