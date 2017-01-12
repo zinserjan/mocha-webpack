@@ -232,11 +232,13 @@ export default class TestRunner extends EventEmitter {
 
     const files = await glob(this.entries, {
       cwd: this.options.cwd,
-      absolute: true,
+      absolute: false, // this option isn't covered by the version range in 'globby' for 'glob' (default value is false)
     });
 
     const entryConfig = new EntryConfig();
-    files.forEach((f) => entryConfig.addFile(f));
+    files
+      .map((f) =>  path.join(this.options.cwd, f))
+      .forEach((f) => entryConfig.addFile(f));
 
     const includeLoaderQuery = {
       include: this.includes,
