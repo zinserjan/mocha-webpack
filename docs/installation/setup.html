@@ -48,7 +48,7 @@
     <body>
         
         
-    <div class="book" data-level="1" data-basepath="../.." data-revision="Wed Jan 11 2017 17:29:55 GMT+0100 (CET)">
+    <div class="book" data-level="1" data-basepath="../.." data-revision="Thu Jan 12 2017 19:08:53 GMT+0100 (CET)">
     
 
 <div class="book-summary">
@@ -155,7 +155,15 @@
     
         <li class="chapter " data-level="2.2" data-path="docs/guides/code-coverage.html">
             
-            <span><b>2.2.</b> Code coverage</span>
+                
+                    <a href="../../docs/guides/code-coverage.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.</b>
+                        
+                        Code coverage
+                    </a>
             
             
         </li>
@@ -302,9 +310,9 @@
                     <section class="normal" id="section-">
                     
                         <a id="edit-link" href="https://github.com/zinserjan/mocha-webpack/tree/master/docs/installation/setup.md" class="btn fa fa-edit pull-left">&#xA0;&#xA0;Edit This Page</a><h1 id="installation"><a name="installation" class="plugin-anchor" href="#installation"><span class="fa fa-link"></span></a>Installation</h1>
-<p>The recommended approach is to install mocha-webpack locally in your project&apos;s directory.</p>
+<p>The recommended approach to setup mocha-webpack is to install it locally in your project&apos;s directory.</p>
 <pre><code class="lang-bash"><span class="token comment" spellcheck="true"># install mocha, webpack &amp; mocha-webpack as devDependencies</span>
-$ npm <span class="token function">install</span> --save-dev mocha webpack mocha-webpack
+$ npm <span class="token function">install</span> --save-dev mocha webpack mocha-webpack@next
 </code></pre>
 <p>This will install <code>mocha</code>, <code>webpack</code> and <code>mocha-webpack</code> packages in your project directory into <code>node_modules</code> and also store them as <code>devDependencies</code> in your package.json.</p>
 <p>Congratulations, you are ready to run mocha-webpack for the first time in your project!</p>
@@ -326,7 +334,7 @@ $ node ./node_modules/mocha-webpack/bin/mocha-webpack --help
 <p>This allows you to run your test command simply by just typing <code>npm run test</code>.</p>
 <p>In addition, the defined command tells mocha-webpack to use the provided webpack config file <code>webpack.config-test.js</code> and to execute all tests matching the pattern <code>&quot;src/**/*.test.js&quot;</code>.</p>
 <p><strong>Note:</strong> You may noticed the quotes around the glob pattern. That&apos;s unfortunately necessary as most terminals will resolve globs automatically.</p>
-<p>For more installations details please have a look at the subchapter of the installation section.</p>
+<p>For more installation details please have a look at the subchapter of the installation section.</p>
 
                     
                     </section>

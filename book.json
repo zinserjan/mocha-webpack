@@ -1,7 +1,7 @@
 {
   "gitbook": "2.4.3",
   "title": "mocha-webpack",
-  "description": "",
+  "description": "mocha cli with webpack support",
   "structure": {
     "summary": "docs/README.md",
     "glossary": "docs/GLOSSARY.md"

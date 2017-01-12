@@ -48,7 +48,7 @@
     <body>
         
         
-    <div class="book" data-level="1.1" data-basepath="../.." data-revision="Wed Jan 11 2017 17:29:55 GMT+0100 (CET)">
+    <div class="book" data-level="1.1" data-basepath="../.." data-revision="Thu Jan 12 2017 19:08:53 GMT+0100 (CET)">
     
 
 <div class="book-summary">
@@ -155,7 +155,15 @@
     
         <li class="chapter " data-level="2.2" data-path="docs/guides/code-coverage.html">
             
-            <span><b>2.2.</b> Code coverage</span>
+                
+                    <a href="../../docs/guides/code-coverage.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.</b>
+                        
+                        Code coverage
+                    </a>
             
             
         </li>
@@ -343,9 +351,9 @@ Default pattern when no arguments:
 </code></pre>
 <h2 id="most-useful-options"><a name="most-useful-options" class="plugin-anchor" href="#most-useful-options"><span class="fa fa-link"></span></a>Most useful options</h2>
 <h3 id="-webpack-config"><a name="-webpack-config" class="plugin-anchor" href="#-webpack-config"><span class="fa fa-link"></span></a>--webpack-config</h3>
-<p>Let&apos;s you use a webpack config for your tests. This allows you to define custom loaders and other webpack configuration settings.</p>
-<p>If you want to use JavaScript preprocessor such as <a href="https://babeljs.io/" target="_blank">Babel</a> or <a href="http://coffeescript.org/" target="_blank">CoffeeScript</a>
-in your webpack config file then give it a name ending with corresponding extension and call it without it:</p>
+<p>Allows you to use your own custom webpack config for your tests and  custom loaders and other webpack configuration settings.</p>
+<p>If you need to use a JavaScript preprocessor such as <a href="https://babeljs.io/" target="_blank">Babel</a> or <a href="http://coffeescript.org/" target="_blank">CoffeeScript</a>
+for your webpack config file then give it a name ending with corresponding extension and call it without it:</p>
 <p><code>$ mocha-webpack --webpack-config webpack.config-test.js</code></p>
 <p><strong>webpack.config-test.babel.js</strong> - Babel example config</p>
 <pre><code class="lang-javascript"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
@@ -371,8 +379,7 @@ in your webpack config file then give it a name ending with corresponding extens
 </code></pre>
 <p>Please have a look at the <a href="webpack-configuration.html">webpack configuration chapter</a> to get further instructions &amp; tips.</p>
 <h3 id="-opts"><a name="-opts" class="plugin-anchor" href="#-opts"><span class="fa fa-link"></span></a>--opts</h3>
-<p>When there is no <code>--opts</code> given, mocha-webpack attempts to load <code>mocha-webpack.opts</code> in your working directory.
-It&apos;s basically the same like <code>mocha.opts</code> for mocha and appends common CLI options automatically to your commands.</p>
+<p>mocha-webpack attempts to load a configuration file named <code>mocha-webpack.opts</code> in your working directory. It&apos;s basically the same like <code>mocha.opts</code> for mocha and appends common CLI options automatically to your commands.</p>
 <p><code>--opts</code> allows you to define a custom file path for this config file.</p>
 <p>The lines in this file are combined with any command-line arguments. Command-line arguments take precedence.</p>
 <p>Imagine you have the following mocha-webpack.opts file:</p>
@@ -386,20 +393,19 @@ src/**/*.test.js
 <p>then it&apos;s equivalent to</p>
 <pre><code class="lang-bash">$ mocha-webpack --growl --colors --webpack-config webpack.config-test.js <span class="token string">&quot;src/**/*.test.js&quot;</span>
 </code></pre>
-<p><strong>Note:</strong> Unlink in your terminal you have to avoid quotes in your <em>mocha-webpack.opts</em> file.</p>
 <h3 id="-glob-recursive"><a name="-glob-recursive" class="plugin-anchor" href="#-glob-recursive"><span class="fa fa-link"></span></a>--glob, --recursive</h3>
 <p>When you use a directory as a test entry <code>--glob</code> and <code>--recursive</code> can help you to control the files to test.</p>
 <ul>
-<li><code>--glob</code> affects only directory entries and allows you to specifiy a pattern for the files that should be tested</li>
+<li><code>--glob</code> affects only directory entries and allows you to specifiy a pattern (e.g. <code>*.test.js</code>) for the files that should be tested</li>
 <li><code>--recursive</code> searches also in subdirectories for tests to run</li>
 </ul>
 <h3 id="-require-include"><a name="-require-include" class="plugin-anchor" href="#-require-include"><span class="fa fa-link"></span></a>--require, --include</h3>
 <p><code>--require</code> is a known mocha option that lets you execute files before your tests would be required.
 It&apos;s useful for setup stuff like initializing <code>jsdom</code>.</p>
-<p><code>--include</code> does something similar, expect that the files will be included into the webpack bundle.
+<p><code>--include</code> does something similar, except that the files will be included into the webpack bundle.
 But like <code>--require</code> it will be executed before your tests.</p>
 <h3 id="-watch"><a name="-watch" class="plugin-anchor" href="#-watch"><span class="fa fa-link"></span></a>--watch</h3>
-<p>Starts mocha-webpack in watch mode and automatically compiles &amp; tests when a file change occur.
+<p>Starts mocha-webpack in watch mode and compiles &amp; run your tests automatically when a file change occur.
 Unlike mocha, mocha-webpack analyzes your dependency graph and run only those test files that were affected by this file change.</p>
 
                     
