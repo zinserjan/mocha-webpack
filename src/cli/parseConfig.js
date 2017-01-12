@@ -12,6 +12,13 @@ function handleMissingConfig(config) {
   return {};
 }
 
+function removeSurroundingQuotes(str) {
+  if (str.indexOf('"') === 0 && str.lastIndexOf('"') === str.length - 1 && str.indexOf('"') !== str.lastIndexOf('"')) {
+    return str.substring(1, str.length - 1);
+  }
+  return str;
+}
+
 export default function parseConfig(explicitConfig) {
   const config = explicitConfig || defaultConfig;
 
@@ -23,7 +30,8 @@ export default function parseConfig(explicitConfig) {
     .replace(/\\\s/g, '%20')
     .split(/\s/)
     .filter(Boolean)
-    .map((value) => value.replace(/%20/g, ' '));
+    .map((value) => value.replace(/%20/g, ' '))
+    .map(removeSurroundingQuotes);
   const defaultOptions = parseArgv(argv, true);
   return defaultOptions;
 }

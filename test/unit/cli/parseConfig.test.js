@@ -2,12 +2,14 @@
 /* eslint-disable func-names, prefer-arrow-callback, no-loop-func, max-len */
 
 import path from 'path';
+import fs from 'fs-extra';
 import { assert } from 'chai';
 import parseConfig from '../../../src/cli/parseConfig';
 
-const configFileName = path.join(__dirname, 'fixture', 'config', 'mocha-webpack.opts');
+const optsTestCasesPath = path.join(__dirname, 'fixture', 'config', 'optsTestCases');
+const optsTestCases = fs.readdirSync(optsTestCasesPath);
 
-describe('parseConfig', function () {
+describe.only('parseConfig', function () {
   it('returns empty object when default config file is missing', function () {
     assert.deepEqual(parseConfig(), {});
   });
@@ -30,11 +32,17 @@ describe('parseConfig', function () {
     assert.throws(fn, /Options file 'missing-config.opts' not found/);
   });
 
-  it(`parses ${configFileName} when exists and returns options`, function () {
-    // eslint-disable-next-line global-require
-    const expectedResult = require(path.join(__dirname, 'fixture', 'config', 'expected.json'));
-    const parsedOptions = parseConfig(configFileName);
+  optsTestCases.forEach((testDirName) => {
+    const testDirPath = path.join(optsTestCasesPath, testDirName);
+    const optsFilePath = path.join(testDirPath, 'mocha-webpack.opts');
+    const expectedResultsPath = path.join(testDirPath, 'expected.json');
 
-    assert.deepEqual(parsedOptions, expectedResult);
+    it(`parses ${optsFilePath} and returns options`, function () {
+      // eslint-disable-next-line global-require
+      const expectedResult = require(expectedResultsPath);
+      const parsedOptions = parseConfig(optsFilePath);
+
+      assert.deepEqual(parsedOptions, expectedResult);
+    });
   });
 });
