@@ -1,0 +1,9 @@
+# Ignore file for gitbook
+
+# Ignore everything
+*
+# But not these files...
+!*.md
+!book.json
+!docs/*
+!docs/*/*
