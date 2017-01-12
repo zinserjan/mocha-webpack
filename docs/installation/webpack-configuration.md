@@ -1,6 +1,6 @@
 # Webpack configuration
 
-A really really basic webpack configuration for mocha-webpack should at least contain the following:
+A really basic webpack configuration for mocha-webpack should at least contain the following:
 
 
 **webpack.config-test.js** - example config
@@ -16,7 +16,7 @@ module.exports = {
 The most important option is the value of `target`, as it tells webpack to compile the code for Node.js. When you leave this empty, webpack compiles for web environment and features like code-splitting will not work.
 
 Another important thing is to *stop webpack from bundling your libraries* inside your node_modules folder.
-This can be easily done with the [webpack-node-externals](https://github.com/liady/webpack-node-externals) plugin.
+This can be easily done by using the [webpack-node-externals](https://github.com/liady/webpack-node-externals) plugin.
 The reason for this is that webpack isn't able to compile all node_modules like server only modules. Another reason is simply performance.
 
 *Info*: You can install this plugin with `npm install --save-dev webpack-node-externals`
@@ -66,7 +66,7 @@ When you never heard about [CSS-Modules](https://github.com/css-modules/css-modu
 ### Without CSS-Modules
 If you don't want to use CSS-Modules then you can replace all of your CSS loaders with [null-loader](https://github.com/webpack/null-loader):
 
-Your webpack-config might look like the following:
+Your webpack-config for the browser might look like the following:
 ```javascript
 module.exports = {
     module: {
@@ -105,7 +105,7 @@ This has the following advantages:
 If you want to use CSS-Modules you have to make your loader definition compatible with the node environment.
 It's the same setup like for universal applications respectively pre-rendering of Single Page Applications.
 
-Your webpack-config might look like the following:
+Your webpack-config for the browser might look like the following:
 ```javascript
 module.exports = {
     module: {
@@ -123,7 +123,7 @@ To make the config compatible with the node environment you have to do two thing
 - remove `style-loader`
 - replace `css-loader` with `css-loader/locals`
 
-Then your config looks finally like this:
+Then your config looks like this and you're ready to test:
 ```javascript
 module.exports = {
     module: {

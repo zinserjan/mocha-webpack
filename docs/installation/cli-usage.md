@@ -48,11 +48,10 @@ Default pattern when no arguments:
 
 ### --webpack-config
 
-Allows you to use your own custom webpack config for your tests and  custom loaders and other webpack configuration settings.
-
+Allows you to use your own webpack configuration to define custom loaders and other webpack related stuff.
 
 If you need to use a JavaScript preprocessor such as [Babel](https://babeljs.io/) or [CoffeeScript](http://coffeescript.org/)
-for your webpack config file then give it a name ending with corresponding extension and call it without it:
+for your webpack config file then give it a name that ends with corresponding extension and call it without it:
 
 `$ mocha-webpack --webpack-config webpack.config-test.js`
 
@@ -122,11 +121,11 @@ When you use a directory as a test entry `--glob` and `--recursive` can help you
 
 ### --require, --include
 
-`--require` is a known mocha option that lets you execute files before your tests would be required.
+`--require` is a known mocha option that lets you execute files before your tests will be required.
 It's useful for setup stuff like initializing `jsdom`.
 
 `--include` does something similar, except that the files will be included into the webpack bundle.
-But like `--require` it will be executed before your tests.
+But like `--require` they will be executed before your tests.
 
 
 ### --watch

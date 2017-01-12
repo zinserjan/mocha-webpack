@@ -121,7 +121,7 @@ module.exports = {
 };
 ```
 
-In this config we add `istanbul-instrumenter-loader` only when we want coverage reports. The loader must be the first entry in the loaders array so ensure that it gets applied as last.
+In this config we add `istanbul-instrumenter-loader` only when we want coverage reports. The loader must be the first entry in the loaders array to ensure that it gets applied as last.
 Alternatively you can also use the [`postLoaders` option](https://webpack.github.io/docs/configuration.html#module-preloaders-module-postloaders) when you are using webpack@1 or for webpack@2 the [`enforce` option](https://webpack.js.org/configuration/module/#rule-enforce).
 
 Another important detail is that the `include` option should be configured in the same way (but webpack compatible) as in the `package.json`. `istanbul-instrumenter-loader` does not respect the value in the package.json, that's why you need to configure it again.
@@ -135,7 +135,7 @@ And you should get an html report (located at `./coverage/lcov-report/index.html
 
 ## Generate coverage reports for the whole codebase
 
-Code coverage will only be measured for files that were executed within your test run. Normally you start your tests with just the test files as entries.
+Only files that were executed within your test run generate code coverage reports. Normally you start your tests with just the test files as entries.
 
 But when you want code coverage reports for the whole codebase, you need to import the rest of the code. It happens very often, that some files doesn't have any tests and doesn't impact the code coverage negatively.
 
@@ -168,4 +168,4 @@ To fix this we add another entry to make sure that all source files are imported
 $ mocha-webpack "src/**/*.js" "test/**/*.js"
 ```
 
-**Note:** It's recommended to have a CI configuration that imports all *source* + *test* files and for developing it's best to import only the tests as it costs performance to import code that will never execute.
+**Note:** It's recommended to have a CI configuration that imports all *source* + *test* files and for developing it's best to import only the tests cause importing code that will never execute causes unnecessary compile time.
