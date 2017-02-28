@@ -61,6 +61,7 @@
     "babel-plugin-transform-runtime": "^6.15.0",
     "babel-preset-es2015": "^6.5.0",
     "babel-register": "^6.5.2",
+    "bdd-lazy-var": "^1.2.0",
     "chai": "^3.5.0",
     "coffee-script": "^1.11.1",
     "cross-env": "^3.1.3",
