@@ -26,7 +26,7 @@ Benefits over plain mocha
 
 Unlike mocha, mocha-webpack analyzes your dependency graph and run only those test files that were affected by this file change.
 
-You'll get continues feedback whenever you make changes as all tests that are related in any way to this change will be tested again. Isn't that awesome?
+You'll get continuous feedback whenever you make changes as all tests that are related in any way to this change will be tested again. Isn't that awesome?
 
 If any build errors happens, they will be shown like below
 
