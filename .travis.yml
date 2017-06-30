@@ -7,12 +7,12 @@ node_js:
   - "6"
 
 env:
-  - WEBPACK_VERSION=1 MOCHA_VERSION=2
-  - WEBPACK_VERSION=1 MOCHA_VERSION=3
-  - WEBPACK_VERSION=beta MOCHA_VERSION=3
+  - WEBPACK_VERSION=2 MOCHA_VERSION=2
+  - WEBPACK_VERSION=2 MOCHA_VERSION=3
+  - WEBPACK_VERSION=3 MOCHA_VERSION=3
 
 before_script:
-  - if [ "${WEBPACK_VERSION}" != "1" ]; then npm install "webpack@$WEBPACK_VERSION"; fi
+  - "npm install webpack@$WEBPACK_VERSION"
   - "npm install mocha@$MOCHA_VERSION"
 
 script:
