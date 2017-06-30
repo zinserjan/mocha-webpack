@@ -1,6 +1,11 @@
 # Don't actually build.
 build: off
 
+# Build only master & PRs
+branches:
+  only:
+    - master
+
 # Test against these versions of Node.js.
 environment:
   matrix:

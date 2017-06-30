@@ -1,5 +1,10 @@
 sudo: false
 
+# Build only master & PRs
+branches:
+  only:
+    - master
+
 language: node_js
 
 node_js:
