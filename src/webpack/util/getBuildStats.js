@@ -1,3 +1,4 @@
+// @flow
 import path from 'path';
 import sortChunks from './sortChunks';
 import getAffectedModuleIds from './getAffectedModuleIds';

@@ -1,3 +1,4 @@
+// @flow
 import TestRunner from './runner/TestRunner';
 import testRunnerReporter from './runner/testRunnerReporter';
 
@@ -8,20 +9,20 @@ export type MochaWebpackOptions = {
   reporter: string | () => void,
   reporterOptions: {},
   ui: string,
-  fgrep: ?string,
-  grep: ?string | RegExp,
+  fgrep?: string,
+  grep?: string | RegExp,
   invert: boolean,
   ignoreLeaks: boolean,
   fullStackTrace: boolean,
-  colors: ?boolean,
+  colors?: boolean,
   useInlineDiffs: boolean,
   timeout: number,
-  retries: ?number,
+  retries?: number,
   slow: number,
   asyncOnly: boolean,
   delay: boolean,
   interactive: boolean,
-  growl: ?boolean,
+  growl?: boolean,
 };
 
 export default class MochaWebpack {
@@ -58,7 +59,7 @@ export default class MochaWebpack {
     slow: 75,
     asyncOnly: false,
     delay: false,
-    interactive: !!(process.stdout.isTTY),
+    interactive: !!((process.stdout: any).isTTY),
   };
 
   /**
@@ -128,7 +129,7 @@ export default class MochaWebpack {
    * @param {boolean} [bail]
    * @return {MochaWebpack}
    */
-  bail(bail = false): MochaWebpack {
+  bail(bail: boolean = false): MochaWebpack {
     this.options = {
       ...this.options,
       bail,
