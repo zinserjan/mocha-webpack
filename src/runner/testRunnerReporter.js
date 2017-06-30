@@ -1,6 +1,6 @@
 // @flow
 import chalk from 'chalk';
-import { Stats } from '../webpack/types';
+import type { Stats } from '../webpack/types';
 import createStatsFormatter from '../webpack/util/createStatsFormatter';
 
 type ReporterOptions = {

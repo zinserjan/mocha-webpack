@@ -1,3 +1,4 @@
+// @flow
 import Mocha from 'mocha';
 import loadReporter from './loadReporter';
 import type { MochaWebpackOptions } from '../MochaWebpack';
@@ -18,7 +19,7 @@ export default function configureMocha(options: MochaWebpackOptions) {
   mocha.useColors(options.colors);
 
   // inline-diffs
-  mocha.useInlineDiffs(options.inlineDiffs);
+  mocha.useInlineDiffs(options.useInlineDiffs);
 
 
   // slow <ms>

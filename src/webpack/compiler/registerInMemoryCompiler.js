@@ -1,3 +1,4 @@
+// @flow
 import path from 'path';
 import sourceMapSupport from 'source-map-support';
 import MemoryFileSystem from 'memory-fs';
@@ -6,7 +7,7 @@ import type { Compiler } from '../types';
 
 const noop = () => null;
 
-export default function registerInMemoryCompiler(compiler: Compiler): void {
+export default function registerInMemoryCompiler(compiler: Compiler) {
   const memoryFs = new MemoryFileSystem();
   compiler.outputFileSystem = memoryFs; // eslint-disable-line no-param-reassign
 

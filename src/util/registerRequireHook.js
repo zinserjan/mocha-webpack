@@ -1,6 +1,8 @@
+// @flow
 /*  eslint-disable no-underscore-dangle */
 
 // see https://github.com/nodejs/node/blob/master/lib/module.js
+// $FlowFixMe
 import Module from 'module';
 
 // the module in which the require() call originated
@@ -42,7 +44,9 @@ Module._findPath = function _findPath(...parameters) {
 };
 
 
-export default function registerRequireHook(dotExt: string, resolve: (path: string, parent: Module) => string): void {
+export default function registerRequireHook(
+  dotExt: string,
+  resolve: (path: string, parent: Module) => { path: ?string, source: ?string }) {
   // cache source code after resolving to avoid another access to the fs
   const sourceCache = {};
   // store all files that were affected by this hook
@@ -53,7 +57,7 @@ export default function registerRequireHook(dotExt: string, resolve: (path: stri
     const { path: resolvedPath, source } = resolve(path, parent);
 
     // if no CommonJS module source code returned - skip this require() hook
-    if (path === null) {
+    if (resolvedPath == null) {
       return void 0;
     }
 
