@@ -237,7 +237,6 @@ export default class TestRunner extends EventEmitter {
 
     const entryConfig = new EntryConfig();
     files
-      .map((f) => path.join(this.options.cwd, f))
       .forEach((f) => entryConfig.addFile(f));
 
     const includeLoaderQuery = {
