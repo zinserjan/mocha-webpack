@@ -1,3 +1,4 @@
+// @flow
 import { EOL } from 'os';
 import _ from 'lodash';
 

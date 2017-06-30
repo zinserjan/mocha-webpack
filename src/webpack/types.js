@@ -1,3 +1,4 @@
+// @flow
 
 export type SourceMap = {
   sources: Array<any>,
@@ -28,6 +29,8 @@ export type Module = {
   built: boolean,
   dependencies: Array<{ module: Module }>,
   readableIdentifier: ?any,
+  chunks: Array<Chunk>, // eslint-disable-line no-use-before-define
+  blocks: Array<{chunks: Array<Chunk>}> // eslint-disable-line no-use-before-define
 };
 
 /**
@@ -35,8 +38,8 @@ export type Module = {
  */
 export type WebpackError = {
   message: string,
-  file: ?string,
-  module: ?Module
+  file?: ?string,
+  module?: ?Module
 };
 
 
@@ -49,6 +52,8 @@ export type Chunk = {
   chunks: Array<Chunk>,
   parents: Array<Chunk>,
   files: Array<string>,
+  isInitial?: () => boolean, // webpack >= 2
+  initial?: boolean, // webpack 1
 };
 
 /**
@@ -59,8 +64,8 @@ export type Compilation = {
   plugin: (hook: string, fn: () => void) => void,
   modules: Module[],
   chunks: Chunk[],
-  errors: Array<WebpackError>,
-  warnings: Array<WebpackError>,
+  errors: Array<string | WebpackError>,
+  warnings: Array<string | WebpackError>,
   assets: {
     [key: string]: {
       size: () => number,
@@ -76,12 +81,14 @@ export type Compilation = {
  */
 export type Stats = {
   compilation: Compilation,
+  startTime: number,
+  endTime: number,
   toString: (options: Object) => string,
-  toJson: (options: Object) => {
+  toJson: (options?: Object) => {
     startTime: number,
     endTime: number,
-    errors: Array<Error>,
-    warnings: Array<Error>,
+    errors: Array<string | WebpackError>,
+    warnings: Array<string | WebpackError>,
   },
   hasWarnings: () => boolean,
   hasErrors: () => boolean,

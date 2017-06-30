@@ -1,5 +1,6 @@
+// @flow
 import path from 'path';
-import { EventEmitter } from 'events';
+import EventEmitter from 'events';
 import _ from 'lodash';
 import chokidar from 'chokidar';
 
@@ -8,6 +9,7 @@ import createCompiler from '../webpack/compiler/createCompiler';
 import createWatchCompiler from '../webpack/compiler/createWatchCompiler';
 import registerInMemoryCompiler from '../webpack/compiler/registerInMemoryCompiler';
 import registerReadyCallback from '../webpack/compiler/registerReadyCallback';
+// $FlowFixMe
 import { EntryConfig, KEY as ENTRY_CONFIG_KEY } from '../webpack/loader/entryLoader';
 import configureMocha from './configureMocha';
 import getBuildStats from '../webpack/util/getBuildStats';
@@ -39,7 +41,7 @@ export default class TestRunner extends EventEmitter {
   options: MochaWebpackOptions;
   outputFilePath: string;
 
-  constructor(entries: Array<string>, includes: Array<String>, options: MochaWebpackOptions) {
+  constructor(entries: Array<string>, includes: Array<string>, options: MochaWebpackOptions) {
     super();
     this.entries = entries;
     this.includes = includes;
@@ -61,7 +63,7 @@ export default class TestRunner extends EventEmitter {
       delete require.cache[filePath];
     });
     // pass webpack's entry files to mocha
-    mocha.files = buildStats.entries;
+    (mocha: any).files = buildStats.entries;
     return mocha;
   }
 
@@ -72,6 +74,7 @@ export default class TestRunner extends EventEmitter {
 
     compiler.plugin('run', (c, cb) => {
       this.emit('webpack:start');
+      // $FlowFixMe
       cb();
     });
 
@@ -80,7 +83,7 @@ export default class TestRunner extends EventEmitter {
       failures = await new Promise((resolve, reject) => {
         registerReadyCallback(compiler, (err?: Error, webpackStats?: Stats) => {
           this.emit('webpack:ready', err, webpackStats);
-          if (err) {
+          if (err || !webpackStats) {
             reject();
             return;
           }
@@ -105,13 +108,13 @@ export default class TestRunner extends EventEmitter {
     return failures;
   }
 
-  async watch(): void {
+  async watch(): Promise<void> {
     const config = await this.createWebpackConfig();
     const entryConfig: EntryConfig = config[ENTRY_CONFIG_KEY];
 
-    let mochaRunner: MochaRunner = null;
-    let stats: Stats = null;
-    let compilationScheduler: () => void = null;
+    let mochaRunner: ?MochaRunner = null;
+    let stats: ?Stats = null;
+    let compilationScheduler: ?() => void = null;
 
     const uncaughtExceptionListener = (err) => {
       // mocha catches uncaughtException only while tests are running,
@@ -120,6 +123,7 @@ export default class TestRunner extends EventEmitter {
     };
 
     const runMocha = () => {
+      // $FlowFixMe
       const mocha = this.prepareMocha(config, stats);
 
       try {
@@ -135,7 +139,7 @@ export default class TestRunner extends EventEmitter {
           // need to wait until next tick, otherwise mochaRunner = null doesn't work..
           process.nextTick(() => {
             mochaRunner = null;
-            if (compilationScheduler !== null) {
+            if (compilationScheduler != null) {
               this.emit('mocha:aborted');
               compilationScheduler();
               compilationScheduler = null;
@@ -157,19 +161,22 @@ export default class TestRunner extends EventEmitter {
       if (mochaRunner) {
         compilationScheduler = () => {
           this.emit('webpack:start');
+          // $FlowFixMe
           cb();
         };
 
         mochaRunner.abort();
         // make sure that the current running test will be aborted when timeouts are disabled for async tests
         if (mochaRunner.currentRunnable) {
-          mochaRunner.currentRunnable.retries(0);
-          mochaRunner.currentRunnable.enableTimeouts(true);
-          mochaRunner.currentRunnable.timeout(1);
-          mochaRunner.currentRunnable.resetTimeout(1);
+          const runnable: any = mochaRunner.currentRunnable;
+          runnable.retries(0);
+          runnable.enableTimeouts(true);
+          runnable.timeout(1);
+          runnable.resetTimeout(1);
         }
       } else {
         this.emit('webpack:start');
+        // $FlowFixMe
         cb();
       }
     });
@@ -184,7 +191,7 @@ export default class TestRunner extends EventEmitter {
       runMocha();
     });
 
-    const watchCompiler: WatchCompiler = createWatchCompiler(compiler, config.watchOptions);
+    const watchCompiler: WatchCompiler = createWatchCompiler(compiler, (config: any).watchOptions);
     // start webpack build immediately
     watchCompiler.watch();
 
@@ -260,12 +267,12 @@ export default class TestRunner extends EventEmitter {
       [ENTRY_CONFIG_KEY]: entryConfig,
       entry,
       output: {
-        ...webpackConfig.output,
+        ...(webpackConfig: any).output,
         filename: outputFileName,
         path: outputPath,
       },
       plugins: [
-        ...(webpackConfig.plugins || []),
+        ...((webpackConfig: any).plugins || []),
         ...plugins,
       ],
     };

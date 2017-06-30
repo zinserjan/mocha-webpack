@@ -67,7 +67,7 @@ describe('configureMocha', function () {
     });
 
     assert.isTrue(this.spyUseInlineDiffs.called, 'useInlineDiffs() should be called');
-    assert.isTrue(this.spyUseInlineDiffs.calledWith(this.options.inlineDiffs));
+    assert.isTrue(this.spyUseInlineDiffs.calledWith(this.options.useInlineDiffs));
   });
 
   it('should call enableTimeouts()', function () {

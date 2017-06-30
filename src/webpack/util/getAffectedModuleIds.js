@@ -1,19 +1,15 @@
 // @flow
 import type { Module, Chunk } from '../types';
 
+type ModuleMap = { [key: string | number]: Module };
 type ModuleUsageMap = {
   // child id
-  [key: string]: {
-    // parent id
-    [key: string]: Module,
-  },
+  [key: string | number]: ModuleMap,
 };
-type ModuleMap = { [key: string]: Module };
-
 const isBuilt = (module: Module): boolean => module.built;
-const getId = (module: Module): number => module.id;
+const getId = (module: any): number | string => module.id;
 
-const affectedModules = (map: ModuleMap, usageMap: ModuleUsageMap, affected: ModuleMap, moduleId: string): void => {
+const affectedModules = (map: ModuleMap, usageMap: ModuleUsageMap, affected: ModuleMap, moduleId: string | number) => {
   if (typeof affected[moduleId] !== 'undefined') {
     // module was already inspected, stop here otherwise we get into endless recursion
     return;
@@ -82,7 +78,7 @@ const buildModuleUsageMap = (chunks: Array<Chunk>, modules: Array<Module>): Modu
   //      [moduleId]: Module
   //    }
   // }
-  const chunkModuleMap = chunks.reduce((memo, chunk: Chunk) => {
+  const chunkModuleMap: ModuleUsageMap = chunks.reduce((memo, chunk: Chunk) => {
     // build chunk map first to get also empty chunks (without modules)
     memo[chunk.id] = {}; // eslint-disable-line no-param-reassign
     return memo;
@@ -95,7 +91,7 @@ const buildModuleUsageMap = (chunks: Array<Chunk>, modules: Array<Module>): Modu
   }, chunkModuleMap);
 
   // detect modules with code split points (e.g. require.ensure) and enhance moduleUsageMap with that information
-  modules.forEach((module) => {
+  modules.forEach((module: Module) => {
     module.blocks
     // chunks can be invalid in in some cases
       .filter((block) => Array.isArray(block.chunks))
@@ -104,8 +100,8 @@ const buildModuleUsageMap = (chunks: Array<Chunk>, modules: Array<Module>): Modu
         block.chunks.map(getId).forEach((chunkId) => {
           // and mark all modules of this chunk as a direct dependency of the original module
           Object
-            .values(chunkModuleMap[chunkId])
-            .forEach((childModule: Module) => {
+            .values((chunkModuleMap[chunkId]: ModuleMap))
+            .forEach((childModule: any) => {
               if (typeof moduleUsageMap[childModule.id] === 'undefined') {
                 moduleUsageMap[childModule.id] = {}; // eslint-disable-line no-param-reassign
               }
@@ -127,7 +123,7 @@ const buildModuleUsageMap = (chunks: Array<Chunk>, modules: Array<Module>): Modu
  * @param modules Array<Module>
  * @return {Array.<number>}
  */
-export default function getAffectedModuleIds(chunks: Array<Chunk>, modules: Array<Module>): Array<number> {
+export default function getAffectedModuleIds(chunks: Array<Chunk>, modules: Array<Module>): Array<number | string> {
   const moduleMap: ModuleMap = buildModuleMap(modules);
   const moduleUsageMap: ModuleUsageMap = buildModuleUsageMap(chunks, modules);
 
