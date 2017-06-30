@@ -1,7 +1,8 @@
+// @flow
 import path from 'path';
 import { interfaces } from 'mocha';
 
-export default function loadUI(ui: string | () => void, cwd: string) {
+export default function loadUI(ui: string, cwd: string) {
   // try to load built-in ui like 'bdd'
   if (typeof interfaces[ui] !== 'undefined') {
     return ui;
