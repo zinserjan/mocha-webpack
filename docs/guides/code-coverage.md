@@ -101,18 +101,18 @@ module.exports = {
           test: /\.(js|ts)/,
           include: path.resolve('src'), // instrument only testing sources with Istanbul, after ts-loader runs
           loader: 'istanbul-instrumenter-loader'
-        }: [],
+      }: [],
+      {
+          test: /.js$/,
+          exclude: /(node_modules|bower_components)/,
+          loader: 'babel-loader',
+      },
+      {
+          test: /\.ts$/,
+          exclude: /(node_modules|bower_components)/,
+          loader: 'ts-loader'
+      }
     ),
-    {
-      test: /.js$/,
-      exclude: /(node_modules|bower_components)/,
-      loader: 'babel-loader',
-    },
-    {
-      test: /\.ts$/,
-      exclude: /(node_modules|bower_components)/,
-      loader: 'ts-loader'
-    }
     // ...
   },
   target: 'node',  // webpack should compile node compatible code
