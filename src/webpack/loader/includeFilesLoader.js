@@ -6,7 +6,7 @@ module.exports = function includeFilesLoader(sourceCode: string) {
   if (this.cacheable) {
     this.cacheable();
   }
-  const loaderOptions = loaderUtils.parseQuery(this.query);
+  const loaderOptions = loaderUtils.getOptions(this);
 
   if (loaderOptions.include && loaderOptions.include.length) {
     const includes = loaderOptions.include
