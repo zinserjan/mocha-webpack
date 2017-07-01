@@ -119,8 +119,7 @@ const options = {
   },
   ui: {
     alias: 'u',
-    describe: 'specify user-interface',
-    choices: ['bdd', 'tdd', 'exports', 'qunit'],
+    describe: 'specify user-interface (e.g. "bdd", "tdd", "exports", "qunit")',
     group: BASIC_GROUP,
     default: 'bdd',
     requiresArg: true,

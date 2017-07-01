@@ -1,6 +1,7 @@
 // @flow
 import Mocha from 'mocha';
 import loadReporter from './loadReporter';
+import loadUI from './loadUI';
 import type { MochaWebpackOptions } from '../MochaWebpack';
 
 
@@ -81,7 +82,8 @@ export default function configureMocha(options: MochaWebpackOptions) {
   }
 
   // interface
-  mocha.ui(options.ui);
+  const ui = loadUI(options.ui, options.cwd);
+  mocha.ui(ui);
 
   return mocha;
 }
