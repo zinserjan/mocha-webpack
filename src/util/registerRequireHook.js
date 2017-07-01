@@ -26,18 +26,18 @@ const originalFindPath = Module._findPath;
 Module._findPath = function _findPath(...parameters) {
   const request = parameters[0];
 
-  // first try to resolve path with original resolver
-  const filename = originalFindPath.apply(this, parameters);
-  if (filename !== false) {
-    return filename;
-  }
-
-  // and when none found try to resolve the path with custom resolvers
+  // try to resolve the path with custom resolvers
   for (const resolve of pathResolvers) {
     const resolved = resolve(request, requireCaller);
     if (typeof resolved !== 'undefined') {
       return resolved;
     }
+  }
+
+  // and when none found try to resolve path with original resolver
+  const filename = originalFindPath.apply(this, parameters);
+  if (filename !== false) {
+    return filename;
   }
 
   return false;
