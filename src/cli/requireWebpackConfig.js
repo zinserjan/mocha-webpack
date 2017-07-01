@@ -91,5 +91,9 @@ export default function requireWebpackConfig(webpackConfig) {
   registerCompiler(interpret.extensions[configExtension]);
   const config = require(configPath); // eslint-disable-line global-require
 
+  if (typeof config === 'function') {
+    return config('test')
+  }
+
   return config.default || config;
 }
