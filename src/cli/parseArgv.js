@@ -171,6 +171,7 @@ const options = {
     describe: 'path to webpack-config file',
     group: BASIC_GROUP,
     requiresArg: true,
+    default: 'webpack-config.js',
   },
   opts: {
     type: 'string',
