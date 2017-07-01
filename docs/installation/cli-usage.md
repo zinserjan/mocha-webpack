@@ -48,7 +48,11 @@ Default pattern when no arguments:
 
 ### --webpack-config
 
-Allows you to use your own webpack configuration to define custom loaders and other webpack related stuff.
+Allows you to use your own webpack configuration to define custom loaders and other webpack related stuff. 
+
+When the parameter `--webpack-config` is omitted, mocha-webpack tries to load a webpack-config file named `webpack.config.js`, but will not bail when it doesn't exist.
+It fails only for missing webpack config files when the config is explicitly given.
+
 
 If you need to use a JavaScript preprocessor such as [Babel](https://babeljs.io/) or [CoffeeScript](http://coffeescript.org/)
 for your webpack config file then give it a name that ends with corresponding extension and call it without it:

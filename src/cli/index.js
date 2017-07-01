@@ -27,6 +27,7 @@ function exit(lazy, code) {
 
 const cliOptions = parseArgv(process.argv.slice(2), true);
 const configOptions = parseConfig(cliOptions.opts);
+const requiresWebpackConfig = cliOptions.webpackConfig != null || configOptions.webpackConfig != null;
 const defaultOptions = parseArgv([]);
 
 const options = _.defaults({}, cliOptions, configOptions, defaultOptions);
@@ -37,7 +38,7 @@ options.require.forEach((mod) => {
 
 options.include = options.include.map(resolve);
 
-options.webpackConfig = requireWebpackConfig(options.webpackConfig);
+options.webpackConfig = requireWebpackConfig(options.webpackConfig, requiresWebpackConfig);
 
 const mochaWebpack = createMochaWebpack();
 
