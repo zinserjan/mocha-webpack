@@ -64,36 +64,49 @@ function registerCompiler(moduleDescriptor) {
   }
 }
 
-export default function requireWebpackConfig(webpackConfig) {
-  if (!webpackConfig) {
+export default function requireWebpackConfig(webpackConfig, required) {
+  const configPath = path.resolve(webpackConfig);
+  const configExtension = getConfigExtension(configPath);
+  let configFound = false;
+  let config;
+
+  if (fileExists(configPath)) {
+    // config exists, register compiler for non-js extensions
+    registerCompiler(interpret.extensions[configExtension]);
+    // require config
+    config = require(configPath); // eslint-disable-line global-require
+    configFound = true;
+  } else if (configExtension === '.js') {
+    // config path does not exist, try to require it with precompiler
+    const configDirPath = path.dirname(configPath);
+    const configBaseName = path.basename(configPath, configExtension);
+    const configPathPrecompiled = findConfigFile(configDirPath, configBaseName);
+    if (configPathPrecompiled != null) {
+      // found a config that needs to be precompiled
+      const configExtensionPrecompiled = getConfigExtension(configPathPrecompiled);
+      // register compiler & require config
+      registerCompiler(interpret.extensions[configExtensionPrecompiled]);
+      config = require(configPathPrecompiled); // eslint-disable-line global-require
+      configFound = true;
+    }
+  }
+
+  if (!configFound) {
+    if (required) {
+      throw new Error(`Webpack config could not be found: ${webpackConfig}`);
+    }
     return {};
   }
 
-  let configPath = path.resolve(webpackConfig);
-  let configExtension = getConfigExtension(configPath);
-
-  if (!fileExists(configPath)) {
-    if (configExtension !== '.js') {
-      return {};
-    }
-
-    const configDirPath = path.dirname(configPath);
-    const configBaseName = path.basename(configPath, configExtension);
-
-    configPath = findConfigFile(configDirPath, configBaseName);
-    if (configPath === null) {
-      return {};
-    }
-
-    configExtension = getConfigExtension(configPath);
-  }
-
-  registerCompiler(interpret.extensions[configExtension]);
-  const config = require(configPath); // eslint-disable-line global-require
+  config = config.default || config;
 
   if (typeof config === 'function') {
-    return config('test')
+    config = config('test');
   }
 
-  return config.default || config;
+  if (Array.isArray(config)) {
+    throw new Error('Passing multiple configs as an Array is not supported. Please provide a single config instead.');
+  }
+
+  return config;
 }

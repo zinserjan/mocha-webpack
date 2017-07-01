@@ -797,7 +797,7 @@ describe('parseArgv', function () {
     });
 
     context('webpack-config', function () {
-      it('has no default value', function () {
+      it('has default value', function () {
         // given
         const argv = this.argv;
 
@@ -805,7 +805,7 @@ describe('parseArgv', function () {
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.notProperty(parsedArgv, 'webpackConfig');
+        assert.propertyVal(parsedArgv, 'webpackConfig', 'webpack-config.js');
       });
 
 
