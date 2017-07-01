@@ -95,7 +95,7 @@
     "globby": "^6.1.0",
     "interpret": "^1.0.1",
     "is-glob": "^2.0.1",
-    "loader-utils": "^0.2.13",
+    "loader-utils": "^1.1.0",
     "lodash": "^4.3.0",
     "memory-fs": "^0.4.1",
     "nodent-runtime": "^3.0.3",
