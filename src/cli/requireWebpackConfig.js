@@ -101,7 +101,11 @@ export default function requireWebpackConfig(webpackConfig, required) {
   config = config.default || config;
 
   if (typeof config === 'function') {
-    return config('test');
+    config = config('test');
+  }
+
+  if (Array.isArray(config)) {
+    throw new Error('Passing multiple configs as an Array is not supported. Please provide a single config instead.');
   }
 
   return config;

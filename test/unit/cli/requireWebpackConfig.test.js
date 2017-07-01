@@ -36,6 +36,12 @@ describe('requireWebpackConfig', () => {
     assert.deepEqual(requireWebpackConfig(configPath), expectedConfig);
   });
 
+  it('throws error when multi compiler config is given', () => {
+    const configPath = getConfigPath('.js', 'config-multi');
+    const error = 'Passing multiple configs as an Array is not supported. Please provide a single config instead.';
+    assert.throws(() => requireWebpackConfig(configPath, true), error);
+  });
+
   it('throws error when not found when required', () => {
     const configPath = getConfigPath('.js', 'config-xxx');
     assert.throws(() => requireWebpackConfig(configPath, true), /Webpack config could not be found/);
