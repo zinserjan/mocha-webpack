@@ -16,6 +16,11 @@ describe('requireWebpackConfig', () => {
     assert.deepEqual(requireWebpackConfig(configPath), expectedConfig);
   });
 
+  (process.platform === 'win32' ? it.skip : it)('requires symlinked config file', () => {
+    const configPath = getConfigPath('.js', 'config-symlink');
+    assert.deepEqual(requireWebpackConfig(configPath), expectedConfig);
+  });
+
   it('requires Babel Webpack config file', () => {
     const configPath = getConfigPath('.babel.js');
     assert.deepEqual(requireWebpackConfig(configPath), expectedConfig);
