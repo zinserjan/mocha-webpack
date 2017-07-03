@@ -239,7 +239,7 @@ export default class TestRunner extends EventEmitter {
     files.forEach((f) => entryConfig.addFile(f));
 
     const includeLoaderQuery = {
-      include: this.includes,
+      include: this.includes
     };
 
     const entry = `!!${includeLoaderPath}?${JSON.stringify(includeLoaderQuery)}!${entryLoaderPath}!${entryPath}`;
