@@ -31,6 +31,7 @@ Options
   --retries                      set numbers of time to retry a failed test case
   --delay                        wait for async suite definition
   --webpack-config               path to webpack-config file
+  --webpack-env                  environment passed to the webpack-config, when it is a function
   --opts                         path to webpack-mocha options file, Default cwd/mocha-webpack.opts
 
 Examples
@@ -83,6 +84,25 @@ module.exports =
         loader: "coffee-loader"
       }
     ]
+```
+
+Instead of returning a webpack config, you can also export a function which returns the config when called. You should use this in conjunction with the `--webpack-env` option to make your config environment aware, for example `--webpack-env test`.
+
+```javascript
+export default function (env) {
+  return {
+    devtool: env === "production" ? "source-map": "inline-cheap-module-source-map",
+    target: env === "test" ? "node" : "web",
+    module: {
+      loaders: [
+        {
+          test: /\.js$/,
+          loader: "babel-loader"
+        }
+      ]
+    }
+  }
+};
 ```
 
 Please have a look at the [webpack configuration chapter](./webpack-configuration.md) to get further instructions & tips.

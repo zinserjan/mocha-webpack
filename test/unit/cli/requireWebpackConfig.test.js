@@ -38,7 +38,7 @@ describe('requireWebpackConfig', () => {
 
   it('supports config that exports a function', () => {
     const configPath = getConfigPath('.js', 'config-function');
-    assert.deepEqual(requireWebpackConfig(configPath), expectedConfig);
+    assert.deepEqual(requireWebpackConfig(configPath, false, 'test'), expectedConfig);
   });
 
   it('throws error when multi compiler config is given', () => {
