@@ -827,6 +827,36 @@ describe('parseArgv', function () {
       }
     });
 
+    context('webpack-env', function () {
+      it('has no default value', function () {
+        // given
+        const argv = this.argv;
+
+        // when
+        const parsedArgv = this.parseArgv(argv);
+
+        // then
+        assert.notProperty(parsedArgv, 'webpackEnv');
+      });
+
+      const parameters = [
+        { given: ['--webpack-env', 'production'], expected: 'production' },
+        { given: ['--webpack-env.env', 'production'], expected: { env: 'production' } },
+      ];
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.deepPropertyVal(parsedArgv, 'webpackEnv', parameter.expected);
+        });
+      }
+    });
+
     context('opts', function () {
       it('has no default value', function () {
         // given

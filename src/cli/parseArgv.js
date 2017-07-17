@@ -173,6 +173,10 @@ const options = {
     requiresArg: true,
     default: 'webpack-config.js',
   },
+  'webpack-env': {
+    describe: 'environment passed to the webpack-config, when it is a function',
+    group: BASIC_GROUP,
+  },
   opts: {
     type: 'string',
     describe: 'path to webpack-mocha options file',
