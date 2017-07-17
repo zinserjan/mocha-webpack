@@ -48,7 +48,7 @@
     <body>
         
         
-    <div class="book" data-level="2.2" data-basepath="../.." data-revision="Thu Jan 12 2017 23:44:21 GMT+0100 (CET)">
+    <div class="book" data-level="2.2" data-basepath="../.." data-revision="Tue Jul 18 2017 00:37:55 GMT+0200 (CEST)">
     
 
 <div class="book-summary">
@@ -309,7 +309,7 @@
                 
                     <section class="normal" id="section-">
                     
-                        <a id="edit-link" href="https://github.com/zinserjan/mocha-webpack/tree/master/docs/guides/code-coverage.md" class="btn fa fa-edit pull-left">&#xA0;&#xA0;Edit This Page</a><h1 id="code-coverage-with-mocha-webpack"><a name="code-coverage-with-mocha-webpack" class="plugin-anchor" href="#code-coverage-with-mocha-webpack"><span class="fa fa-link"></span></a>Code Coverage with mocha-webpack</h1>
+                        <html><head></head><body><a id="edit-link" href="https://github.com/zinserjan/mocha-webpack/tree/master/docs/guides/code-coverage.md" class="btn fa fa-edit pull-left">&#xA0;&#xA0;Edit This Page</a><h1 id="code-coverage-with-mocha-webpack"><a name="code-coverage-with-mocha-webpack" class="plugin-anchor" href="#code-coverage-with-mocha-webpack"><span class="fa fa-link"></span></a>Code Coverage with mocha-webpack</h1>
 <p>This guide will show you how to setup code coverage with mocha-webpack and get a report like the following.</p>
 <p><img src="../media/code-coverage-report.png" alt="code coverage report">
   <em>Yes, this is a very poor sample report for just two files...</em></p>
@@ -387,18 +387,18 @@ module<span class="token punctuation">.</span>exports <span class="token operato
           test<span class="token punctuation">:</span> <span class="token regex">/\.(js|ts)/</span><span class="token punctuation">,</span>
           include<span class="token punctuation">:</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token string">&apos;src&apos;</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">// instrument only testing sources with Istanbul, after ts-loader runs</span>
           loader<span class="token punctuation">:</span> <span class="token string">&apos;istanbul-instrumenter-loader&apos;</span>
-        <span class="token punctuation">}</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span>
+          test<span class="token punctuation">:</span> <span class="token regex">/.js$/</span><span class="token punctuation">,</span>
+          exclude<span class="token punctuation">:</span> <span class="token regex">/(node_modules|bower_components)/</span><span class="token punctuation">,</span>
+          loader<span class="token punctuation">:</span> <span class="token string">&apos;babel-loader&apos;</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span>
+          test<span class="token punctuation">:</span> <span class="token regex">/\.ts$/</span><span class="token punctuation">,</span>
+          exclude<span class="token punctuation">:</span> <span class="token regex">/(node_modules|bower_components)/</span><span class="token punctuation">,</span>
+          loader<span class="token punctuation">:</span> <span class="token string">&apos;ts-loader&apos;</span>
+      <span class="token punctuation">}</span>
     <span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token punctuation">{</span>
-      test<span class="token punctuation">:</span> <span class="token regex">/.js$/</span><span class="token punctuation">,</span>
-      exclude<span class="token punctuation">:</span> <span class="token regex">/(node_modules|bower_components)/</span><span class="token punctuation">,</span>
-      loader<span class="token punctuation">:</span> <span class="token string">&apos;babel-loader&apos;</span><span class="token punctuation">,</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token punctuation">{</span>
-      test<span class="token punctuation">:</span> <span class="token regex">/\.ts$/</span><span class="token punctuation">,</span>
-      exclude<span class="token punctuation">:</span> <span class="token regex">/(node_modules|bower_components)/</span><span class="token punctuation">,</span>
-      loader<span class="token punctuation">:</span> <span class="token string">&apos;ts-loader&apos;</span>
-    <span class="token punctuation">}</span>
     <span class="token comment" spellcheck="true">// ...</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
   target<span class="token punctuation">:</span> <span class="token string">&apos;node&apos;</span><span class="token punctuation">,</span>  <span class="token comment" spellcheck="true">// webpack should compile node compatible code</span>
@@ -432,7 +432,7 @@ Alternatively you can also use the <a href="https://webpack.github.io/docs/confi
 <pre><code class="lang-bash">$ mocha-webpack <span class="token string">&quot;src/**/*.js&quot;</span> <span class="token string">&quot;test/**/*.js&quot;</span>
 </code></pre>
 <p><strong>Note:</strong> It&apos;s recommended to have a CI configuration that imports all <em>source</em> + <em>test</em> files and for developing it&apos;s best to import only the tests cause importing code that will never execute causes unnecessary compile time.</p>
-
+</body></html>
                     
                     </section>
                 

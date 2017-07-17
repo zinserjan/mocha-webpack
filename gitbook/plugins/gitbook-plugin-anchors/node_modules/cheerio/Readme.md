@@ -23,14 +23,14 @@
 <br />
 
 ```js
-let cheerio = require('cheerio')
-let $ = cheerio.load('<h2 class="title">Hello world</h2>')
+const cheerio = require('cheerio')
+const $ = cheerio.load('<h2 class="title">Hello world</h2>')
 
 $('h2.title').text('Hello there!')
 $('h2').addClass('welcome')
 
 $.html()
-//=> <h2 class="title welcome">Hello there!</h2>
+//=> <html><head></head><body><h2 class="title welcome">Hello there!</h2></body></html>
 ```
 
 ## Installation
@@ -44,77 +44,19 @@ __&#991; Blazingly fast:__
 Cheerio works with a very simple, consistent DOM model. As a result parsing, manipulating, and rendering are incredibly efficient. Preliminary end-to-end benchmarks suggest that cheerio is about __8x__ faster than JSDOM.
 
 __&#10049; Incredibly flexible:__
-Cheerio wraps around @FB55's forgiving [htmlparser2](https://github.com/fb55/htmlparser2/). Cheerio can parse nearly any HTML or XML document.
+Cheerio wraps around [parse5](https://github.com/inikulin/parse5) parser and can optionally use @FB55's forgiving [htmlparser2](https://github.com/fb55/htmlparser2/). Cheerio can parse nearly any HTML or XML document.
 
-## Sponsors
+## Cheerio is not a web browser
 
-Does your company use Cheerio in production? Please consider [sponsoring this project](https://opencollective.com/cheerio#sponsor). Your help will allow maintainers to dedicate more time and resources to its development and support.
+Cheerio parses markup and provides an API for traversing/manipulating the resulting data structure. It does not interpret the result as a web browser does. Specifically, it does *not* produce a visual rendering, apply CSS, load external resources, or execute JavaScript. If your use case requires any of this functionality, you should consider projects like [PhantomJS](http://phantomjs.org/) or [JSDom](https://github.com/tmpvar/jsdom).
 
-<a href="https://opencollective.com/cheerio/sponsor/0/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/1/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/2/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/3/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/4/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/5/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/6/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/7/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/8/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/9/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/9/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/10/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/10/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/11/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/11/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/12/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/12/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/13/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/13/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/14/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/14/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/15/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/15/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/16/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/16/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/17/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/17/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/18/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/18/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/19/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/19/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/20/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/20/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/21/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/21/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/22/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/22/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/23/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/23/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/24/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/24/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/25/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/25/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/26/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/26/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/27/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/27/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/28/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/28/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/sponsor/29/website" target="_blank"><img src="https://opencollective.com/cheerio/sponsor/29/avatar.svg"></a>
+## Job Board
 
-## Backers
+Looking for a career upgrade? Check out the available Node.js & Javascript positions at these innovative companies:
 
-[Become a backer](https://opencollective.com/cheerio#backer) to show your support for Cheerio and help us maintain and improve this open source project.
-
-<a href="https://opencollective.com/cheerio/backer/0/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/0/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/1/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/1/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/2/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/2/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/3/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/3/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/4/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/4/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/5/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/5/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/6/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/6/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/7/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/7/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/8/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/8/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/9/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/9/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/10/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/10/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/11/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/11/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/12/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/12/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/13/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/13/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/14/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/14/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/15/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/15/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/16/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/16/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/17/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/17/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/18/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/18/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/19/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/19/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/20/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/20/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/21/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/21/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/22/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/22/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/23/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/23/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/24/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/24/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/25/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/25/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/26/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/26/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/27/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/27/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/28/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/28/avatar.svg"></a>
-<a href="https://opencollective.com/cheerio/backer/29/website" target="_blank"><img src="https://opencollective.com/cheerio/backer/29/avatar.svg"></a>
+<a href="https://astro.netlify.com/automattic"><img src="https://astro.netlify.com/static/automattic.png"></a>
+<a href="https://astro.netlify.com/segment"><img src="https://astro.netlify.com/static/segment.png"></a>
+<a href="https://astro.netlify.com/auth0"><img src="https://astro.netlify.com/static/auth0.png"/></a>
 
 ## API
 
@@ -136,48 +78,70 @@ First you need to load in the HTML. This step in jQuery is implicit, since jQuer
 This is the _preferred_ method:
 
 ```js
-var cheerio = require('cheerio'),
-    $ = cheerio.load('<ul id="fruits">...</ul>');
+const cheerio = require('cheerio');
+const $ = cheerio.load('<ul id="fruits">...</ul>');
 ```
 
 Optionally, you can also load in the HTML by passing the string as the context:
 
 ```js
-$ = require('cheerio');
+const $ = require('cheerio');
 $('ul', '<ul id="fruits">...</ul>');
 ```
 
 Or as the root:
 
 ```js
-$ = require('cheerio');
+const $ = require('cheerio');
 $('li', 'ul', '<ul id="fruits">...</ul>');
 ```
 
-You can also pass an extra object to `.load()` if you need to modify any
-of the default parsing options:
+If you need to modify parsing options for XML input, you may pass an extra
+object to `.load()`:
 
 ```js
-$ = cheerio.load('<ul id="fruits">...</ul>', {
-    normalizeWhitespace: true,
-    xmlMode: true
+const $ = cheerio.load('<ul id="fruits">...</ul>', {
+    xml: {
+      normalizeWhitespace: true,
+    }
 });
 ```
 
-These parsing options are taken directly from [htmlparser2](https://github.com/fb55/htmlparser2/wiki/Parser-options), therefore any options that can be used in `htmlparser2` are valid in cheerio as well. The default options are:
+The options in the `xml` object are taken directly from [htmlparser2](https://github.com/fb55/htmlparser2/wiki/Parser-options), therefore any options that can be used in `htmlparser2` are valid in cheerio as well. The default options are:
 
 ```js
 {
     withDomLvl1: true,
     normalizeWhitespace: false,
-    xmlMode: false,
+    xmlMode: true,
     decodeEntities: true
 }
-
 ```
 
 For a full list of options and their effects, see [this](https://github.com/fb55/DomHandler) and
 [htmlparser2's options](https://github.com/fb55/htmlparser2/wiki/Parser-options).
+
+Some users may wish to parse markup with the `htmlparser2` library, and
+traverse/manipulate the resulting structure with Cheerio. This may be the case
+for those upgrading from pre-1.0 releases of Cheerio (which relied on
+`htmlparser2`), for those dealing with invalid markup (because `htmlparser2` is
+more forgiving), or for those operating in performance-critical situations
+(because `htmlparser2` may be faster in some cases). Note that "more forgiving"
+means `htmlparser2` has error-correcting mechanisms that aren't always a match
+for the standards observed by web browsers. This behavior may be useful when
+parsing non-HTML content.
+
+To support these cases, `load` also accepts a `htmlparser2`-compatible data
+structure as its first argument. Users may install `htmlparser2`, use it to
+parse input, and pass the result to `load`:
+
+```js
+// Usage as of htmlparser2 version 3:
+const htmlparser2 = require('htmlparser2');
+const dom = htmlparser2.parseDOM(document, options);
+
+const $ = cheerio.load(dom);
+```
 
 ### Selectors
 
@@ -238,7 +202,7 @@ $('<div data-apple-color="red"></div>').data()
 $('<div data-apple-color="red"></div>').data('apple-color')
 //=> 'red'
 
-var apple = $('.apple').data('kind', 'mac')
+const apple = $('.apple').data('kind', 'mac')
 apple.data('kind')
 //=> 'mac'
 ```
@@ -484,7 +448,7 @@ $('#fruits').contents().length
 Iterates over a cheerio object, executing a function for each matched element. When the callback is fired, the function is fired in the context of the DOM element, so `this` refers to the current element, which is equivalent to the function parameter `element`. To break out of the `each` loop early, return with `false`.
 
 ```js
-var fruits = [];
+const fruits = [];
 
 $('li').each(function(i, elem) {
   fruits[i] = $(this).text();
@@ -505,7 +469,7 @@ $('li').map(function(i, el) {
 //=> "apple orange pear"
 ```
 
-#### .filter( selector ) <br /> .filter( selection ) <br /> .filter( element ) <br /> .filter( function(index) )
+#### .filter( selector ) <br /> .filter( selection ) <br /> .filter( element ) <br /> .filter( function(index, element) )
 
 Iterates over a cheerio object, reducing the set of selector elements to those that match the selector or pass the function's test. When a Cheerio selection is specified, return only the elements contained in that selection. When an element is specified, return only that element (if it is contained in the original selection). If using the function method, the function is executed in the context of the selected element, so `this` refers to the current element.
 
@@ -783,7 +747,7 @@ $.html()
 Replaces matched elements with `content`.
 
 ```js
-var plum = $('<li class="plum">Plum</li>')
+const plum = $('<li class="plum">Plum</li>')
 $('.pear').replaceWith(plum)
 $.html()
 //=> <ul id="fruits">
@@ -814,7 +778,7 @@ $('#fruits').html('<li class="mango">Mango</li>').html()
 ```
 
 #### .text( [textString] )
-Get the combined text contents of each element in the set of matched elements, including their descendants.. If `textString` is specified, each selected element's content is replaced by the new text content.
+Get the combined text contents of each element in the set of matched elements, including their descendants. If `textString` is specified, each selected element's content is replaced by the new text content.
 
 ```js
 $('.orange').text()
@@ -830,7 +794,7 @@ $('ul').text()
 The .wrap() function can take any string or object that could be passed to the $() factory function to specify a DOM structure. This structure may be nested several levels deep, but should contain only one inmost element. A copy of this structure will be wrapped around each of the elements in the set of matched elements. This method returns the original set of elements for chaining purposes.
 
 ```js
-var redFruit = $('<div class="red-fruit"></div>')
+const redFruit = $('<div class="red-fruit"></div>')
 $('.apple').wrap(redFruit)
 
 //=> <ul id="fruits">
@@ -841,7 +805,7 @@ $('.apple').wrap(redFruit)
 //     <li class="plum">Plum</li>
 //   </ul>
 
-var healthy = $('<div class="healthy"></div>')
+const healthy = $('<div class="healthy"></div>')
 $('li').wrap(healthy)
 
 //=> <ul id="fruits">
@@ -883,7 +847,7 @@ $.html('.pear')
 By default, `html` will leave some tags open. Sometimes you may instead want to render a valid XML document. For example, you might parse the following XML snippet:
 
 ```xml
-$ = cheerio.load('<media:thumbnail url="http://www.foo.com/keyframe.jpg" width="75" height="50" time="12:05:01.123"/>');
+const $ = cheerio.load('<media:thumbnail url="http://www.foo.com/keyframe.jpg" width="75" height="50" time="12:05:01.123"/>');
 ```
 
 ... and later want to render to XML. To do this, you can use the 'xml' utility function:
@@ -896,7 +860,7 @@ $.xml()
 You may also render the text content of a Cheerio object using the `text` static method:
 
 ```js
-$ = cheerio.load('This is <em>content</em>.')
+const $ = cheerio.load('This is <em>content</em>.')
 $.text()
 //=> This is content.
 ```
@@ -904,7 +868,7 @@ $.text()
 The method may be called on the Cheerio module itself--be sure to pass a collection of nodes!
 
 ```js
-$ = cheerio.load('<div>This is <em>content</em>.</div>')
+const $ = cheerio.load('<div>This is <em>content</em>.</div>')
 cheerio.text($('div'))
 //=> This is content.
 ```
@@ -924,7 +888,7 @@ $('li').toArray()
 Clone the cheerio object.
 
 ```js
-var moreFruit = $('#fruits').clone()
+const moreFruit = $('#fruits').clone()
 ```
 
 ### Utilities
@@ -945,14 +909,14 @@ Checks to see if the `contained` DOM element is a descendant of the `container` 
 Parses a string into an array of DOM nodes. The `context` argument has no meaning for Cheerio, but it is maintained for API compatability.
 
 #### $.load( html[, options ] )
-Load in the HTML. (See the previous section titled "Loading" for more information.)
+Create a querying function, bound to a document created from the provided markup. Note that similar to web browser contexts, this operation may introduce `<html>`, `<head>`, and `<body>` elements. See the previous section titled "Loading" for usage information.
 
 ### Plugins
 
 Once you have loaded a document, you may extend the prototype or the equivalent `fn` property with custom plugin methods:
 
 ```js
-var $ = cheerio.load('<html><body>Hello, <b>world</b>!</body></html>');
+const $ = cheerio.load('<html><body>Hello, <b>world</b>!</body></html>');
 $.prototype.logHtml = function() {
   console.log(this.html());
 };
@@ -972,22 +936,6 @@ Cheerio collections are made up of objects that bear some resemblence to [browse
 - `firstChild`
 - `childNodes`
 - `lastChild`
-
-## What about JSDOM?
-I wrote cheerio because I found myself increasingly frustrated with JSDOM. For me, there were three main sticking points that I kept running into again and again:
-
-__&#8226; JSDOM's built-in parser is too strict:__
-  JSDOM's bundled HTML parser cannot handle many popular sites out there today.
-
-__&#8226; JSDOM is too slow:__
-Parsing big websites with JSDOM has a noticeable delay.
-
-__&#8226; JSDOM feels too heavy:__
-The goal of JSDOM is to provide an identical DOM environment as what we see in the browser. I never really needed all this, I just wanted a simple, familiar way to do HTML manipulation.
-
-## When I would use JSDOM
-
-Cheerio will not solve all your problems. I would still use JSDOM if I needed to work in a browser-like environment on the server, particularly if I wanted to automate functional tests.
 
 ## Screencasts
 
