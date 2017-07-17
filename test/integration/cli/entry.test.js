@@ -10,11 +10,12 @@ import { exec } from 'child_process';
 import anymatch from 'anymatch';
 import normalizePath from 'normalize-path';
 
+const escapePath = (p) => p.replace(/\\/gm, '\\\\');
 
 function createTest(filePath, passing) {
   const content = `
     var assert = require('assert');
-    describe('${filePath}', function () {
+    describe('${escapePath(filePath)}', function () {
       it('runs test', function () {
         assert.ok(${passing});
       });
@@ -26,7 +27,7 @@ function createTest(filePath, passing) {
 function createCorruptedTest(filePath) {
   const content = `
     var assert = require('assert');
-    describe('${filePath}', function () {
+    describe('${escapePath(filePath)}', function () {
       it('runs test', function () {
         assert.ok(false);
     });
@@ -37,8 +38,8 @@ function createCorruptedTest(filePath) {
 function createRuntimeErrorTest(filePath, passing) {
   const content = `
     var assert = require('assert');
-    throw new Error('error in ${filePath}');
-    describe('${filePath}', function () {
+    throw new Error('error in ${escapePath(filePath)}');
+    describe('${escapePath(filePath)}', function () {
       it('runs test', function () {
         assert.ok(${passing});
       });
@@ -154,6 +155,26 @@ describe('cli - entry', function () {
 
     after(function () {
       return del([this.passingTest, this.passingTest2, this.failingTest, this.failingTest2, this.corruptedTest, this.corruptedTest2]);
+    });
+  });
+
+  context('entry with absolute paths', function () {
+    before(function () {
+      this.passingTest = path.join(process.cwd(), fixtureDirTmp, 'passing-test.js');
+      createTest(this.passingTest, true);
+    });
+
+    it('runs test with absolute entry', function (done) {
+      exec(`node ${binPath} "${this.passingTest}"`, (err, stdout) => {
+        assert.isNull(err);
+        assert.include(stdout, this.passingTest);
+        assert.include(stdout, '1 passing');
+        done();
+      });
+    });
+
+    after(function () {
+      return del([this.passingTest]);
     });
   });
 
