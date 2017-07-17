@@ -10,11 +10,12 @@ import { exec } from 'child_process';
 import anymatch from 'anymatch';
 import normalizePath from 'normalize-path';
 
+const escapePath = (p) => p.replace(/\\/gm, '\\\\');
 
 function createTest(filePath, passing) {
   const content = `
     var assert = require('assert');
-    describe('${filePath}', function () {
+    describe('${escapePath(filePath)}', function () {
       it('runs test', function () {
         assert.ok(${passing});
       });
@@ -26,7 +27,7 @@ function createTest(filePath, passing) {
 function createCorruptedTest(filePath) {
   const content = `
     var assert = require('assert');
-    describe('${filePath}', function () {
+    describe('${escapePath(filePath)}', function () {
       it('runs test', function () {
         assert.ok(false);
     });
@@ -37,8 +38,8 @@ function createCorruptedTest(filePath) {
 function createRuntimeErrorTest(filePath, passing) {
   const content = `
     var assert = require('assert');
-    throw new Error('error in ${filePath}');
-    describe('${filePath}', function () {
+    throw new Error('error in ${escapePath(filePath)}');
+    describe('${escapePath(filePath)}', function () {
       it('runs test', function () {
         assert.ok(${passing});
       });
