@@ -16,7 +16,7 @@ const extensions = Object.keys(interpret.extensions).sort(sortExtensions);
 
 function fileExists(filePath) {
   try {
-    return fs.lstatSync(filePath).isFile();
+    return fs.existsSync(filePath);
   } catch (e) {
     return false;
   }
