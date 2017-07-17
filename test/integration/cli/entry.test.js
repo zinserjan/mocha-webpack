@@ -157,6 +157,26 @@ describe('cli - entry', function () {
     });
   });
 
+  context('entry with absolute paths', function () {
+    before(function () {
+      this.passingTest = path.join(process.cwd(), fixtureDirTmp, 'passing-test.js');
+      createTest(this.passingTest, true);
+    });
+
+    it('runs test with absolute entry', function (done) {
+      exec(`node ${binPath} "${this.passingTest}"`, (err, stdout) => {
+        assert.isNull(err);
+        assert.include(stdout, this.passingTest);
+        assert.include(stdout, '1 passing');
+        done();
+      });
+    });
+
+    after(function () {
+      return del([this.passingTest]);
+    });
+  });
+
   context('glob pattern as option', function () {
     const testFiles = _.range(1, 30).map((x) => {
       if (parseInt(x / 10, 10) === 0) {

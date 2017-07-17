@@ -5,6 +5,7 @@ import _ from 'lodash';
 import chokidar from 'chokidar';
 
 import { glob } from '../util/glob';
+import { ensureAbsolutePath } from '../util/paths';
 import createCompiler from '../webpack/compiler/createCompiler';
 import createWatchCompiler from '../webpack/compiler/createWatchCompiler';
 import registerInMemoryCompiler from '../webpack/compiler/registerInMemoryCompiler';
@@ -244,7 +245,7 @@ export default class TestRunner extends EventEmitter {
 
     const entryConfig = new EntryConfig();
     files
-      .map((f) => path.join(this.options.cwd, f))
+      .map((f) => ensureAbsolutePath(f, this.options.cwd))
       .forEach((f) => entryConfig.addFile(f));
 
     const includeLoaderQuery = {
