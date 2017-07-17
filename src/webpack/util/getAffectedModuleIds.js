@@ -84,7 +84,7 @@ const buildModuleUsageMap = (chunks: Array<Chunk>, modules: Array<Module>): Modu
     return memo;
   }, {});
   modules.reduce((memo, module: Module) => {
-    module.chunks.forEach((chunk: Chunk) => {
+    (module.getChunks ? module.getChunks() : module.chunks).forEach((chunk: Chunk) => {
       memo[chunk.id][module.id] = module; // eslint-disable-line no-param-reassign
     });
     return memo;

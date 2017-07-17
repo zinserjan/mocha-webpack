@@ -30,6 +30,7 @@ export type Module = {
   dependencies: Array<{ module: Module }>,
   readableIdentifier: ?any,
   chunks: Array<Chunk>, // eslint-disable-line no-use-before-define
+  getChunks?: () => Array<Chunk>, // eslint-disable-line no-use-before-define
   blocks: Array<{chunks: Array<Chunk>}> // eslint-disable-line no-use-before-define
 };
 
@@ -54,6 +55,7 @@ export type Chunk = {
   files: Array<string>,
   isInitial?: () => boolean, // webpack >= 2
   initial?: boolean, // webpack 1
+  getModules?: () => Array<Module>, // webpack 3
 };
 
 /**
@@ -84,7 +86,7 @@ export type Stats = {
   startTime: number,
   endTime: number,
   toString: (options: Object) => string,
-  toJson: (options?: Object) => {
+  toJson: (options: ?Object) => {
     startTime: number,
     endTime: number,
     errors: Array<string | WebpackError>,
