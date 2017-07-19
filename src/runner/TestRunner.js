@@ -48,7 +48,7 @@ export default class TestRunner extends EventEmitter {
     this.includes = includes;
 
     this.options = options;
-    this.tmpPath = path.join(this.options.cwd, '.tmp', 'mocha-webpack');
+    this.tmpPath = path.join(this.options.cwd, '.tmp', 'mocha-webpack', Date.now().toString());
     this.outputFilePath = path.join(this.tmpPath, 'bundle.js');
   }
 
