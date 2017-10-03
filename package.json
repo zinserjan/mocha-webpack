@@ -18,7 +18,7 @@
     "build": "npm run clean-lib && babel ./src -d lib",
     "lint": "eslint src test bin",
     "flow": "flow",
-    "test": "npm run clean-tmp && npm run build && mocha --timeout 10000 --recursive --compilers js:babel-register \"test/**/*.test.js\"",
+    "test": "npm run clean-tmp && npm run build && mocha --timeout 10000 --recursive --require babel-register \"test/**/*.test.js\"",
     "cover": "cross-env BABEL_ENV=coverage nyc --reporter=lcov --reporter=text npm test",
     "posttest": "npm run lint",
     "docs:clean": "del-cli _book",
@@ -44,7 +44,7 @@
   "author": "Jan-André Zinser",
   "license": "MIT",
   "peerDependencies": {
-    "mocha": "^2.4.5 || ^3.0.0",
+    "mocha": "^2.4.5 || ^3.0.0 || ^4.0.0",
     "webpack": "^2.0.0 || ^3.0.0"
   },
   "devDependencies": {
@@ -79,13 +79,13 @@
     "gh-pages": "^0.12.0",
     "gitbook-cli": "^2.3.0",
     "glob": "7.0.5",
-    "mocha": "^3.0.0",
+    "mocha": "^4.0.0",
     "node-sass": "~4.1.1",
     "np": "^2.9.0",
     "nyc": "^10.0.0",
     "sass-loader": "~6.0.0",
     "sinon": "^1.17.3",
-    "webpack": "^2.0.0"
+    "webpack": "^3.6.0"
   },
   "dependencies": {
     "babel-runtime": "^6.18.0",

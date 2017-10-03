@@ -8,13 +8,17 @@ branches:
 language: node_js
 
 node_js:
-  - "4"
+  - "5"
   - "6"
+  - "7"
+  - "8"
 
 env:
   - WEBPACK_VERSION=2 MOCHA_VERSION=2
   - WEBPACK_VERSION=2 MOCHA_VERSION=3
   - WEBPACK_VERSION=3 MOCHA_VERSION=3
+  - WEBPACK_VERSION=2 MOCHA_VERSION=4
+  - WEBPACK_VERSION=3 MOCHA_VERSION=4
 
 before_script:
   - "npm install webpack@$WEBPACK_VERSION"
