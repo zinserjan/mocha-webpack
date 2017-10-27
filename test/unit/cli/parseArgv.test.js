@@ -805,7 +805,7 @@ describe('parseArgv', function () {
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'webpackConfig', 'webpack-config.js');
+        assert.propertyVal(parsedArgv, 'webpackConfig', 'webpack.config.js');
       });
 
 

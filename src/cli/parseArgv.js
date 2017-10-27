@@ -171,7 +171,7 @@ const options = {
     describe: 'path to webpack-config file',
     group: BASIC_GROUP,
     requiresArg: true,
-    default: 'webpack-config.js',
+    default: 'webpack.config.js',
   },
   'webpack-env': {
     describe: 'environment passed to the webpack-config, when it is a function',
