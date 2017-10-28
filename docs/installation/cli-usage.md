@@ -64,7 +64,7 @@ for your webpack config file then give it a name that ends with corresponding ex
 ```javascript
 export default {
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         loader: "babel-loader"
@@ -78,7 +78,7 @@ export default {
 ```coffeescript
 module.exports =
   module:
-    loaders: [
+    rules: [
       {
         test: /\.coffee$/
         loader: "coffee-loader"
@@ -94,7 +94,7 @@ export default function (env) {
     devtool: env === "production" ? "source-map": "inline-cheap-module-source-map",
     target: env === "test" ? "node" : "web",
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.js$/,
           loader: "babel-loader"

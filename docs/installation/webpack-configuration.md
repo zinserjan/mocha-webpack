@@ -70,10 +70,10 @@ Your webpack-config for the browser might look like the following:
 ```javascript
 module.exports = {
     module: {
-        loaders: [
+        rules: [
             // ...
-            { test: /\.scss$/, loaders: ['style-loader', 'css-loader', 'sass-loader'] },
-            { test: /\.css$/, loaders: ['style-loader', 'css-loader'] },
+            { test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader'] },
+            { test: /\.css$/, use: ['style-loader', 'css-loader'] },
             // ...
         ]
     },
@@ -85,7 +85,7 @@ Replacing all CSS related loaders with [null-loader](https://github.com/webpack/
 ```javascript
 module.exports = {
     module: {
-        loaders: [
+        rules: [
             // ...
             { test: /\.scss$/, loader: 'null-loader' },
             { test: /\.css$/, loader: 'null-loader' },
@@ -109,10 +109,10 @@ Your webpack-config for the browser might look like the following:
 ```javascript
 module.exports = {
     module: {
-        loaders: [
+        rules: [
             // ...
-            { test: /\.scss$/, loaders: ['style-loader', 'css-loader?modules', 'sass-loader'] },
-            { test: /\.css$/, loaders: ['style-loader', 'css-loader?modules'] },
+            { test: /\.scss$/, use: ['style-loader', 'css-loader?modules', 'sass-loader'] },
+            { test: /\.css$/, use: ['style-loader', 'css-loader?modules'] },
             // ...
         ]
     },
@@ -127,10 +127,10 @@ Then your config looks like this and you're ready to test:
 ```javascript
 module.exports = {
     module: {
-        loaders: [
+        rules: [
             // ...
-            { test: /\.scss$/, loaders: ['css-loader/locals?modules', 'sass-loader'] },
-            { test: /\.css$/, loaders: ['css-loader/locals?modules'] },
+            { test: /\.scss$/, use: ['css-loader/locals?modules', 'sass-loader'] },
+            { test: /\.css$/, use: ['css-loader/locals?modules'] },
             // ...
         ]
     },
