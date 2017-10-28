@@ -259,7 +259,7 @@ export default class TestRunner extends EventEmitter {
     const userLoaders = _.get(webpackConfig, 'module.rules', _.get(webpackConfig, 'module.loaders', []));
     userLoaders.unshift(
       {
-        test: /\.js?$/,
+        test: /\.js$/,
         include: entryPath,
         use: [
           {
