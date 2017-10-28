@@ -48,7 +48,7 @@
     <body>
         
         
-    <div class="book" data-level="1.1" data-basepath="../.." data-revision="Fri Oct 27 2017 23:15:04 GMT+0200 (CEST)">
+    <div class="book" data-level="1.1" data-basepath="../.." data-revision="Sat Oct 28 2017 21:58:16 GMT+0200 (CEST)">
     
 
 <div class="book-summary">
@@ -361,7 +361,7 @@ for your webpack config file then give it a name that ends with corresponding ex
 <p><strong>webpack.config-test.babel.js</strong> - Babel example config</p>
 <pre><code class="lang-javascript"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
   module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
-    loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    rules<span class="token punctuation">:</span> <span class="token punctuation">[</span>
       <span class="token punctuation">{</span>
         test<span class="token punctuation">:</span> <span class="token regex">/\.js$/</span><span class="token punctuation">,</span>
         loader<span class="token punctuation">:</span> <span class="token string">&quot;babel-loader&quot;</span>
@@ -373,7 +373,7 @@ for your webpack config file then give it a name that ends with corresponding ex
 <p><strong>webpack.config-test.coffee</strong> - CoffeeScript example config</p>
 <pre><code class="lang-coffeescript">module<span class="token punctuation">.</span>exports <span class="token operator">=</span>
   <span class="token property">module</span><span class="token punctuation">:</span>
-    <span class="token property">loaders</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token property">rules</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
       <span class="token punctuation">{</span>
         <span class="token property">test</span><span class="token punctuation">:</span> <span class="token regex">/\.coffee$/</span>
         <span class="token property">loader</span><span class="token punctuation">:</span> <span class="token string">&quot;coffee-loader&quot;</span>
@@ -386,7 +386,7 @@ for your webpack config file then give it a name that ends with corresponding ex
     devtool<span class="token punctuation">:</span> env <span class="token operator">===</span> <span class="token string">&quot;production&quot;</span> <span class="token operator">?</span> <span class="token string">&quot;source-map&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;inline-cheap-module-source-map&quot;</span><span class="token punctuation">,</span>
     target<span class="token punctuation">:</span> env <span class="token operator">===</span> <span class="token string">&quot;test&quot;</span> <span class="token operator">?</span> <span class="token string">&quot;node&quot;</span> <span class="token punctuation">:</span> <span class="token string">&quot;web&quot;</span><span class="token punctuation">,</span>
     module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
-      loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+      rules<span class="token punctuation">:</span> <span class="token punctuation">[</span>
         <span class="token punctuation">{</span>
           test<span class="token punctuation">:</span> <span class="token regex">/\.js$/</span><span class="token punctuation">,</span>
           loader<span class="token punctuation">:</span> <span class="token string">&quot;babel-loader&quot;</span>

@@ -48,7 +48,7 @@
     <body>
         
         
-    <div class="book" data-level="1.2" data-basepath="../.." data-revision="Fri Oct 27 2017 23:15:04 GMT+0200 (CEST)">
+    <div class="book" data-level="1.2" data-basepath="../.." data-revision="Sat Oct 28 2017 21:58:16 GMT+0200 (CEST)">
     
 
 <div class="book-summary">
@@ -357,10 +357,10 @@ module<span class="token punctuation">.</span>exports <span class="token operato
 <p>Your webpack-config for the browser might look like the following:</p>
 <pre><code class="lang-javascript">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
     module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
-        loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        rules<span class="token punctuation">:</span> <span class="token punctuation">[</span>
             <span class="token comment" spellcheck="true">// ...</span>
-            <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.scss$/</span><span class="token punctuation">,</span> loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;style-loader&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;css-loader&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;sass-loader&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-            <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.css$/</span><span class="token punctuation">,</span> loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;style-loader&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;css-loader&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.scss$/</span><span class="token punctuation">,</span> use<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;style-loader&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;css-loader&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;sass-loader&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.css$/</span><span class="token punctuation">,</span> use<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;style-loader&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;css-loader&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
             <span class="token comment" spellcheck="true">// ...</span>
         <span class="token punctuation">]</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -369,7 +369,7 @@ module<span class="token punctuation">.</span>exports <span class="token operato
 <p>Replacing all CSS related loaders with <a href="https://github.com/webpack/null-loader" target="_blank">null-loader</a> results in the following config:</p>
 <pre><code class="lang-javascript">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
     module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
-        loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        rules<span class="token punctuation">:</span> <span class="token punctuation">[</span>
             <span class="token comment" spellcheck="true">// ...</span>
             <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.scss$/</span><span class="token punctuation">,</span> loader<span class="token punctuation">:</span> <span class="token string">&apos;null-loader&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
             <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.css$/</span><span class="token punctuation">,</span> loader<span class="token punctuation">:</span> <span class="token string">&apos;null-loader&apos;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -389,10 +389,10 @@ It&apos;s the same setup like for universal applications respectively pre-render
 <p>Your webpack-config for the browser might look like the following:</p>
 <pre><code class="lang-javascript">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
     module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
-        loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        rules<span class="token punctuation">:</span> <span class="token punctuation">[</span>
             <span class="token comment" spellcheck="true">// ...</span>
-            <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.scss$/</span><span class="token punctuation">,</span> loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;style-loader&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;css-loader?modules&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;sass-loader&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-            <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.css$/</span><span class="token punctuation">,</span> loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;style-loader&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;css-loader?modules&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.scss$/</span><span class="token punctuation">,</span> use<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;style-loader&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;css-loader?modules&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;sass-loader&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.css$/</span><span class="token punctuation">,</span> use<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;style-loader&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;css-loader?modules&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
             <span class="token comment" spellcheck="true">// ...</span>
         <span class="token punctuation">]</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -406,10 +406,10 @@ It&apos;s the same setup like for universal applications respectively pre-render
 <p>Then your config looks like this and you&apos;re ready to test:</p>
 <pre><code class="lang-javascript">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
     module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
-        loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        rules<span class="token punctuation">:</span> <span class="token punctuation">[</span>
             <span class="token comment" spellcheck="true">// ...</span>
-            <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.scss$/</span><span class="token punctuation">,</span> loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;css-loader/locals?modules&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;sass-loader&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
-            <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.css$/</span><span class="token punctuation">,</span> loaders<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;css-loader/locals?modules&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.scss$/</span><span class="token punctuation">,</span> use<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;css-loader/locals?modules&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;sass-loader&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token punctuation">{</span> test<span class="token punctuation">:</span> <span class="token regex">/\.css$/</span><span class="token punctuation">,</span> use<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&apos;css-loader/locals?modules&apos;</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
             <span class="token comment" spellcheck="true">// ...</span>
         <span class="token punctuation">]</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
