@@ -36,15 +36,13 @@ If any build errors happens, they will be shown like below
 
 mocha-webpack works with
 - webpack in version `2.x.x` & `3.x.x`
-- mocha in version `2.x.x` & `3.x.x`
+- mocha in version `2.x.x`, `3.x.x` & `4.x.x` 
 
 ## Installation
 
-**Note:** Version 1.0.0 is on the way and the latest pre-releases are available on npm under the `next` tag.
-
 Install mocha-webpack via npm install
 ```bash
-$ npm install webpack mocha mocha-webpack@next --save-dev
+$ npm install webpack mocha mocha-webpack --save-dev
 ```
 
 and use it via npm scripts in your `package.json`
