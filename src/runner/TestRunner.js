@@ -261,18 +261,20 @@ export default class TestRunner extends EventEmitter {
       {
         test: /\.js?$/,
         include: entryPath,
-        loader: includeLoaderPath,
-        options: {
-          include: this.includes,
-        },
-      },
-      {
-        test: /\.js?$/,
-        include: entryPath,
-        loader: entryLoaderPath,
-        options: {
-          entryConfig,
-        },
+        use: [
+          {
+            loader: includeLoaderPath,
+            options: {
+              include: this.includes,
+            },
+          },
+          {
+            loader: entryLoaderPath,
+            options: {
+              entryConfig,
+            },
+          },
+        ],
       }
     );
 
