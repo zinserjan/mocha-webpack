@@ -11,7 +11,7 @@ import createWatchCompiler from '../webpack/compiler/createWatchCompiler';
 import registerInMemoryCompiler from '../webpack/compiler/registerInMemoryCompiler';
 import registerReadyCallback from '../webpack/compiler/registerReadyCallback';
 // $FlowFixMe
-import { EntryConfig, KEY as ENTRY_CONFIG_KEY } from '../webpack/loader/entryLoader';
+import { EntryConfig } from '../webpack/loader/entryLoader';
 import configureMocha from './configureMocha';
 import getBuildStats from '../webpack/util/getBuildStats';
 import buildProgressPlugin from '../webpack/plugin/buildProgressPlugin';
@@ -69,7 +69,7 @@ export default class TestRunner extends EventEmitter {
   }
 
   async run(): Promise<number> {
-    const config = await this.createWebpackConfig();
+    const { webpackConfig: config } = await this.createWebpackConfig();
     let failures = 0;
     const compiler: Compiler = createCompiler(config);
 
@@ -110,8 +110,7 @@ export default class TestRunner extends EventEmitter {
   }
 
   async watch(): Promise<void> {
-    const config = await this.createWebpackConfig();
-    const entryConfig: EntryConfig = config[ENTRY_CONFIG_KEY];
+    const { webpackConfig: config, entryConfig } = await this.createWebpackConfig();
 
     let mochaRunner: ?MochaRunner = null;
     let stats: ?Stats = null;
@@ -235,7 +234,7 @@ export default class TestRunner extends EventEmitter {
     return new Promise(() => void 0); // never ending story
   }
 
-  async createWebpackConfig(): {} {
+  async createWebpackConfig() {
     const webpackConfig = this.options.webpackConfig;
 
     const files = await glob(this.entries, {
@@ -248,12 +247,6 @@ export default class TestRunner extends EventEmitter {
       .map((f) => ensureAbsolutePath(f, this.options.cwd))
       .forEach((f) => entryConfig.addFile(f));
 
-    const includeLoaderQuery = {
-      include: this.includes,
-    };
-
-    const entry = `!!${includeLoaderPath}?${JSON.stringify(includeLoaderQuery)}!${entryLoaderPath}!${entryPath}`;
-
     const outputFileName = path.basename(this.outputFilePath);
     const outputPath = path.dirname(this.outputFilePath);
 
@@ -263,10 +256,33 @@ export default class TestRunner extends EventEmitter {
       plugins.push(buildProgressPlugin());
     }
 
-    return {
+    const userLoaders = _.get(webpackConfig, 'module.rules', _.get(webpackConfig, 'module.loaders', []));
+    userLoaders.unshift(
+      {
+        test: /\.js?$/,
+        include: entryPath,
+        loader: includeLoaderPath,
+        options: {
+          include: this.includes,
+        },
+      },
+      {
+        test: /\.js?$/,
+        include: entryPath,
+        loader: entryLoaderPath,
+        options: {
+          entryConfig,
+        },
+      }
+    );
+
+    const config = {
       ...webpackConfig,
-      [ENTRY_CONFIG_KEY]: entryConfig,
-      entry,
+      entry: entryPath,
+      module: {
+        ...(webpackConfig: any).module,
+        [_.has(webpackConfig, 'module.loaders') ? 'loaders' : 'rules']: userLoaders,
+      },
       output: {
         ...(webpackConfig: any).output,
         filename: outputFileName,
@@ -276,6 +292,10 @@ export default class TestRunner extends EventEmitter {
         ...((webpackConfig: any).plugins || []),
         ...plugins,
       ],
+    };
+    return {
+      webpackConfig: config,
+      entryConfig,
     };
   }
 }
