@@ -96,7 +96,7 @@ module.exports = {
     devtoolFallbackModuleFilenameTemplate: '[absolute-resource-path]?[hash]'
   },
   module: {
-    loaders: [].concat(
+    rules: [].concat(
       isCoverage ? {
           test: /\.(js|ts)/,
           include: path.resolve('src'), // instrument only testing sources with Istanbul, after ts-loader runs
