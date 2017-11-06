@@ -9,6 +9,7 @@ Options
   --async-only, -A               force all tests to take a callback (async) or return a promise
   --colors, -c                   force enabling of colors
   --interactive                  force interactive mode
+  --quiet, -q                    does not display informational messages
   --growl, -G                    enable growl notification support
   --recursive                    include sub directories
   --reporter, -R                 specify the reporter to use
