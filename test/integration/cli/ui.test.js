@@ -28,7 +28,7 @@ describe('cli --ui', function () {
     });
   });
 
-  it('uses bdd-lazy-va', function (done) {
+  it('uses bdd-lazy-var', function (done) {
     exec(`node ${binPath}  --ui bdd-lazy-var/getter "${testBddLazy}"`, (err, stdout) => {
       assert.isNull(err);
       assert.include(stdout, '1 passing');
