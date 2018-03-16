@@ -22,6 +22,7 @@ export type MochaWebpackOptions = {
   asyncOnly: boolean,
   delay: boolean,
   interactive: boolean,
+  quiet: boolean,
   growl?: boolean,
 };
 
@@ -60,6 +61,7 @@ export default class MochaWebpack {
     asyncOnly: false,
     delay: false,
     interactive: !!((process.stdout: any).isTTY),
+    quiet: false,
   };
 
   /**
@@ -257,6 +259,20 @@ export default class MochaWebpack {
   }
 
   /**
+   * Quiet informational messages.
+   *
+   * @public
+   * @return {MochaWebpack}
+   */
+  quiet(): MochaWebpack {
+    this.options = {
+      ...this.options,
+      quiet: true,
+    };
+    return this;
+  }
+
+  /**
    * Use inline diffs rather than +/-.
    *
    * @public
@@ -386,6 +402,7 @@ export default class MochaWebpack {
     testRunnerReporter({
       eventEmitter: runner,
       interactive: this.options.interactive,
+      quiet: this.options.quiet,
       cwd: this.options.cwd,
     });
     return await runner.run();
@@ -400,6 +417,7 @@ export default class MochaWebpack {
     testRunnerReporter({
       eventEmitter: runner,
       interactive: this.options.interactive,
+      quiet: this.options.quiet,
       cwd: this.options.cwd,
     });
     await runner.watch();

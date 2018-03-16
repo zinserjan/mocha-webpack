@@ -31,6 +31,7 @@ describe('MochaWebpack', function () {
       asyncOnly: false,
       delay: false,
       interactive: !!(process.stdout.isTTY),
+      quiet: false,
     };
     assert.deepEqual(mochaWebpack.options, expected);
   });

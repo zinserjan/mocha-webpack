@@ -20,6 +20,13 @@ const options = {
     describe: 'force enabling of colors',
     group: OUTPUT_GROUP,
   },
+  quiet: {
+    alias: 'q',
+    type: 'boolean',
+    default: undefined,
+    describe: 'does not show informational messages',
+    group: OUTPUT_GROUP,
+  },
   interactive: {
     type: 'boolean',
     default: !!(process.stdout.isTTY),

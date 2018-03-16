@@ -77,6 +77,10 @@ if (options.fullTrace) {
   mochaWebpack.fullStackTrace();
 }
 
+if (options.quiet) {
+  mochaWebpack.quiet();
+}
+
 mochaWebpack.useColors(options.colors);
 mochaWebpack.useInlineDiffs(options.inlineDiffs);
 mochaWebpack.timeout(options.timeout);
