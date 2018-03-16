@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import _ from 'lodash';
-import chalk from 'chalk';
+import stripAnsi from 'strip-ansi';
 import webpack from 'webpack';
 import { version as WEBPACK_VERSION } from 'webpack/package.json';
 import MemoryFileSystem from 'memory-fs';
@@ -27,7 +27,7 @@ const webpackConfig = {
         test: /.js$/,
         loader: 'babel-loader',
         query: {
-          presets: ['babel-preset-es2015'],
+          presets: ['babel-preset-env'],
         },
       },
       {
@@ -59,7 +59,7 @@ describe('statFormatter', function () {
 
     // make os & location independent messages without colors
     const ensureConsistentCompare = _.flow([
-      chalk.stripColor,
+      stripAnsi,
       (message) => message.replace(/\r?\n/g, '\n'),
       (message) => message.replace(testDirPath, `Xdir/${testName}`),
     ]);
