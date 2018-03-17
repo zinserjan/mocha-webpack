@@ -22,11 +22,11 @@ const webpackConfig = {
     filename: 'bundle.js',
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /.js$/,
         loader: 'babel-loader',
-        query: {
+        options : {
           presets: ['babel-preset-env'],
         },
       },
@@ -36,11 +36,11 @@ const webpackConfig = {
       },
       {
         test: /\.css$/,
-        loaders: ['css-loader'],
+        loader: 'css-loader',
       },
       {
         test: /\.scss$/,
-        loaders: ['sass-loader'],
+        loader: 'sass-loader',
       },
     ],
   },

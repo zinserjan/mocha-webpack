@@ -259,7 +259,7 @@ export default class TestRunner extends EventEmitter {
       plugins.push(buildProgressPlugin());
     }
 
-    const userLoaders = _.get(webpackConfig, 'module.rules', _.get(webpackConfig, 'module.loaders', []));
+    const userLoaders = _.get(webpackConfig, 'module.rules',  []);
     userLoaders.unshift(
       {
         test: entryPath,
@@ -285,7 +285,7 @@ export default class TestRunner extends EventEmitter {
       entry: entryPath,
       module: {
         ...(webpackConfig: any).module,
-        [_.has(webpackConfig, 'module.loaders') ? 'loaders' : 'rules']: userLoaders,
+        rules: userLoaders,
       },
       output: {
         ...(webpackConfig: any).output,
