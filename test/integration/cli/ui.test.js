@@ -13,25 +13,25 @@ const testBddLazy = path.join(fixtureDir, 'ui/bdd-lazy-var.js');
 
 describe('cli --ui', function () {
   it('uses bdd as default', function (done) {
-    exec(`node ${binPath} --mode development "${testBdd}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development "${testBdd}"`, (err, output) => {
       assert.isNull(err);
-      assert.include(stdout, '1 passing');
+      assert.include(output, '1 passing');
       done();
     });
   });
 
   it('uses tdd', function (done) {
-    exec(`node ${binPath} --mode development --ui tdd "${testTdd}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development --ui tdd "${testTdd}"`, (err, output) => {
       assert.isNull(err);
-      assert.include(stdout, '1 passing');
+      assert.include(output, '1 passing');
       done();
     });
   });
 
   it('uses bdd-lazy-var', function (done) {
-    exec(`node ${binPath} --mode development --ui bdd-lazy-var/getter "${testBddLazy}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development --ui bdd-lazy-var/getter "${testBddLazy}"`, (err, output) => {
       assert.isNull(err);
-      assert.include(stdout, '1 passing');
+      assert.include(output, '1 passing');
       done();
     });
   });

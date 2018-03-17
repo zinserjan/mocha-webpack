@@ -11,27 +11,27 @@ const test = path.join(fixtureDir, 'simple/simple.js');
 
 describe('cli --quiet', function () {
   it('shows info messages when not set', function (done) {
-    exec(`node ${binPath} --mode development "${test}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development "${test}"`, (err, output) => {
       assert.isNull(err);
-      assert.include(stdout, 'WEBPACK  Compiling...');
+      assert.include(output, 'WEBPACK  Compiling...');
       done();
     });
   });
 
   it('does not show info messages', function (done) {
-    exec(`node ${binPath} --mode development --quiet "${test}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development --quiet "${test}"`, (err, output) => {
       assert.isNull(err);
-      assert.notInclude(stdout, 'WEBPACK');
-      assert.notInclude(stdout, 'MOCHA');
-      assert.notInclude(stdout, 'successfully');
+      assert.notInclude(output, 'WEBPACK');
+      assert.notInclude(output, 'MOCHA');
+      assert.notInclude(output, 'successfully');
       done();
     });
   });
 
   it('still shows mocha output', function (done) {
-    exec(`node ${binPath} --mode development --quiet "${test}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development --quiet "${test}"`, (err, output) => {
       assert.isNull(err);
-      assert.include(stdout, '1 passing');
+      assert.include(output, '1 passing');
       done();
     });
   });

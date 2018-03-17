@@ -26,18 +26,18 @@ function testInclude(entry, includes, cb) {
 }
 
 function testSingleInclude(entry, done) {
-  return testInclude(entry, [helper1], (err, stdout) => {
+  return testInclude(entry, [helper1], (err, output) => {
     assert.isNull(err);
-    assert.include(stdout, 'first --include works');
+    assert.include(output, 'first --include works');
     done();
   });
 }
 
 function testMultiInclude(entry, done) {
-  return testInclude(entry, [helper1, helper2], (err, stdout) => {
+  return testInclude(entry, [helper1, helper2], (err, output) => {
     assert.isNull(err);
-    assert.include(stdout, 'first --include works');
-    assert.include(stdout, 'second --include works');
+    assert.include(output, 'first --include works');
+    assert.include(output, 'second --include works');
     done();
   });
 }

@@ -12,18 +12,18 @@ const test = path.join(fixtureDir, 'simple/simple.js');
 
 describe('cli --reporter', function () {
   it('uses spec reporter', function (done) {
-    exec(`node ${binPath} --mode development --reporter spec "${test}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development --reporter spec "${test}"`, (err, output) => {
       assert.isNull(err);
-      assert.include(stdout, '1 passing');
+      assert.include(output, '1 passing');
       done();
     });
   });
 
   it('uses custom reporter', function (done) {
-    exec(`node ${binPath} --mode development --reporter "${reporter}" "${test}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development --reporter "${reporter}" "${test}"`, (err, output) => {
       assert.isNull(err);
-      assert.include(stdout, 'customMochaReporter started');
-      assert.include(stdout, 'customMochaReporter finished');
+      assert.include(output, 'customMochaReporter started');
+      assert.include(output, 'customMochaReporter finished');
       done();
     });
   });
