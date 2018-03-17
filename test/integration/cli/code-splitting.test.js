@@ -3,8 +3,8 @@
 
 import { assert } from 'chai';
 import path from 'path';
-import { exec } from 'child_process';
 import normalizePath from 'normalize-path';
+import { exec } from './util/childProcess';
 
 
 const fixtureDir = path.relative(process.cwd(), path.join(__dirname, 'fixture'));

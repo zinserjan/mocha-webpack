@@ -3,7 +3,7 @@
 
 import path from 'path';
 import { assert } from 'chai';
-import { exec } from 'child_process';
+import { exec } from './util/childProcess';
 
 const binPath = path.relative(process.cwd(), path.join('bin', '_mocha'));
 

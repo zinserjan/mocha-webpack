@@ -6,9 +6,9 @@ import _ from 'lodash';
 import fs from 'fs-extra';
 import del from 'del';
 import path from 'path';
-import { exec } from 'child_process';
 import anymatch from 'anymatch';
 import normalizePath from 'normalize-path';
+import { exec } from './util/childProcess';
 
 const escapePath = (p) => p.replace(/\\/gm, '\\\\');
 
