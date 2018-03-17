@@ -11,7 +11,7 @@ const test = path.join(fixtureDir, 'simple/simple.js');
 
 describe('cli --quiet', function () {
   it('shows info messages when not set', function (done) {
-    exec(`node ${binPath} "${test}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development "${test}"`, (err, stdout) => {
       assert.isNull(err);
       assert.include(stdout, 'WEBPACK  Compiling...');
       done();
@@ -19,7 +19,7 @@ describe('cli --quiet', function () {
   });
 
   it('does not show info messages', function (done) {
-    exec(`node ${binPath} --quiet "${test}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development --quiet "${test}"`, (err, stdout) => {
       assert.isNull(err);
       assert.notInclude(stdout, 'WEBPACK');
       assert.notInclude(stdout, 'MOCHA');
@@ -29,7 +29,7 @@ describe('cli --quiet', function () {
   });
 
   it('still shows mocha output', function (done) {
-    exec(`node ${binPath} --quiet "${test}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development --quiet "${test}"`, (err, stdout) => {
       assert.isNull(err);
       assert.include(stdout, '1 passing');
       done();

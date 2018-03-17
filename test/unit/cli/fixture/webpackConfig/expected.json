@@ -1,3 +1,4 @@
 {
+  "mode": "development",
   "target": "node"
 }

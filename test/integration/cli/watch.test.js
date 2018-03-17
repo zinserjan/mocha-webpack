@@ -57,7 +57,7 @@ function createErrorFile(fileName, testName) {
 const createLongRunningTest = (fileName, testName) => {
   const content = `
     var assert = require('assert');
-    describe('${fileName} - ${testName} - 1', function () {      
+    describe('${fileName} - ${testName} - 1', function () {
       it('runs test 1' , function (done) {
         this.timeout(3000);
         console.log('starting ${testName} - 1');
@@ -67,7 +67,7 @@ const createLongRunningTest = (fileName, testName) => {
         }, 2000);
       });
     });
-    
+
     describe('${fileName} - ${testName}', function () {
       it('runs test 2' , function (done) {
         this.timeout(3000);
@@ -85,7 +85,7 @@ const createLongRunningTest = (fileName, testName) => {
 const createNeverEndingTest = (fileName, testName) => {
   const content = `
     var assert = require('assert');
-    describe('${fileName} - ${testName} - 1', function () {      
+    describe('${fileName} - ${testName} - 1', function () {
       it('runs test 1' , function (done) {
         console.log('starting ${testName}');
       });
@@ -118,7 +118,7 @@ const spawnMochaWebpack = (...args) => {
   let data = '';
   const binPath = path.relative(process.cwd(), path.join('bin', 'mocha-webpack'));
 
-  const child = spawn('node', [binPath, ...args]);
+  const child = spawn('node', [binPath, '--mode', 'development', ...args]);
   const receiveData = (d) => {
     data += d.toString();
   };

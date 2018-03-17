@@ -16,7 +16,7 @@ describe('code-splitting', function () {
       this.passingTest = normalizePath(path.join(fixtureDir, 'code-splitting/test/lazy-load-entry-static.js'));
       this.webpackConfig = normalizePath(path.join(fixtureDir, 'code-splitting/webpack.config-test.js'));
     });
-    it('runs successfull test', function (done) {
+    it('runs successful test', function (done) {
       exec(`node ${binPath}  --webpack-config "${this.webpackConfig}" "${this.passingTest}"`, (err, stdout) => {
         assert.isNull(err);
         assert.include(stdout, 'entry1.js');

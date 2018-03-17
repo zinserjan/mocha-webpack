@@ -64,7 +64,7 @@ function registerCompiler(moduleDescriptor) {
   }
 }
 
-export default function requireWebpackConfig(webpackConfig, required, env) {
+export default function requireWebpackConfig(webpackConfig, required, env, mode) {
   const configPath = path.resolve(webpackConfig);
   const configExtension = getConfigExtension(configPath);
   let configFound = false;
@@ -102,6 +102,10 @@ export default function requireWebpackConfig(webpackConfig, required, env) {
 
   if (typeof config === 'function') {
     config = config(env);
+  }
+
+  if (!config.mode) {
+    config.mode = mode;
   }
 
   if (Array.isArray(config)) {

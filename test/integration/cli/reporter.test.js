@@ -12,7 +12,7 @@ const test = path.join(fixtureDir, 'simple/simple.js');
 
 describe('cli --reporter', function () {
   it('uses spec reporter', function (done) {
-    exec(`node ${binPath}  --reporter spec "${test}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development --reporter spec "${test}"`, (err, stdout) => {
       assert.isNull(err);
       assert.include(stdout, '1 passing');
       done();
@@ -20,7 +20,7 @@ describe('cli --reporter', function () {
   });
 
   it('uses custom reporter', function (done) {
-    exec(`node ${binPath}  --reporter "${reporter}" "${test}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development --reporter "${reporter}" "${test}"`, (err, stdout) => {
       assert.isNull(err);
       assert.include(stdout, 'customMochaReporter started');
       assert.include(stdout, 'customMochaReporter finished');
@@ -29,7 +29,7 @@ describe('cli --reporter', function () {
   });
 
   it('shows notifications with --growl', function (done) {
-    exec(`node ${binPath}  --growl "${test}"`, (err) => {
+    exec(`node ${binPath} --mode development --growl "${test}"`, (err) => {
       assert.isNull(err);
       done();
     });

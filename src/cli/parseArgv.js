@@ -173,6 +173,12 @@ const options = {
     group: ADVANCED_GROUP,
     default: false,
   },
+  mode: {
+    alias: 'm',
+    type: 'string',
+    describe: 'TODO',
+    group: BASIC_GROUP,
+  },
   'webpack-config': {
     type: 'string',
     describe: 'path to webpack-config file',

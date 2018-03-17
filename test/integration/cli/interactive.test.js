@@ -11,7 +11,7 @@ const test = path.join(fixtureDir, 'simple/simple.js');
 
 describe('cli --interactive', function () {
   it('just runs', function (done) {
-    exec(`node ${binPath}  --interactive "${test}"`, (err, stdout) => {
+    exec(`node ${binPath} --mode development --interactive "${test}"`, (err, stdout) => {
       assert.isNull(err);
       assert.include(stdout, '1 passing');
       done();
