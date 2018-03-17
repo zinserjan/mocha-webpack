@@ -1,5 +1,6 @@
 // @flow
 import _ from 'lodash';
+import Watching from 'webpack/lib/Watching';
 import type { Compiler } from '../types';
 
 export type WatchCompiler = {
@@ -16,7 +17,7 @@ const noop = () => void 0;
 export default function createWatchCompiler(compiler: Compiler, watchOptions: {}): WatchCompiler {
   // this ugly statement to create a watch compiler is unfortunately necessary,
   // as webpack clears the file timestamps with the official compiler.watch()
-  const createWatcher = () => new compiler.constructor.Watching(compiler, watchOptions, noop);
+  const createWatcher = () => new Watching(compiler, watchOptions, noop);
   let watchCompiler = null;
 
   return {
