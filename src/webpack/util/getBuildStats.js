@@ -13,9 +13,9 @@ export type BuildStats = {
 
 
 export default function getBuildStats(stats: Stats, outputPath: string): BuildStats {
-  const { chunks, modules } = stats.compilation;
+  const { chunks, chunkGroups, modules } = stats.compilation;
 
-  const sortedChunks = sortChunks(chunks);
+  const sortedChunks = sortChunks(chunks, chunkGroups);
   const affectedModules = getAffectedModuleIds(chunks, modules);
 
   const entries = [];
@@ -26,13 +26,13 @@ export default function getBuildStats(stats: Stats, outputPath: string): BuildSt
   sortedChunks.forEach((chunk: Chunk) => {
     const files = Array.isArray(chunk.files) ? chunk.files : [chunk.files];
 
-    if (chunk.isInitial ? chunk.isInitial() : chunk.initial) {
+    if (chunk.isOnlyInitial()) {
       // only entry files
       const entry = files[0];
       entries.push(entry);
     }
 
-    if ((chunk.getModules ? chunk.getModules() : chunk.modules).some(
+    if (chunk.getModules().some(
         (module: Module) => affectedModules.indexOf(module.id) !== -1)
     ) {
       files.forEach((file) => {
