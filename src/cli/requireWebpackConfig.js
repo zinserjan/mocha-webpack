@@ -68,7 +68,7 @@ export default function requireWebpackConfig(webpackConfig, required, env, mode)
   const configPath = path.resolve(webpackConfig);
   const configExtension = getConfigExtension(configPath);
   let configFound = false;
-  let config;
+  let config = {};
 
   if (fileExists(configPath)) {
     // config exists, register compiler for non-js extensions
@@ -94,8 +94,10 @@ export default function requireWebpackConfig(webpackConfig, required, env, mode)
   if (!configFound) {
     if (required) {
       throw new Error(`Webpack config could not be found: ${webpackConfig}`);
+    } else if (mode != null) {
+      config.mode = mode;
     }
-    return {};
+    return config;
   }
 
   config = config.default || config;
@@ -104,7 +106,7 @@ export default function requireWebpackConfig(webpackConfig, required, env, mode)
     config = config(env);
   }
 
-  if (!config.mode) {
+  if (mode != null) {
     config.mode = mode;
   }
 

@@ -887,5 +887,37 @@ describe('parseArgv', function () {
         });
       }
     });
+
+    context('mode', function () {
+      it('has no default value', function () {
+        // given
+        const argv = this.argv;
+
+        // when
+        const parsedArgv = this.parseArgv(argv);
+
+        // then
+        assert.notProperty(parsedArgv, 'mode');
+      });
+
+
+      const parameters = [
+        { given: ['--mode', 'development'], expected: 'development' },
+        { given: ['--mode', 'production'], expected: 'production' },
+      ];
+
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'mode', parameter.expected);
+        });
+      }
+    });
   });
 });
