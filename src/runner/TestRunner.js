@@ -88,16 +88,20 @@ export default class TestRunner extends EventEmitter {
             reject();
             return;
           }
-          const mocha = this.prepareMocha(config, webpackStats);
-          this.emit('mocha:begin');
           try {
-            mocha.run((fails) => {
-              this.emit('mocha:finished', fails);
-              resolve(fails);
-            });
+            const mocha = this.prepareMocha(config, webpackStats);
+            this.emit('mocha:begin');
+            try {
+              mocha.run((fails) => {
+                this.emit('mocha:finished', fails);
+                resolve(fails);
+              });
+            } catch (e) {
+              this.emit('exception', e);
+              resolve(1);
+            }
           } catch (e) {
-            this.emit('exception', e);
-            resolve(1);
+            reject(e);
           }
         });
         compiler.run(noop);
