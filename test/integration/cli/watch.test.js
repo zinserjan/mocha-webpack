@@ -142,7 +142,7 @@ const spawnMochaWebpack = (...args) => {
 };
 
 
-describe('cli --watch', function () {
+describe.skip('cli --watch', function () {
   // Retry all tests in this suite up to 4 times
   this.retries(4);
 
