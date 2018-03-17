@@ -1,7 +1,0 @@
-Error in ./main.scss
-
-  Syntax error:
-    color: red;
-               ^
-        Invalid CSS after "  color: red;": expected "}", was ""
-        in Xdir/sass-loader-syntax-error/main.scss (line 2, column 15)

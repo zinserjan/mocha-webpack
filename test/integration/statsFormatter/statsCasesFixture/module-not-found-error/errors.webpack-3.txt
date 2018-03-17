@@ -1,3 +1,0 @@
-Error in ./entry.js
-
-  Module not found: 'xxx-does-not-exist-xxx' in 'Xdir/module-not-found-error'

@@ -14,9 +14,9 @@ const webpackMajorVersion = WEBPACK_VERSION.charAt(0);
 
 const base = path.join(__dirname, 'statsCasesFixture');
 const tests = fs.readdirSync(base).filter((testName) => fs.existsSync(path.join(base, testName, 'entry.js')));
-const jsonLoaderPath = path.resolve(__dirname, './mock/json-loader.js');
 
 const webpackConfig = {
+  mode: 'development',
   output: {
     path: path.join(__dirname, '/dist'),
     filename: 'bundle.js',
@@ -26,13 +26,9 @@ const webpackConfig = {
       {
         test: /.js$/,
         loader: 'babel-loader',
-        options : {
+        options: {
           presets: ['babel-preset-env'],
         },
-      },
-      {
-        test: /.json$/,
-        loader: jsonLoaderPath,
       },
       {
         test: /\.css$/,
