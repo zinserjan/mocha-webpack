@@ -1,8 +1,7 @@
 import toposort from 'toposort';
-  // see https://github.com/jantimon/html-webpack-plugin/blob/8131d8bb1dc9b185b3c1709264a3baf32ef799bc/lib/chunksorter.js
+// see https://github.com/jantimon/html-webpack-plugin/blob/8131d8bb1dc9b185b3c1709264a3baf32ef799bc/lib/chunksorter.js
 
 export default function sortChunks(chunks, chunkGroups) {
-
   // We build a map (chunk-id -> chunk) for faster access during graph building.
   const nodeMap = {};
 

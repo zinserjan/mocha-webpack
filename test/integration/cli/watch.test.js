@@ -376,7 +376,7 @@ describe('cli --watch', function () {
         return updatedTestId;
       })
       // wait until the output matches our condition
-      .then((updatedTestId) => waitFor(() =>assert.include(mw.log, updatedTestId) && assert.include(mw.log, '1 passing'), 5000))
+      .then((updatedTestId) => waitFor(() => assert.include(mw.log, updatedTestId) && assert.include(mw.log, '1 passing'), 5000))
       // output matched our condition
       .then(() => {
         // check if just updated test was tested again

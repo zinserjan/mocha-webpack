@@ -73,7 +73,7 @@ export default class TestRunner extends EventEmitter {
     let failures = 0;
     const compiler: Compiler = createCompiler(config);
 
-    compiler.hooks.run.tapAsync("mocha-webpack", (c, cb) => {
+    compiler.hooks.run.tapAsync('mocha-webpack', (c, cb) => {
       this.emit('webpack:start');
       // $FlowFixMe
       cb();
@@ -159,7 +159,7 @@ export default class TestRunner extends EventEmitter {
     const compiler = createCompiler(config);
     registerInMemoryCompiler(compiler);
     // register webpack start callback
-    compiler.hooks.watchRun.tapAsync("mocha-webpack", (c, cb) => {
+    compiler.hooks.watchRun.tapAsync('mocha-webpack', (c, cb) => {
       // check if mocha tests are still running, abort them and start compiling
       if (mochaRunner) {
         compilationScheduler = () => {
@@ -259,7 +259,7 @@ export default class TestRunner extends EventEmitter {
       plugins.push(buildProgressPlugin());
     }
 
-    const userLoaders = _.get(webpackConfig, 'module.rules',  []);
+    const userLoaders = _.get(webpackConfig, 'module.rules', []);
     userLoaders.unshift(
       {
         test: entryPath,
