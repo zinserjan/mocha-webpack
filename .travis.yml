@@ -9,14 +9,16 @@ language: node_js
 
 node_js:
   - "6"
+  - "8"
+  - "9"
 
 env:
   - WEBPACK_VERSION=4 MOCHA_VERSION=4
   - WEBPACK_VERSION=4 MOCHA_VERSION=5
 
 before_script:
-  - "npm install webpack@$WEBPACK_VERSION"
-  - "npm install mocha@$MOCHA_VERSION"
+  - "yarn add webpack@$WEBPACK_VERSION"
+  - "yarn add mocha@$MOCHA_VERSION"
 
 script:
   - npm run cover
