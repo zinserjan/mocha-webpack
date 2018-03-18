@@ -22,7 +22,6 @@ const formatTitleWarn = (title) => chalk.black.bgYellow('', title, '');
 const formatTitleError = (title) => chalk.white.bold.bgRed('', title, '');
 
 class Reporter {
-
   added: Array<string>;
   removed: Array<string>;
   interactive: boolean;

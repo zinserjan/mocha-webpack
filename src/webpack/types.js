@@ -36,15 +36,6 @@ export type Module = {
 };
 
 /**
- * webpack/lib/DependenciesBlock.js
- * webpack/lib/AsyncDependenciesBlock.js
- */
-export type DependenciesBlock = {
-  chunkGroup?: ChunkGroup,
-};
-
-
-/**
  * Webpack build error or warning
  */
 export type WebpackError = {
@@ -72,6 +63,14 @@ export type Chunk = {
  */
 export type ChunkGroup = {
   chunks: Array<Chunk>,
+};
+
+/**
+ * webpack/lib/DependenciesBlock.js
+ * webpack/lib/AsyncDependenciesBlock.js
+ */
+export type DependenciesBlock = {
+  chunkGroup?: ChunkGroup,
 };
 
 /**

@@ -18,7 +18,7 @@ export default function sortChunks(chunks, chunkGroups) {
   const sortedChunks = sortedGroups
     .reduce((result, chunkGroup) => result.concat(chunkGroup.chunks), [])
     .map(chunk => // use the chunk from the list passed in, since it may be a filtered list
-  nodeMap[chunk.id])
+      nodeMap[chunk.id])
     .filter((chunk, index, self) => {
       // make sure exists (ie excluded chunks not in nodeMap)
       const exists = !!chunk;

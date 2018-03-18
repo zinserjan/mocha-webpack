@@ -35,7 +35,6 @@ type Mocha = {
 };
 
 export default class TestRunner extends EventEmitter {
-
   entries: Array<string>;
   includes: Array<string>;
   tmpPath: string;
