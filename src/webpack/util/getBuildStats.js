@@ -33,7 +33,7 @@ export default function getBuildStats(stats: Stats, outputPath: string): BuildSt
     }
 
     if ((chunk.getModules ? chunk.getModules() : chunk.modules).some(
-        (module: Module) => affectedModules.indexOf(module.id) !== -1)
+      (module: Module) => affectedModules.indexOf(module.id) !== -1)
     ) {
       files.forEach((file) => {
         if (/\.js$/.test(file)) {
