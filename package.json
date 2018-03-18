@@ -71,7 +71,7 @@
     "del-cli": "^1.1.0",
     "eslint": "^4.8.0",
     "eslint-config-airbnb-base": "^4.0.2",
-    "eslint-plugin-flowtype": "^2.29.1",
+    "eslint-plugin-flowtype": "^2.46.1",
     "eslint-plugin-flowtype-errors": "^1.5.0",
     "eslint-plugin-import": "^1.11.0",
     "fast-async": "^6.1.2",
