@@ -16,7 +16,7 @@ const affectedModules = (map: ModuleMap, usageMap: ModuleUsageMap, affected: Mod
   }
   // module is identified as affected by this function call
   const module = map[moduleId];
-  affected[module.id] = module;  // eslint-disable-line no-param-reassign
+  affected[module.id] = module; // eslint-disable-line no-param-reassign
 
   // next we need to mark all usages aka parents also as affected
   const usages = usageMap[module.id];

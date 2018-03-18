@@ -27,7 +27,6 @@ export type MochaWebpackOptions = {
 };
 
 export default class MochaWebpack {
-
   /**
    * Files to run test against
    *
