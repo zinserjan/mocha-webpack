@@ -14,7 +14,7 @@ describe('cli - version', function () {
   });
 
   it('--version prints the correct version', function (done) {
-    exec(`node ${binPath} --mode development --version`, (err, output) => {
+    exec(`node ${binPath} --version`, (err, output) => {
       assert.isNull(err);
       assert.include(output, this.version);
       done();

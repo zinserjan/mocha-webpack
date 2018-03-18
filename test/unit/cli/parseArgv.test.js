@@ -519,8 +519,10 @@ describe('parseArgv', function () {
 
       const parameters = [
         { given: ['--slow', '1000'], expected: 1000 },
+        { given: ['--slow', '-1'], expected: -1 },
         { given: ['--s', '1000'], expected: 1000 },
         { given: ['-s', '1000'], expected: 1000 },
+        { given: ['-s', '-1'], expected: -1 },
       ];
 
       for (const parameter of parameters) {
