@@ -173,6 +173,13 @@ const options = {
     group: ADVANCED_GROUP,
     default: false,
   },
+  mode: {
+    type: 'string',
+    choices: ['development', 'production'],
+    describe: 'webpack mode to use',
+    group: BASIC_GROUP,
+    requiresArg: true,
+  },
   'webpack-config': {
     type: 'string',
     describe: 'path to webpack-config file',

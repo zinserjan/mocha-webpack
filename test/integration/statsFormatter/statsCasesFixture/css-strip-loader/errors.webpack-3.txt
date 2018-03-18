@@ -1,3 +1,0 @@
-Error in ./other.css
-
-  Module not found: './other2.css' in 'Xdir/css-strip-loader'

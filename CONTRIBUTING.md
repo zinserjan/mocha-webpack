@@ -62,7 +62,7 @@ Let's use `npm link` to symlink the fork into your project.
   $ npm link mocha-webpack
   ```
 
-1. If your using webpack 2, you need to configure loader resolution in your webpack config, like below
+1. You need to configure loader resolution in your webpack config, like below
   ```js
   var path = require('path');
 

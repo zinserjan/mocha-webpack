@@ -3,7 +3,7 @@
 
 import path from 'path';
 import { assert } from 'chai';
-import { exec } from 'child_process';
+import { exec } from './util/childProcess';
 
 const binPath = path.relative(process.cwd(), path.join('bin', '_mocha'));
 
@@ -17,7 +17,7 @@ const helper2 = `${path.join(helperDir, 'test-helper-2.js')}`;
 
 
 function test(entry, options, cb) {
-  exec(`node ${binPath} "${entry}" ${options.join(' ')}  `, cb);
+  exec(`node ${binPath} --mode development "${entry}" ${options.join(' ')}  `, cb);
 }
 
 function testInclude(entry, includes, cb) {
@@ -26,18 +26,18 @@ function testInclude(entry, includes, cb) {
 }
 
 function testSingleInclude(entry, done) {
-  return testInclude(entry, [helper1], (err, stdout) => {
+  return testInclude(entry, [helper1], (err, output) => {
     assert.isNull(err);
-    assert.include(stdout, 'first --include works');
+    assert.include(output, 'first --include works');
     done();
   });
 }
 
 function testMultiInclude(entry, done) {
-  return testInclude(entry, [helper1, helper2], (err, stdout) => {
+  return testInclude(entry, [helper1, helper2], (err, output) => {
     assert.isNull(err);
-    assert.include(stdout, 'first --include works');
-    assert.include(stdout, 'second --include works');
+    assert.include(output, 'first --include works');
+    assert.include(output, 'second --include works');
     done();
   });
 }

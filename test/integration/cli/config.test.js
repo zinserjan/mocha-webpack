@@ -3,7 +3,7 @@
 
 import { assert } from 'chai';
 import path from 'path';
-import { exec } from 'child_process';
+import { exec } from './util/childProcess';
 
 const fixtureDir = path.relative(process.cwd(), path.join(__dirname, 'fixture'));
 const binPath = path.relative(process.cwd(), path.join('bin', '_mocha'));
@@ -28,9 +28,9 @@ describe('cli --webpack-config', function () {
   it('passes --webpack-env random to config', function (done) {
     const config = path.join(fixtureDir, 'config/config.env.js');
     const env = Math.random();
-    exec(`node ${binPath} --webpack-config ${config} --webpack-env ${env} "${testSimple}"`, (err, stdout) => {
+    exec(`node ${binPath} --webpack-config ${config} --webpack-env ${env} "${testSimple}"`, (err, output) => {
       assert.isNull(err);
-      assert.include(stdout, env);
+      assert.include(output, env);
       done();
     });
   });
@@ -38,9 +38,9 @@ describe('cli --webpack-config', function () {
   it('passes --webpack-env object to config', function (done) {
     const config = path.join(fixtureDir, 'config/config.env.js');
     const env = Math.random();
-    exec(`node ${binPath} --webpack-config ${config} --webpack-env.test ${env} "${testSimple}"`, (err, stdout) => {
+    exec(`node ${binPath} --webpack-config ${config} --webpack-env.test ${env} "${testSimple}"`, (err, output) => {
       assert.isNull(err);
-      assert.include(stdout, env);
+      assert.include(output, env);
       done();
     });
   });

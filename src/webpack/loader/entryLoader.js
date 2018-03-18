@@ -4,7 +4,6 @@ import normalizePath from 'normalize-path';
 import createEntry from '../util/createEntry';
 
 class EntryConfig {
-
   files: Array<string>;
 
   constructor() {
@@ -24,7 +23,6 @@ class EntryConfig {
   getFiles(): Array<string> {
     return this.files;
   }
-
 }
 
 const entryLoader = function entryLoader() {
@@ -50,4 +48,3 @@ const entryLoader = function entryLoader() {
 
 module.exports = entryLoader;
 module.exports.EntryConfig = EntryConfig;
-

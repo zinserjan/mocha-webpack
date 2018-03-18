@@ -1,8 +1,0 @@
-Error in ./main.scss
-
-  Module not found:
-  @import "xxx-does-not-exist-xxx";
-  ^
-        File to import not found or unreadable: xxx-does-not-exist-xxx.
-  Parent style sheet: stdin
-        in Xdir/sass-loader-module-not-found-error/main.scss (line 1, column 1)

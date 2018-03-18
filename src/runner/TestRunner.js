@@ -35,7 +35,6 @@ type Mocha = {
 };
 
 export default class TestRunner extends EventEmitter {
-
   entries: Array<string>;
   includes: Array<string>;
   tmpPath: string;
@@ -73,7 +72,7 @@ export default class TestRunner extends EventEmitter {
     let failures = 0;
     const compiler: Compiler = createCompiler(config);
 
-    compiler.plugin('run', (c, cb) => {
+    compiler.hooks.run.tapAsync('mocha-webpack', (c, cb) => {
       this.emit('webpack:start');
       // $FlowFixMe
       cb();
@@ -88,16 +87,20 @@ export default class TestRunner extends EventEmitter {
             reject();
             return;
           }
-          const mocha = this.prepareMocha(config, webpackStats);
-          this.emit('mocha:begin');
           try {
-            mocha.run((fails) => {
-              this.emit('mocha:finished', fails);
-              resolve(fails);
-            });
+            const mocha = this.prepareMocha(config, webpackStats);
+            this.emit('mocha:begin');
+            try {
+              mocha.run((fails) => {
+                this.emit('mocha:finished', fails);
+                resolve(fails);
+              });
+            } catch (e) {
+              this.emit('exception', e);
+              resolve(1);
+            }
           } catch (e) {
-            this.emit('exception', e);
-            resolve(1);
+            reject(e);
           }
         });
         compiler.run(noop);
@@ -123,10 +126,9 @@ export default class TestRunner extends EventEmitter {
     };
 
     const runMocha = () => {
-      // $FlowFixMe
-      const mocha = this.prepareMocha(config, stats);
-
       try {
+        // $FlowFixMe
+        const mocha = this.prepareMocha(config, stats);
         // unregister our custom exception handler (see declaration)
         process.removeListener('uncaughtException', uncaughtExceptionListener);
 
@@ -156,7 +158,7 @@ export default class TestRunner extends EventEmitter {
     const compiler = createCompiler(config);
     registerInMemoryCompiler(compiler);
     // register webpack start callback
-    compiler.plugin('watch-run', (w, cb) => {
+    compiler.hooks.watchRun.tapAsync('mocha-webpack', (c, cb) => {
       // check if mocha tests are still running, abort them and start compiling
       if (mochaRunner) {
         compilationScheduler = () => {
@@ -256,7 +258,7 @@ export default class TestRunner extends EventEmitter {
       plugins.push(buildProgressPlugin());
     }
 
-    const userLoaders = _.get(webpackConfig, 'module.rules', _.get(webpackConfig, 'module.loaders', []));
+    const userLoaders = _.get(webpackConfig, 'module.rules', []);
     userLoaders.unshift(
       {
         test: entryPath,
@@ -282,7 +284,7 @@ export default class TestRunner extends EventEmitter {
       entry: entryPath,
       module: {
         ...(webpackConfig: any).module,
-        [_.has(webpackConfig, 'module.loaders') ? 'loaders' : 'rules']: userLoaders,
+        rules: userLoaders,
       },
       output: {
         ...(webpackConfig: any).output,

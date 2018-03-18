@@ -10,7 +10,7 @@ const isDirectory = (filePath) => path.extname(filePath).length === 0;
 export const glob = async (
   patterns: Array<string>,
   options: {}
-  ): Promise<Array<string>> => await globby(patterns, options);
+): Promise<Array<string>> => await globby(patterns, options);
 
 export const ensureGlob = (entry: string, recursive: boolean = false, pattern: string = '*.js'): string => {
   const normalized = normalizePath(entry);

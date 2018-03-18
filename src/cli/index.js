@@ -38,7 +38,12 @@ options.require.forEach((mod) => {
 
 options.include = options.include.map(resolve);
 
-options.webpackConfig = requireWebpackConfig(options.webpackConfig, requiresWebpackConfig, options.webpackEnv);
+options.webpackConfig = requireWebpackConfig(
+  options.webpackConfig,
+  requiresWebpackConfig,
+  options.webpackEnv,
+  options.mode
+);
 
 const mochaWebpack = createMochaWebpack();
 

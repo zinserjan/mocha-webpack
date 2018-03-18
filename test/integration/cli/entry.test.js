@@ -6,9 +6,9 @@ import _ from 'lodash';
 import fs from 'fs-extra';
 import del from 'del';
 import path from 'path';
-import { exec } from 'child_process';
 import anymatch from 'anymatch';
 import normalizePath from 'normalize-path';
+import { exec } from './util/childProcess';
 
 const escapePath = (p) => p.replace(/\\/gm, '\\\\');
 
@@ -66,7 +66,7 @@ describe('cli - entry', function () {
     });
 
     it('handles failed module with syntax errors', function (done) {
-      exec(`node ${binPath} "${this.corruptedTest}"`, (err) => {
+      exec(`node ${binPath} --mode development "${this.corruptedTest}"`, (err) => {
         assert.isNotNull(err);
         assert.isAbove(err.code, 0);
         done();
@@ -74,7 +74,7 @@ describe('cli - entry', function () {
     });
 
     it('handles module with runtime errors', function (done) {
-      exec(`node ${binPath} "${this.runtimeErrorTest}"`, (err) => {
+      exec(`node ${binPath} --mode development "${this.runtimeErrorTest}"`, (err) => {
         assert.isNotNull(err);
         assert.isAbove(err.code, 0);
         done();
@@ -83,21 +83,21 @@ describe('cli - entry', function () {
 
 
     it('runs successfull test', function (done) {
-      exec(`node ${binPath} "${this.passingTest}"`, (err, stdout) => {
+      exec(`node ${binPath} --mode development "${this.passingTest}"`, (err, output) => {
         assert.isNull(err);
-        assert.include(stdout, this.passingTest);
-        assert.include(stdout, '1 passing');
+        assert.include(output, this.passingTest);
+        assert.include(output, '1 passing');
         done();
       });
     });
 
     it('runs failing test', function (done) {
-      exec(`node ${binPath} "${this.failingTest}"`, (err, stdout) => {
+      exec(`node ${binPath} --mode development "${this.failingTest}"`, (err, output) => {
         assert.isNotNull(err);
         assert.strictEqual(err.code, 1);
-        assert.include(stdout, this.failingTest);
-        assert.include(stdout, '0 passing');
-        assert.include(stdout, '1 failing');
+        assert.include(output, this.failingTest);
+        assert.include(output, '0 passing');
+        assert.include(output, '1 failing');
         done();
       });
     });
@@ -124,7 +124,7 @@ describe('cli - entry', function () {
     });
 
     it('handles failed module with syntax errors', function (done) {
-      exec(`node ${binPath} "${this.corruptedTest}" "${this.corruptedTest2}"`, (err) => {
+      exec(`node ${binPath} --mode development "${this.corruptedTest}" "${this.corruptedTest2}"`, (err) => {
         assert.isNotNull(err);
         assert.isAbove(err.code, 0);
         done();
@@ -132,23 +132,23 @@ describe('cli - entry', function () {
     });
 
     it('runs successfull test', function (done) {
-      exec(`node ${binPath} "${this.passingTest}" "${this.passingTest2}"`, (err, stdout) => {
+      exec(`node ${binPath} --mode development "${this.passingTest}" "${this.passingTest2}"`, (err, output) => {
         assert.isNull(err);
-        assert.include(stdout, this.passingTest);
-        assert.include(stdout, this.passingTest2);
-        assert.include(stdout, '2 passing');
+        assert.include(output, this.passingTest);
+        assert.include(output, this.passingTest2);
+        assert.include(output, '2 passing');
         done();
       });
     });
 
     it('runs failing test', function (done) {
-      exec(`node ${binPath} "${this.failingTest}" "${this.failingTest2}"`, (err, stdout) => {
+      exec(`node ${binPath} --mode development "${this.failingTest}" "${this.failingTest2}"`, (err, output) => {
         assert.isNotNull(err);
         assert.strictEqual(err.code, 2);
-        assert.include(stdout, this.failingTest);
-        assert.include(stdout, this.failingTest2);
-        assert.include(stdout, '0 passing');
-        assert.include(stdout, '2 failing');
+        assert.include(output, this.failingTest);
+        assert.include(output, this.failingTest2);
+        assert.include(output, '0 passing');
+        assert.include(output, '2 failing');
         done();
       });
     });
@@ -165,10 +165,10 @@ describe('cli - entry', function () {
     });
 
     it('runs test with absolute entry', function (done) {
-      exec(`node ${binPath} "${this.passingTest}"`, (err, stdout) => {
+      exec(`node ${binPath} --mode development "${this.passingTest}"`, (err, output) => {
         assert.isNull(err);
-        assert.include(stdout, this.passingTest);
-        assert.include(stdout, '1 passing');
+        assert.include(output, this.passingTest);
+        assert.include(output, '1 passing');
         done();
       });
     });
@@ -211,7 +211,7 @@ describe('cli - entry', function () {
 
     corruptedPatterns.forEach((pattern) => {
       it(`handles corrupted modules with pattern '${pattern}'`, function (done) {
-        exec(`node ${binPath} "${pattern}"`, (err) => {
+        exec(`node ${binPath} --mode development "${pattern}"`, (err) => {
           assert.isNotNull(err);
           assert.isAbove(err.code, 0);
           done();
@@ -230,12 +230,12 @@ describe('cli - entry', function () {
       const files = testFiles.filter(matcher);
 
       it(`runs ${files.length} passing tests of ${testFiles.length} with pattern '${pattern}'`, function (done) {
-        exec(`node ${binPath} "${pattern}"`, (err, stdout) => {
+        exec(`node ${binPath} --mode development "${pattern}"`, (err, output) => {
           assert.isNull(err);
           files.forEach((file) => {
-            assert.include(stdout, file);
+            assert.include(output, file);
           });
-          assert.include(stdout, `${files.length} passing`);
+          assert.include(output, `${files.length} passing`);
           done();
         });
       });
@@ -252,15 +252,15 @@ describe('cli - entry', function () {
       const files = testFiles.filter(matcher);
 
       it(`runs ${files.length} failing tests of ${testFiles.length} with pattern '${pattern}'`, function (done) {
-        exec(`node ${binPath} "${pattern}"`, (err, stdout) => {
+        exec(`node ${binPath} --mode development "${pattern}"`, (err, output) => {
           assert.isNotNull(err);
           assert.strictEqual(err.code, files.length);
           files.forEach((file) => {
-            assert.include(stdout, file);
+            assert.include(output, file);
           });
 
-          assert.include(stdout, '0 passing');
-          assert.include(stdout, `${files.length} failing`);
+          assert.include(output, '0 passing');
+          assert.include(output, `${files.length} failing`);
           done();
         });
       });
@@ -277,12 +277,12 @@ describe('cli - entry', function () {
     const files = testFiles.filter(matcher);
 
     it(`runs ${files.length} passing tests of ${testFiles.length} with pattern '${pattern}'`, function (done) {
-      exec(`node ${binPath} ${pattern}`, (err, stdout) => {
+      exec(`node ${binPath} --mode development ${pattern}`, (err, output) => {
         assert.isNull(err);
         files.forEach((file) => {
-          assert.include(stdout, file);
+          assert.include(output, file);
         });
-        assert.include(stdout, `${files.length} passing`);
+        assert.include(output, `${files.length} passing`);
         done();
       });
     });
@@ -308,12 +308,12 @@ describe('cli - entry', function () {
         const matcher = anymatch(`${fixtureDirTmp}/*.js`);
         const files = this.testFiles.filter(matcher);
 
-        exec(`node ${binPath} "${fixtureDirTmp}"`, (err, stdout) => {
+        exec(`node ${binPath} --mode development "${fixtureDirTmp}"`, (err, output) => {
           assert.isNull(err);
           files.forEach((file) => {
-            assert.include(stdout, file);
+            assert.include(output, file);
           });
-          assert.include(stdout, `${files.length} passing`);
+          assert.include(output, `${files.length} passing`);
           done();
         });
       });
@@ -321,12 +321,12 @@ describe('cli - entry', function () {
       it('runs all tests matching file glob\'', function (done) {
         const matcher = anymatch(`${fixtureDirTmp}/*-test-3.js`);
         const files = this.testFiles.filter(matcher);
-        exec(`node ${binPath} --glob "*-test-3.js" "${fixtureDirTmp}"`, (err, stdout) => {
+        exec(`node ${binPath} --mode development --glob "*-test-3.js" "${fixtureDirTmp}"`, (err, output) => {
           assert.isNull(err);
           files.forEach((file) => {
-            assert.include(stdout, file);
+            assert.include(output, file);
           });
-          assert.include(stdout, `${files.length} passing`);
+          assert.include(output, `${files.length} passing`);
           done();
         });
       });
@@ -336,12 +336,12 @@ describe('cli - entry', function () {
         const matcher = anymatch(`${fixtureDirTmp}/**/*.js`);
         const files = this.testFiles.filter(matcher);
 
-        exec(`node ${binPath} --recursive "${fixtureDirTmp}"`, (err, stdout) => {
+        exec(`node ${binPath} --mode development --recursive "${fixtureDirTmp}"`, (err, output) => {
           assert.isNull(err);
           files.forEach((file) => {
-            assert.include(stdout, file);
+            assert.include(output, file);
           });
-          assert.include(stdout, `${files.length} passing`);
+          assert.include(output, `${files.length} passing`);
           done();
         });
       });
@@ -364,15 +364,15 @@ describe('cli - entry', function () {
         const matcher = anymatch(`${fixtureDirTmp}/*.js`);
         const files = this.testFiles.filter(matcher);
 
-        exec(`node ${binPath} "${fixtureDirTmp}"`, (err, stdout) => {
+        exec(`node ${binPath} --mode development "${fixtureDirTmp}"`, (err, output) => {
           assert.isNotNull(err);
           assert.strictEqual(err.code, files.length);
           files.forEach((file) => {
-            assert.include(stdout, file);
+            assert.include(output, file);
           });
 
-          assert.include(stdout, '0 passing');
-          assert.include(stdout, `${files.length} failing`);
+          assert.include(output, '0 passing');
+          assert.include(output, `${files.length} failing`);
           done();
         });
       });
@@ -381,15 +381,15 @@ describe('cli - entry', function () {
         const matcher = anymatch(`${fixtureDirTmp}/**/*.js`);
         const files = this.testFiles.filter(matcher);
 
-        exec(`node ${binPath} --recursive "${fixtureDirTmp}"`, (err, stdout) => {
+        exec(`node ${binPath} --mode development --recursive "${fixtureDirTmp}"`, (err, output) => {
           assert.isNotNull(err);
           assert.strictEqual(err.code, files.length);
           files.forEach((file) => {
-            assert.include(stdout, file);
+            assert.include(output, file);
           });
 
-          assert.include(stdout, '0 passing');
-          assert.include(stdout, `${files.length} failing`);
+          assert.include(output, '0 passing');
+          assert.include(output, `${files.length} failing`);
           done();
         });
       });
@@ -409,7 +409,7 @@ describe('cli - entry', function () {
       });
 
       it('fails before running tests of directory', function (done) {
-        exec(`node ${binPath} "${fixtureDirTmp}"`, (err) => {
+        exec(`node ${binPath} --mode development "${fixtureDirTmp}"`, (err) => {
           assert.isNotNull(err);
           assert.isAbove(err.code, 0);
           done();
@@ -417,7 +417,7 @@ describe('cli - entry', function () {
       });
 
       it('fails before running tests of directory directory & subdirectories\'', function (done) {
-        exec(`node ${binPath} --recursive "${fixtureDirTmp}"`, (err) => {
+        exec(`node ${binPath} --mode development --recursive "${fixtureDirTmp}"`, (err) => {
           assert.isNotNull(err);
           assert.isAbove(err.code, 0);
           done();
@@ -449,15 +449,15 @@ describe('cli - entry', function () {
     });
 
     it('resolve.extensions will be used for module resolution when no --glob is given', function (done) {
-      exec(`node ${binPath} --webpack-config "${this.configPath}" "${this.testDir}"`, (err, stdout) => {
+      exec(`node ${binPath} --mode development --webpack-config "${this.configPath}" "${this.testDir}"`, (err, output) => {
         assert.isNull(err);
         this.testFiles.forEach((file) => {
-          assert.include(stdout, file);
+          assert.include(output, file);
         });
         this.ignoredFiles.forEach((file) => {
-          assert.notInclude(stdout, file);
+          assert.notInclude(output, file);
         });
-        assert.include(stdout, `${this.testFiles.length} passing`);
+        assert.include(output, `${this.testFiles.length} passing`);
         done();
       });
     });
@@ -465,12 +465,12 @@ describe('cli - entry', function () {
     it('resolve.extensions will not be used for module resolution when --glob is given', function (done) {
       const matcher = anymatch(`${this.testDir}/*.js`);
       const files = this.testFiles.filter(matcher);
-      exec(`node ${binPath} --webpack-config "${this.configPath}" --glob "*.js" "${this.testDir}"`, (err, stdout) => {
+      exec(`node ${binPath} --mode development --webpack-config "${this.configPath}" --glob "*.js" "${this.testDir}"`, (err, output) => {
         assert.isNull(err);
         files.forEach((file) => {
-          assert.include(stdout, file);
+          assert.include(output, file);
         });
-        assert.include(stdout, `${files.length} passing`);
+        assert.include(output, `${files.length} passing`);
         done();
       });
     });

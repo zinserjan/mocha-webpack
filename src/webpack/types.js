@@ -16,6 +16,7 @@ export type Compiler = {
   watch: (watchOptions: {}, cb: () => void) => void,
   outputFileSystem: any,
   watchFileSystem: any,
+  hooks: any,
   fileTimestamps: {},
   contextTimestamps: {},
 }
@@ -30,8 +31,8 @@ export type Module = {
   dependencies: Array<{ module: Module }>,
   readableIdentifier: ?any,
   chunks: Array<Chunk>, // eslint-disable-line no-use-before-define
-  getChunks?: () => Array<Chunk>, // eslint-disable-line no-use-before-define
-  blocks: Array<{chunks: Array<Chunk>}> // eslint-disable-line no-use-before-define
+  getChunks: () => Array<Chunk>, // eslint-disable-line no-use-before-define
+  blocks: Array<DependenciesBlock> // eslint-disable-line no-use-before-define
 };
 
 /**
@@ -53,9 +54,23 @@ export type Chunk = {
   chunks: Array<Chunk>,
   parents: Array<Chunk>,
   files: Array<string>,
-  isInitial?: () => boolean, // webpack >= 2
-  initial?: boolean, // webpack 1
-  getModules?: () => Array<Module>, // webpack 3
+  isOnlyInitial: () => boolean,
+  getModules: () => Array<Module>,
+};
+
+/**
+ * webpack/lib/ChunkGroup.js
+ */
+export type ChunkGroup = {
+  chunks: Array<Chunk>,
+};
+
+/**
+ * webpack/lib/DependenciesBlock.js
+ * webpack/lib/AsyncDependenciesBlock.js
+ */
+export type DependenciesBlock = {
+  chunkGroup?: ChunkGroup,
 };
 
 /**
@@ -66,6 +81,7 @@ export type Compilation = {
   plugin: (hook: string, fn: () => void) => void,
   modules: Module[],
   chunks: Chunk[],
+  chunkGroups: ChunkGroup[],
   errors: Array<string | WebpackError>,
   warnings: Array<string | WebpackError>,
   assets: {

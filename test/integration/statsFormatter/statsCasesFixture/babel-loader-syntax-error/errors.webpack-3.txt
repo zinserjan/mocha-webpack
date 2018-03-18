@@ -1,7 +1,0 @@
-Error in ./entry.js
-
-  Syntax error: Unexpected token (2:0)
-  
-    1 | const x = {
-  > 2 | 
-      | ^

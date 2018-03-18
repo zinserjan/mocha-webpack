@@ -16,7 +16,7 @@ const affectedModules = (map: ModuleMap, usageMap: ModuleUsageMap, affected: Mod
   }
   // module is identified as affected by this function call
   const module = map[moduleId];
-  affected[module.id] = module;  // eslint-disable-line no-param-reassign
+  affected[module.id] = module; // eslint-disable-line no-param-reassign
 
   // next we need to mark all usages aka parents also as affected
   const usages = usageMap[module.id];
@@ -84,7 +84,7 @@ const buildModuleUsageMap = (chunks: Array<Chunk>, modules: Array<Module>): Modu
     return memo;
   }, {});
   modules.reduce((memo, module: Module) => {
-    (module.getChunks ? module.getChunks() : module.chunks).forEach((chunk: Chunk) => {
+    module.getChunks().forEach((chunk: Chunk) => {
       memo[chunk.id][module.id] = module; // eslint-disable-line no-param-reassign
     });
     return memo;
@@ -93,11 +93,11 @@ const buildModuleUsageMap = (chunks: Array<Chunk>, modules: Array<Module>): Modu
   // detect modules with code split points (e.g. require.ensure) and enhance moduleUsageMap with that information
   modules.forEach((module: Module) => {
     module.blocks
-    // chunks can be invalid in in some cases
-      .filter((block) => Array.isArray(block.chunks))
+    // chunkGroup can be invalid in in some cases
+      .filter((block) => block.chunkGroup != null)
       .forEach((block) => {
         // loop through all generated chunks by this module
-        block.chunks.map(getId).forEach((chunkId) => {
+        block.chunkGroup.chunks.map(getId).forEach((chunkId) => { // eslint-disable-line flowtype-errors/show-errors
           // and mark all modules of this chunk as a direct dependency of the original module
           Object
             .values((chunkModuleMap[chunkId]: ModuleMap))
