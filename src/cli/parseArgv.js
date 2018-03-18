@@ -1,6 +1,5 @@
 import yargs from 'yargs';
 import _ from 'lodash';
-import { version } from '../../package.json';
 
 const BASIC_GROUP = 'Basic options:';
 const OUTPUT_GROUP = 'Output options:';
@@ -208,7 +207,7 @@ export default function parseArgv(argv, ignoreDefaults = false) {
   const parsedArgs = yargs(argv)
     .help('help')
     .alias('help', 'h', '?')
-    .version(() => version)
+    .version()
     .options(options)
     .strict()
     .argv;
