@@ -174,10 +174,11 @@ const options = {
     default: false,
   },
   mode: {
-    alias: 'm',
     type: 'string',
-    describe: 'TODO',
+    choices: ['development', 'production'],
+    describe: 'webpack mode to use',
     group: BASIC_GROUP,
+    requiresArg: true,
   },
   'webpack-config': {
     type: 'string',
