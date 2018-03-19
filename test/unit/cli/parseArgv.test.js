@@ -1,5 +1,5 @@
 /* eslint-env node, mocha */
-/* eslint-disable func-names, prefer-arrow-callback, no-loop-func, max-len */
+/* eslint-disable func-names, prefer-arrow-callback */
 
 import { assert } from 'chai';
 import parseArgv from '../../../src/cli/parseArgv';
@@ -138,7 +138,7 @@ describe('parseArgv', function () {
       });
 
       for (const parameter of ['--async-only', '--A', '-A']) {
-        it(`'parses ${parameter}'`, function () { // eslint-disable-line no-loop-func
+        it(`'parses ${parameter}'`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -165,7 +165,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--colors', '--c', '-c']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -179,7 +179,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--no-colors', '--colors=false', '--no-c', '--c=false']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -206,7 +206,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--growl', '--G', '-G']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -233,7 +233,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--recursive']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -268,7 +268,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -301,7 +301,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -328,7 +328,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--bail', '--b', '-b']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -361,7 +361,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -394,7 +394,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -421,7 +421,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--invert', '--i', '-i']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -456,7 +456,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -490,7 +490,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -526,7 +526,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -559,7 +559,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -592,7 +592,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -619,7 +619,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--watch', '--w', '-w']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -646,7 +646,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--check-leaks']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -673,7 +673,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--full-trace']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -700,7 +700,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--inline-diffs']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -727,7 +727,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--exit']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -758,7 +758,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -785,7 +785,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--delay']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -816,7 +816,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -846,7 +846,7 @@ describe('parseArgv', function () {
         { given: ['--webpack-env.env', 'production'], expected: { env: 'production' } },
       ];
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -877,7 +877,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -909,7 +909,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 

@@ -16,7 +16,7 @@
     "clean-lib": "del-cli \"lib/**\" \"!lib\" \"!lib/reporters\" \"!lib/utils.js\" \"!lib/entry.js\" \"!lib/reporters/base.js\"",
     "clean-tmp": "del-cli \".tmp/**\"",
     "build": "npm run clean-lib && babel ./src -d lib",
-    "lint": "eslint src test bin",
+    "lint": "eslint --report-unused-disable-directives src test bin",
     "flow": "flow",
     "test": "npm run clean-tmp && npm run build && mocha --timeout 10000 --recursive --require babel-register \"test/**/*.test.js\"",
     "cover": "cross-env BABEL_ENV=coverage nyc --reporter=lcov --reporter=text npm test",

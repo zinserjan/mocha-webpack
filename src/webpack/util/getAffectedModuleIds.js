@@ -103,9 +103,9 @@ const buildModuleUsageMap = (chunks: Array<Chunk>, modules: Array<Module>): Modu
             .values((chunkModuleMap[chunkId]: ModuleMap))
             .forEach((childModule: any) => {
               if (typeof moduleUsageMap[childModule.id] === 'undefined') {
-                moduleUsageMap[childModule.id] = {}; // eslint-disable-line no-param-reassign
+                moduleUsageMap[childModule.id] = {};
               }
-              moduleUsageMap[childModule.id][module.id] = module; // eslint-disable-line no-param-reassign
+              moduleUsageMap[childModule.id][module.id] = module;
             });
         });
       });
