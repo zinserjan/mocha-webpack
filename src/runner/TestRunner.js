@@ -199,6 +199,7 @@ export default class TestRunner extends EventEmitter {
 
     // webpack enhances watch options, that's why we use them instead
     const watchOptions = watchCompiler.getWatchOptions();
+    const pollingInterval = typeof watchOptions.poll === 'number' ? watchOptions.poll : undefined;
     // create own file watcher for entry files to detect created or deleted files
     const watcher = chokidar.watch(this.entries, {
       cwd: this.options.cwd,
@@ -209,7 +210,8 @@ export default class TestRunner extends EventEmitter {
       ignorePermissionErrors: true,
       ignored: watchOptions.ignored,
       usePolling: watchOptions.poll ? true : undefined,
-      interval: typeof watchOptions.poll === 'number' ? watchOptions.poll : undefined,
+      interval: pollingInterval,
+      binaryInterval: pollingInterval,
     });
 
     const restartWebpackBuild = _.debounce(() => watchCompiler.watch(), watchOptions.aggregateTimeout);
