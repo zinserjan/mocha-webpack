@@ -3,23 +3,40 @@ import path from 'path';
 import sourceMapSupport from 'source-map-support';
 import MemoryFileSystem from 'memory-fs';
 import registerRequireHook from '../../util/registerRequireHook';
-import type { Compiler } from '../types';
-
-const noop = () => null;
+import { ensureAbsolutePath } from '../../util/paths';
+import type { Compiler, Stats } from '../types';
 
 export default function registerInMemoryCompiler(compiler: Compiler) {
+  // register memory fs to webpack
   const memoryFs = new MemoryFileSystem();
   compiler.outputFileSystem = memoryFs; // eslint-disable-line no-param-reassign
 
-  let readFile = (filePath) => {
-    try {
-      const code = memoryFs.readFileSync(filePath, 'utf8');
-      return code;
-    } catch (e) {
-      return null;
+  // build asset map to allow fast checks for file existence
+  const assetMap = new Map();
+  compiler.hooks.done.tap('mocha-webpack', (stats: Stats) => {
+    assetMap.clear();
+    const outputPath = compiler.options.output.path;
+
+    if (!stats.hasErrors()) {
+      Object.keys(stats.compilation.assets)
+        .forEach((assetPath) => assetMap.set(ensureAbsolutePath(assetPath, outputPath), true));
     }
+  });
+
+  // provide file reader to read from memory fs
+  let readFile = (filePath) => {
+    if (assetMap.has(filePath)) {
+      try {
+        const code = memoryFs.readFileSync(filePath, 'utf8');
+        return code;
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
   };
 
+  // module resolver for require calls from memory fs
   const resolveFile = (filePath, requireCaller) => {
     // try to read file from memory-fs as it is
     let code = readFile(filePath);
@@ -49,6 +66,6 @@ export default function registerInMemoryCompiler(compiler: Compiler) {
 
   return function unmount() {
     unmountHook();
-    readFile = noop;
+    readFile = () => null;
   };
 }

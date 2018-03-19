@@ -19,6 +19,11 @@ export type Compiler = {
   hooks: any,
   fileTimestamps: {},
   contextTimestamps: {},
+  options: {
+    output: {
+      path: string,
+    },
+  },
 }
 
 /**
