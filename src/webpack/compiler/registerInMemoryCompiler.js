@@ -15,11 +15,10 @@ export default function registerInMemoryCompiler(compiler: Compiler) {
   const assetMap = new Map();
   compiler.hooks.done.tap('mocha-webpack', (stats: Stats) => {
     assetMap.clear();
-    const outputPath = compiler.options.output.path;
 
     if (!stats.hasErrors()) {
       Object.keys(stats.compilation.assets)
-        .forEach((assetPath) => assetMap.set(ensureAbsolutePath(assetPath, outputPath), true));
+        .forEach((assetPath) => assetMap.set(ensureAbsolutePath(assetPath, compiler.options.output.path), true));
     }
   });
 
