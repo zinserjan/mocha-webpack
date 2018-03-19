@@ -253,7 +253,7 @@ export default function parseArgv(argv, ignoreDefaults = false) {
       if (L.length > 2 || L.length === 0) {
         throw new Error(`invalid reporter option ${opt}`);
       } else if (L.length === 2) {
-        reporterOptions[L[0]] = L[1];
+        reporterOptions[L[0]] = L[1]; // eslint-disable-line prefer-destructuring
       } else {
         reporterOptions[L[0]] = true;
       }
@@ -268,8 +268,7 @@ export default function parseArgv(argv, ignoreDefaults = false) {
     const userOptions = yargs(argv).argv;
     const providedKeys = _.keys(userOptions);
     const usedAliases = _.flatten(_.filter(groupedAliases, (aliases) =>
-      _.some(aliases, (alias) => providedKeys.indexOf(alias) !== -1)
-    ));
+      _.some(aliases, (alias) => providedKeys.indexOf(alias) !== -1)));
 
     if (parsedArgs._.length) {
       usedAliases.push('files');

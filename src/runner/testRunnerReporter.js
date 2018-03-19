@@ -29,7 +29,9 @@ class Reporter {
   formatStats: (stats: Stats) => { warnings: Array<string>, errors: Array<string> };
 
   constructor(options: ReporterOptions) {
-    const { eventEmitter, interactive, quiet, cwd } = options;
+    const {
+      eventEmitter, interactive, quiet, cwd,
+    } = options;
 
     this.added = [];
     this.removed = [];
@@ -60,7 +62,7 @@ class Reporter {
     }
   }
 
-  displayErrors(severity: string, errors: Array<any>) {
+  static displayErrors(severity: string, errors: Array<any>) {
     const errorCount = errors.length;
 
     const message = severity === 'error' ?
@@ -113,15 +115,15 @@ class Reporter {
       }
 
       if (errors.length > 0) {
-        this.displayErrors('error', errors);
+        Reporter.displayErrors('error', errors);
         return;
       }
 
       if (warnings.length > 0) {
-        this.displayErrors('warning', warnings);
+        Reporter.displayErrors('warning', warnings);
       }
     } else {
-      this.displayErrors('error', [err]);
+      Reporter.displayErrors('error', [err]);
     }
   };
 

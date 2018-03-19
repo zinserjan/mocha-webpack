@@ -38,7 +38,7 @@ describe('parseConfig', function () {
     const expectedResultsPath = path.join(testDirPath, 'expected.json');
 
     it(`parses '${testDirName}/mocha-webpack.opts' and returns options`, function () {
-      // eslint-disable-next-line global-require
+      // eslint-disable-next-line global-require, import/no-dynamic-require
       const expectedResult = require(expectedResultsPath);
       const parsedOptions = parseConfig(optsFilePath);
 

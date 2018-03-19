@@ -23,7 +23,7 @@ function fileExists(filePath) {
 }
 
 function findConfigFile(dirPath, baseName) {
-  for (let i = 0; i < extensions.length; i++) {
+  for (let i = 0; i < extensions.length; i += 1) {
     const filePath = path.resolve(dirPath, `${baseName}${extensions[i]}`);
     if (fileExists(filePath)) {
       return filePath;
@@ -33,7 +33,7 @@ function findConfigFile(dirPath, baseName) {
 }
 
 function getConfigExtension(configPath) {
-  for (let i = extensions.length - 1; i >= 0; i--) {
+  for (let i = extensions.length - 1; i >= 0; i -= 1) {
     const extension = extensions[i];
     if (configPath.indexOf(extension, configPath.length - extension.length) > -1) {
       return extension;
@@ -48,12 +48,12 @@ function registerCompiler(moduleDescriptor) {
   }
 
   if (typeof moduleDescriptor === 'string') {
-    require(moduleDescriptor); // eslint-disable-line global-require
+    require(moduleDescriptor); // eslint-disable-line global-require, import/no-dynamic-require
   } else if (!Array.isArray(moduleDescriptor)) {
-    const module = require(moduleDescriptor.module); // eslint-disable-line global-require
+    const module = require(moduleDescriptor.module); // eslint-disable-line global-require, import/no-dynamic-require
     moduleDescriptor.register(module);
   } else {
-    for (let i = 0; i < moduleDescriptor.length; i++) {
+    for (let i = 0; i < moduleDescriptor.length; i += 1) {
       try {
         registerCompiler(moduleDescriptor[i]);
         break;
@@ -74,7 +74,7 @@ export default function requireWebpackConfig(webpackConfig, required, env, mode)
     // config exists, register compiler for non-js extensions
     registerCompiler(interpret.extensions[configExtension]);
     // require config
-    config = require(configPath); // eslint-disable-line global-require
+    config = require(configPath); // eslint-disable-line global-require, import/no-dynamic-require
     configFound = true;
   } else if (configExtension === '.js') {
     // config path does not exist, try to require it with precompiler
@@ -86,7 +86,7 @@ export default function requireWebpackConfig(webpackConfig, required, env, mode)
       const configExtensionPrecompiled = getConfigExtension(configPathPrecompiled);
       // register compiler & require config
       registerCompiler(interpret.extensions[configExtensionPrecompiled]);
-      config = require(configPathPrecompiled); // eslint-disable-line global-require
+      config = require(configPathPrecompiled); // eslint-disable-line global-require, import/no-dynamic-require
       configFound = true;
     }
   }

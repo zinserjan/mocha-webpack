@@ -10,6 +10,7 @@ import { version as WEBPACK_VERSION } from 'webpack/package.json';
 import MemoryFileSystem from 'memory-fs';
 import { assert } from 'chai';
 import createStatsFormatter from '../../../src/webpack/util/createStatsFormatter';
+
 const webpackMajorVersion = WEBPACK_VERSION.charAt(0);
 
 const base = path.join(__dirname, 'statsCasesFixture');

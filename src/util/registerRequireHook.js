@@ -46,7 +46,8 @@ Module._findPath = function _findPath(...parameters) {
 
 export default function registerRequireHook(
   dotExt: string,
-  resolve: (path: string, parent: Module) => { path: ?string, source: ?string }) {
+  resolve: (path: string, parent: Module) => { path: ?string, source: ?string },
+) {
   // cache source code after resolving to avoid another access to the fs
   const sourceCache = {};
   // store all files that were affected by this hook
@@ -58,7 +59,7 @@ export default function registerRequireHook(
 
     // if no CommonJS module source code returned - skip this require() hook
     if (resolvedPath == null) {
-      return void 0;
+      return undefined;
     }
 
     // flush require() cache

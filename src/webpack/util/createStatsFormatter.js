@@ -3,7 +3,7 @@ import { EOL } from 'os';
 import chalk from 'chalk';
 import RequestShortener from 'webpack/lib/RequestShortener';
 import { formatErrorMessage, stripLoaderFromPath } from './formatUtil';
-import type { WebpackError, Stats, Compilation } from '../types';
+import type { WebpackError, Stats } from '../types';
 
 const createGetFile = (requestShortener: RequestShortener) => (e: WebpackError): ?string => {
   /* istanbul ignore if */
@@ -63,7 +63,7 @@ export default function createStatsFormatter(rootPath: string) {
   };
 
   return function statsFormatter(stats: Stats) {
-    const compilation: Compilation = stats.compilation;
+    const { compilation } = stats;
 
     return {
       errors: ensureWebpackErrors(compilation.errors).map(formatError).map(prependError),

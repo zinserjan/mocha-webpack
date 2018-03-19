@@ -437,11 +437,19 @@ describe('cli - entry', function () {
       this.configPath = path.join(fixtureDir, 'config', 'config.resolve-extensions.js');
       this.testDir = path.join(fixtureDirTmp, 'resolve-test');
       this.testFiles = ['ts', 'tsx', 'js', 'jsx']
-        .map((ext) => path.join(this.testDir, `passing-test-${this.index++}.${ext}`))
+        .map((ext) => {
+          const file = path.join(this.testDir, `passing-test-${this.index}.${ext}`);
+          this.index += 1;
+          return file;
+        })
         .map((file) => normalizePath(file));
 
       this.ignoredFiles = ['coffee']
-        .map((ext) => path.join(this.testDir, `passing-test-${this.index++}.${ext}`))
+        .map((ext) => {
+          const file = path.join(this.testDir, `passing-test-${this.index}.${ext}`);
+          this.index += 1;
+          return file;
+        })
         .map((file) => normalizePath(file));
 
       this.testFiles.forEach((file) => createTest(file, true));

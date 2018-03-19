@@ -128,7 +128,7 @@ describe('parseArgv', function () {
     context('async-only', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -154,7 +154,7 @@ describe('parseArgv', function () {
     context('colors', function () {
       it('uses undefined as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -195,7 +195,7 @@ describe('parseArgv', function () {
     context('growl', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -222,7 +222,7 @@ describe('parseArgv', function () {
     context('recursive', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -249,7 +249,7 @@ describe('parseArgv', function () {
     context('reporter-options', function () {
       it('uses {} as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -285,7 +285,7 @@ describe('parseArgv', function () {
     context('reporter', function () {
       it('uses "spec" as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -317,7 +317,7 @@ describe('parseArgv', function () {
     context('bail', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -344,7 +344,7 @@ describe('parseArgv', function () {
     context('grep', function () {
       it('has no default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -377,7 +377,7 @@ describe('parseArgv', function () {
     context('fgrep', function () {
       it('has no default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -410,7 +410,7 @@ describe('parseArgv', function () {
     context('invert', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -437,7 +437,7 @@ describe('parseArgv', function () {
     context('require', function () {
       it('uses [] as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -473,7 +473,7 @@ describe('parseArgv', function () {
     context('include', function () {
       it('uses [] as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -507,7 +507,7 @@ describe('parseArgv', function () {
     context('slow', function () {
       it('uses 75 as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -542,7 +542,7 @@ describe('parseArgv', function () {
     context('timeout', function () {
       it('uses 2000 as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -575,7 +575,7 @@ describe('parseArgv', function () {
     context('ui', function () {
       it('uses "bdd" as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -608,7 +608,7 @@ describe('parseArgv', function () {
     context('watch', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -635,7 +635,7 @@ describe('parseArgv', function () {
     context('check-leaks', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -662,7 +662,7 @@ describe('parseArgv', function () {
     context('full-trace', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -689,7 +689,7 @@ describe('parseArgv', function () {
     context('inline-diffs', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -716,7 +716,7 @@ describe('parseArgv', function () {
     context('exit', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -743,7 +743,7 @@ describe('parseArgv', function () {
     context('retries', function () {
       it('has no default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -774,7 +774,7 @@ describe('parseArgv', function () {
     context('delay', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -801,7 +801,7 @@ describe('parseArgv', function () {
     context('webpack-config', function () {
       it('has default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -832,7 +832,7 @@ describe('parseArgv', function () {
     context('webpack-env', function () {
       it('has no default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -862,7 +862,7 @@ describe('parseArgv', function () {
     context('opts', function () {
       it('has no default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -893,7 +893,7 @@ describe('parseArgv', function () {
     context('mode', function () {
       it('has no default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
