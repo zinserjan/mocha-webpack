@@ -32,8 +32,7 @@ export default function getBuildStats(stats: Stats, outputPath: string): BuildSt
       entries.push(entry);
     }
 
-    if (chunk.getModules().some(
-      (module: Module) => affectedModules.indexOf(module.id) !== -1)
+    if (chunk.getModules().some((module: Module) => affectedModules.indexOf(module.id) !== -1)
     ) {
       files.forEach((file) => {
         if (/\.js$/.test(file)) {

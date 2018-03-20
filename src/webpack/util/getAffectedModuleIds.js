@@ -97,15 +97,16 @@ const buildModuleUsageMap = (chunks: Array<Chunk>, modules: Array<Module>): Modu
       .filter((block) => block.chunkGroup != null)
       .forEach((block) => {
         // loop through all generated chunks by this module
-        block.chunkGroup.chunks.map(getId).forEach((chunkId) => { // eslint-disable-line flowtype-errors/show-errors
+        // $FlowFixMe - flow thinks that block.chunkGroup could be null
+        block.chunkGroup.chunks.map(getId).forEach((chunkId) => {
           // and mark all modules of this chunk as a direct dependency of the original module
           Object
             .values((chunkModuleMap[chunkId]: ModuleMap))
             .forEach((childModule: any) => {
               if (typeof moduleUsageMap[childModule.id] === 'undefined') {
-                moduleUsageMap[childModule.id] = {}; // eslint-disable-line no-param-reassign
+                moduleUsageMap[childModule.id] = {};
               }
-              moduleUsageMap[childModule.id][module.id] = module; // eslint-disable-line no-param-reassign
+              moduleUsageMap[childModule.id][module.id] = module;
             });
         });
       });

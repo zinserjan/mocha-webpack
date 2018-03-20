@@ -24,7 +24,7 @@ import type { Compiler, Stats } from '../webpack/types';
 const entryPath = path.resolve(__dirname, '../entry.js');
 const entryLoaderPath = path.resolve(__dirname, '../webpack/loader/entryLoader.js');
 const includeLoaderPath = path.resolve(__dirname, '../webpack/loader/includeFilesLoader.js');
-const noop = () => void 0;
+const noop = () => undefined;
 
 
 type MochaRunner = {
@@ -232,14 +232,14 @@ export default class TestRunner extends EventEmitter {
     };
 
     // add listener for entry creation & deletion events
-    watcher.on('add', file => fileDeletedOrAdded(file, false));
-    watcher.on('unlink', file => fileDeletedOrAdded(file, true));
+    watcher.on('add', (file) => fileDeletedOrAdded(file, false));
+    watcher.on('unlink', (file) => fileDeletedOrAdded(file, true));
 
-    return new Promise(() => void 0); // never ending story
+    return new Promise(() => undefined); // never ending story
   }
 
   async createWebpackConfig() {
-    const webpackConfig = this.options.webpackConfig;
+    const { webpackConfig } = this.options;
 
     const files = await glob(this.entries, {
       cwd: this.options.cwd,
@@ -261,25 +261,23 @@ export default class TestRunner extends EventEmitter {
     }
 
     const userLoaders = _.get(webpackConfig, 'module.rules', []);
-    userLoaders.unshift(
-      {
-        test: entryPath,
-        use: [
-          {
-            loader: includeLoaderPath,
-            options: {
-              include: this.includes,
-            },
+    userLoaders.unshift({
+      test: entryPath,
+      use: [
+        {
+          loader: includeLoaderPath,
+          options: {
+            include: this.includes,
           },
-          {
-            loader: entryLoaderPath,
-            options: {
-              entryConfig,
-            },
+        },
+        {
+          loader: entryLoaderPath,
+          options: {
+            entryConfig,
           },
-        ],
-      }
-    );
+        },
+      ],
+    });
 
     const config = {
       ...webpackConfig,

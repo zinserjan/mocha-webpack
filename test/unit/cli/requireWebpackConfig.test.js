@@ -9,7 +9,7 @@ describe('requireWebpackConfig', () => {
     path.join(__dirname, 'fixture', 'webpackConfig', `webpack.${suffix}${extension}`);
 
   const expectedConfigPath = path.join(__dirname, 'fixture', 'webpackConfig', 'expected.json');
-  const expectedConfig = require(expectedConfigPath); // eslint-disable-line global-require
+  const expectedConfig = require(expectedConfigPath); // eslint-disable-line global-require, import/no-dynamic-require
 
   it('requires plain JavaScript Webpack config file', () => {
     const configPath = getConfigPath('.js');

@@ -1,5 +1,5 @@
 /* eslint-env node, mocha */
-/* eslint-disable func-names, prefer-arrow-callback, no-loop-func, max-len */
+/* eslint-disable func-names, prefer-arrow-callback */
 import path from 'path';
 import { assert } from 'chai';
 import loadUI from '../../../src/runner/loadUI';

@@ -33,7 +33,7 @@ const defaultOptions = parseArgv([]);
 const options = _.defaults({}, cliOptions, configOptions, defaultOptions);
 
 options.require.forEach((mod) => {
-  require(resolve(mod)); // eslint-disable-line global-require
+  require(resolve(mod)); // eslint-disable-line global-require, import/no-dynamic-require
 });
 
 options.include = options.include.map(resolve);
@@ -42,7 +42,7 @@ options.webpackConfig = requireWebpackConfig(
   options.webpackConfig,
   requiresWebpackConfig,
   options.webpackEnv,
-  options.mode
+  options.mode,
 );
 
 const mochaWebpack = createMochaWebpack();

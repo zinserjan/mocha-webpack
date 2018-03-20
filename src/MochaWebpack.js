@@ -404,7 +404,7 @@ export default class MochaWebpack {
       quiet: this.options.quiet,
       cwd: this.options.cwd,
     });
-    return await runner.run();
+    return runner.run();
   }
 
   /**

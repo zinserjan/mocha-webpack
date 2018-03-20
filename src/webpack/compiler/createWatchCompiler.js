@@ -13,7 +13,7 @@ export type WatchCompiler = {
   },
 }
 
-const noop = () => void 0;
+const noop = () => undefined;
 export default function createWatchCompiler(compiler: Compiler, watchOptions: {}): WatchCompiler {
   // this ugly statement to create a watch compiler is unfortunately necessary,
   // as webpack clears the file timestamps with the official compiler.watch()
@@ -30,7 +30,7 @@ export default function createWatchCompiler(compiler: Compiler, watchOptions: {}
         // the non-empty check is necessary as the times will be reseted after .close()
         // and we don't want to reset already existing timestamps
         if (Object.keys(times).length > 0) {
-          const timesMap = new Map(Object.keys(times).map(key => [key, times[key]]));
+          const timesMap = new Map(Object.keys(times).map((key) => [key, times[key]]));
           // set already collected file timestamps to cache compiled files
           // webpack will do this only after a file change, but that will not happen when we add or delete files
           // and this means that we have to test the whole test suite again ...

@@ -1,5 +1,5 @@
 /* eslint-env node, mocha */
-/* eslint-disable func-names, prefer-arrow-callback, no-loop-func, max-len */
+/* eslint-disable func-names, prefer-arrow-callback */
 import fs from 'fs-extra';
 import path from 'path';
 
@@ -10,6 +10,7 @@ import { version as WEBPACK_VERSION } from 'webpack/package.json';
 import MemoryFileSystem from 'memory-fs';
 import { assert } from 'chai';
 import createStatsFormatter from '../../../src/webpack/util/createStatsFormatter';
+
 const webpackMajorVersion = WEBPACK_VERSION.charAt(0);
 
 const base = path.join(__dirname, 'statsCasesFixture');

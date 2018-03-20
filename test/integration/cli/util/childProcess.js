@@ -6,10 +6,10 @@ export function exec(command, cb) { // eslint-disable-line import/prefer-default
     cb(err, data !== '' ? data : null);
   });
 
-  ps.stdout.on('data', d => {
+  ps.stdout.on('data', (d) => {
     data += d;
   });
-  ps.stderr.on('data', d => {
+  ps.stderr.on('data', (d) => {
     data += d;
   });
 }
