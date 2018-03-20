@@ -37,9 +37,7 @@ type Mocha = {
 export default class TestRunner extends EventEmitter {
   entries: Array<string>;
   includes: Array<string>;
-  tmpPath: string;
   options: MochaWebpackOptions;
-  outputFilePath: string;
 
   constructor(entries: Array<string>, includes: Array<string>, options: MochaWebpackOptions) {
     super();
@@ -47,8 +45,6 @@ export default class TestRunner extends EventEmitter {
     this.includes = includes;
 
     this.options = options;
-    this.tmpPath = path.join(this.options.cwd, '.tmp', 'mocha-webpack', Date.now().toString());
-    this.outputFilePath = path.join(this.tmpPath, 'bundle.js');
   }
 
   prepareMocha(webpackConfig: Object, stats: Stats): Mocha {
@@ -251,8 +247,10 @@ export default class TestRunner extends EventEmitter {
       .map((f) => ensureAbsolutePath(f, this.options.cwd))
       .forEach((f) => entryConfig.addFile(f));
 
-    const outputFileName = path.basename(this.outputFilePath);
-    const outputPath = path.dirname(this.outputFilePath);
+    const tmpPath = path.join(this.options.cwd, '.tmp', 'mocha-webpack', Date.now().toString());
+    const withCustomPath = _.has(webpackConfig, 'output.path');
+    const outputPath = path.normalize(_.get(webpackConfig, 'output.path', tmpPath));
+    const publicPath = withCustomPath ? _.get(webpackConfig, 'output.publicPath', undefined) : outputPath + path.sep;
 
     const plugins = [];
 
@@ -288,8 +286,8 @@ export default class TestRunner extends EventEmitter {
       },
       output: {
         ...(webpackConfig: any).output,
-        filename: outputFileName,
         path: outputPath,
+        publicPath,
       },
       plugins: [
         ...((webpackConfig: any).plugins || []),
