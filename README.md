@@ -1,4 +1,4 @@
-# mocha-webpack [![npm package][npm-badge]][npm]  [![Build Status Linux][build-badge]][build] [![Build Status Windows][build-badge-windows]][build-windows] [![codecov][codecov-badge]][codecov] [![Greenkeeper badge]([greenkeeper-badge])]([greenkeeper])
+# mocha-webpack [![npm package][npm-badge]][npm]  [![Build Status Linux][build-badge]][build] [![Build Status Windows][build-badge-windows]][build-windows] [![codecov][codecov-badge]][codecov] [![Greenkeeper badge][greenkeeper-badge]][greenkeeper]
 
 > mocha test runner with integrated webpack precompiler
 
