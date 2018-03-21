@@ -23,10 +23,10 @@
     "posttest": "npm run lint",
     "docs:clean": "del-cli _book",
     "docs:prepare": "gitbook install",
-    "docs:build": "npm run docs:prepare && gitbook build",
+    "docs:build": "npm run docs:clean && npm run docs:prepare && gitbook build",
     "docs:watch": "npm run docs:prepare && gitbook serve --port 3000",
-    "docs:deploy": "npm run docs:clean && npm run docs:build && gh-pages -d _book",
-    "prepublish": "npm run build",
+    "docs:deploy": "gh-pages -d _book",
+    "prepublish": "npm run build  && npm run docs:build",
     "postpublish": "npm run docs:deploy",
     "release": "np"
   },
