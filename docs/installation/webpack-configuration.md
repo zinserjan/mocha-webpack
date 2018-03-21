@@ -21,9 +21,8 @@ The reason for this is that webpack isn't able to compile all node_modules like 
 
 *Info*: You can install this plugin with `npm install --save-dev webpack-node-externals`
 
-Maybe you noticed that [entry](https://webpack.github.io/docs/configuration.html#entry), [output.filename](https://webpack.github.io/docs/configuration.html#output-filename) and [output.path](https://webpack.github.io/docs/configuration.html#output-path) are completely missing in this config.
-mocha-webpack does this automatically for you and if you would specify it anyway, it will be overridden.
-
+Maybe you noticed that [entry](https://webpack.github.io/docs/configuration.html#entry) and [output.path](https://webpack.github.io/docs/configuration.html#output-path) are completely missing in this config.
+mocha-webpack does this automatically for you, but it respects custom `output` settings. This is especially useful, when you want to write the files to disk with an additional plugin.
 
 
 ## Sourcemaps
