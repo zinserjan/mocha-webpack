@@ -78,7 +78,11 @@
     "flow-bin": "^0.68.0",
     "fs-extra": "^5.0.0",
     "gh-pages": "^1.0.0",
-    "gitbook-cli": "^2.3.0",
+    "gitbook-cli": "^2.3.2",
+    "gitbook-plugin-anchors": "^0.7.1",
+    "gitbook-plugin-edit-link": "^2.0.2",
+    "gitbook-plugin-github": "^2.0.0",
+    "gitbook-plugin-prism": "^2.0.0",
     "glob": "7.1.2",
     "mocha": "^5.0.1",
     "node-sass": "~4.7.2",
@@ -112,7 +116,12 @@
   },
   "greenkeeper": {
     "ignore": [
-      "globby"
+      "globby",
+      "gitbook-cli",
+      "gitbook-plugin-anchors",
+      "gitbook-plugin-edit-link",
+      "gitbook-plugin-github",
+      "gitbook-plugin-prism"
     ]
   },
   "nyc": {

@@ -1,12 +1,8 @@
 {
-  "gitbook": "2.4.3",
+  "gitbook": "3.2.2",
   "title": "mocha-webpack",
   "description": "mocha cli with webpack support",
-  "structure": {
-    "summary": "docs/README.md",
-    "glossary": "docs/GLOSSARY.md"
-  },
-  "plugins": ["edit-link", "prism@2.0.0",  "-search", "-highlight", "github", "anchors"],
+  "plugins": ["edit-link", "-search",  "github", "anchors", "prism", "-highlight"],
   "pluginsConfig": {
     "edit-link": {
       "base": "https://github.com/zinserjan/mocha-webpack/tree/master",
