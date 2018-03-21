@@ -96,7 +96,7 @@
     "chalk": "^2.3.0",
     "chokidar": "^2.0.2",
     "glob-parent": "^3.1.0",
-    "globby": "^8.0.1",
+    "globby": "^7.1.1",
     "interpret": "^1.0.1",
     "is-glob": "^4.0.0",
     "loader-utils": "^1.1.0",
@@ -109,6 +109,11 @@
     "strip-ansi": "^4.0.0",
     "toposort": "^1.0.0",
     "yargs": "^11.0.0"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "globby"
+    ]
   },
   "nyc": {
     "include": [
