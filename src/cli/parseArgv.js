@@ -206,7 +206,7 @@ const groupedAliases = _.values(_.mapValues(options, (value, key) => [_.camelCas
 export default function parseArgv(argv, ignoreDefaults = false) {
   const parsedArgs = yargs()
     .help('help')
-    .alias("help", "h")
+    .alias('help', 'h')
     .version()
     .options(options)
     .strict()
