@@ -1,5 +1,7 @@
 # mocha-webpack [![npm package][npm-badge]][npm]  [![Build Status Linux][build-badge]][build] [![Build Status Windows][build-badge-windows]][build-windows] [![codecov][codecov-badge]][codecov]
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/zinserjan/mocha-webpack.svg)](https://greenkeeper.io/)
+
 > mocha test runner with integrated webpack precompiler
 
 mocha-webpack is basically a wrapper around the following command...
