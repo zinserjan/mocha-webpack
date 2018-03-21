@@ -5,6 +5,7 @@ build: off
 branches:
   only:
     - master
+    - /^greenkeeper/.*$/
 
 # Test against these versions of Node.js.
 environment:
