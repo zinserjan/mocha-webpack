@@ -15,7 +15,7 @@ environment:
 # Install scripts. (runs after repo cloning)
 install:
   # Get the wanted version of Node
-  - ps: Install-Product node $env:nodejs_version
+  - ps: Install-Product node $env:nodejs_version x64
   # Typical npm stuff.
   - npm install || (timeout 30 && npm install)
 
