@@ -204,13 +204,13 @@ const parametersWithMultipleArgs = paramList(_.pickBy(_.mapValues(options, (v) =
 const groupedAliases = _.values(_.mapValues(options, (value, key) => [_.camelCase(key), key, value.alias].filter(_.identity))); // eslint-disable-line max-len
 
 export default function parseArgv(argv, ignoreDefaults = false) {
-  const parsedArgs = yargs(argv)
+  const parsedArgs = yargs()
     .help('help')
-    .alias('help', 'h', '?')
+    .alias("help", "h")
     .version()
     .options(options)
     .strict()
-    .argv;
+    .parse(argv);
 
   let files = parsedArgs._;
 
