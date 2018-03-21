@@ -43,7 +43,7 @@ export type Module = {
 /**
  * Webpack build error or warning
  */
-export type WebpackError = {
+export type WebpackError = Error & {
   message: string,
   file?: ?string,
   module?: ?Module

@@ -29,6 +29,12 @@ const noop = () => undefined;
 
 type MochaRunner = {
   abort: () => void,
+  currentRunnable?: {
+    retries: (count: number) => void,
+    enableTimeouts: (enabled: boolean) => void,
+    timeout: (ms: number) => void,
+    resetTimeout: (ms: number) => void,
+  }
 };
 type Mocha = {
   run: (cb: (failures: number) => void) => MochaRunner,
@@ -77,7 +83,7 @@ export default class TestRunner extends EventEmitter {
     const dispose = registerInMemoryCompiler(compiler);
     try {
       failures = await new Promise((resolve, reject) => {
-        registerReadyCallback(compiler, (err?: Error, webpackStats?: Stats) => {
+        registerReadyCallback(compiler, (err: ?(Error | string), webpackStats: ?Stats) => {
           this.emit('webpack:ready', err, webpackStats);
           if (err || !webpackStats) {
             reject();
@@ -166,7 +172,7 @@ export default class TestRunner extends EventEmitter {
         mochaRunner.abort();
         // make sure that the current running test will be aborted when timeouts are disabled for async tests
         if (mochaRunner.currentRunnable) {
-          const runnable: any = mochaRunner.currentRunnable;
+          const runnable = mochaRunner.currentRunnable;
           runnable.retries(0);
           runnable.enableTimeouts(true);
           runnable.timeout(1);
@@ -179,7 +185,7 @@ export default class TestRunner extends EventEmitter {
       }
     });
     // register webpack ready callback
-    registerReadyCallback(compiler, (err?: Error, webpackStats?: Stats) => {
+    registerReadyCallback(compiler, (err: ?(Error | string), webpackStats: ?Stats) => {
       this.emit('webpack:ready', err, webpackStats);
       if (err) {
         // wait for fixed tests

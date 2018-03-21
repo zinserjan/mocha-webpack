@@ -85,7 +85,7 @@ export default function registerRequireHook(
   const originalLoader = Module._extensions[dotExt];
   // override extension loader
   Module._extensions[dotExt] = (module, filename) => {
-    const source = resolveSource(filename, module);
+    const source = resolveSource(filename);
 
     if (typeof source === 'undefined') {
       // load the file with the original loader

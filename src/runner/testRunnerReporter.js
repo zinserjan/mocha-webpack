@@ -1,12 +1,11 @@
 // @flow
+import EventEmitter from 'events';
 import chalk from 'chalk';
 import type { Stats } from '../webpack/types';
 import createStatsFormatter from '../webpack/util/createStatsFormatter';
 
 type ReporterOptions = {
-  eventEmitter: {
-    on: (event: string, callback: (...rest: Array<any>) => void) => void
-  },
+  eventEmitter: EventEmitter,
   interactive: boolean,
   quiet: boolean,
   cwd: string,
