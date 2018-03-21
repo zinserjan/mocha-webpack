@@ -191,7 +191,7 @@ describe('cli - entry', function () {
         return path.join(fixtureDirTmp, 'sub1', `passing-test-${x}.js`);
       }
       return path.join(fixtureDirTmp, 'sub2', `passing-test-${x}.js`);
-    }).map((file) => normalizePath(file));
+    }).map(normalizePath);
 
     before(function () {
       testFiles.forEach((file) => {
@@ -207,7 +207,7 @@ describe('cli - entry', function () {
 
     const corruptedPatterns = [
       path.join(fixtureDirTmp, 'corrupted-*.js'),
-    ];
+    ].map(normalizePath);
 
     corruptedPatterns.forEach((pattern) => {
       it(`handles corrupted modules with pattern '${pattern}'`, function (done) {
@@ -223,7 +223,7 @@ describe('cli - entry', function () {
       path.join(fixtureDirTmp, 'passing-*.js'),
       path.join(fixtureDirTmp, 'passing-*-1.js'),
       path.join(fixtureDirTmp, '**/passing-*.js'),
-    ];
+    ].map(normalizePath);
 
     passingPatterns.forEach((pattern) => {
       const matcher = anymatch(pattern);
@@ -245,7 +245,7 @@ describe('cli - entry', function () {
       path.join(fixtureDirTmp, 'failing-*.js'),
       path.join(fixtureDirTmp, 'failing-*-7.js'),
       path.join(fixtureDirTmp, 'failing-*-@(5|6).js'),
-    ];
+    ].map(normalizePath);
 
     failingPatterns.forEach((pattern) => {
       const matcher = anymatch(pattern);
@@ -270,7 +270,7 @@ describe('cli - entry', function () {
       path.join(fixtureDirTmp, 'passing-*-1.js'),
       path.join(fixtureDirTmp, 'passing-*-2.js'),
       path.join(fixtureDirTmp, 'passing-*-3.js'),
-    ];
+    ].map(normalizePath);
 
     const pattern = multiPassingPatterns.map((str) => `"${str}"`).join(' ');
     const matcher = anymatch(multiPassingPatterns);
@@ -300,12 +300,12 @@ describe('cli - entry', function () {
         this.testFiles = _.range(1, 10).map((x) => {
           const subdir = subdirectories[x % 3];
           return path.join(fixtureDirTmp, subdir, `passing-test-${x}.js`);
-        }).map((file) => normalizePath(file));
+        }).map(normalizePath);
         this.testFiles.forEach((file) => createTest(file, true));
       });
 
       it('runs all tests in directory\'', function (done) {
-        const matcher = anymatch(`${fixtureDirTmp}/*.js`);
+        const matcher = anymatch(normalizePath(`${fixtureDirTmp}/*.js`));
         const files = this.testFiles.filter(matcher);
 
         exec(`node ${binPath} --mode development "${fixtureDirTmp}"`, (err, output) => {
@@ -319,7 +319,7 @@ describe('cli - entry', function () {
       });
 
       it('runs all tests matching file glob\'', function (done) {
-        const matcher = anymatch(`${fixtureDirTmp}/*-test-3.js`);
+        const matcher = anymatch(normalizePath(`${fixtureDirTmp}/*-test-3.js`));
         const files = this.testFiles.filter(matcher);
         exec(`node ${binPath} --mode development --glob "*-test-3.js" "${fixtureDirTmp}"`, (err, output) => {
           assert.isNull(err);
@@ -333,7 +333,7 @@ describe('cli - entry', function () {
 
 
       it('runs all tests in directory & subdirectories\'', function (done) {
-        const matcher = anymatch(`${fixtureDirTmp}/**/*.js`);
+        const matcher = anymatch(normalizePath(`${fixtureDirTmp}/**/*.js`));
         const files = this.testFiles.filter(matcher);
 
         exec(`node ${binPath} --mode development --recursive "${fixtureDirTmp}"`, (err, output) => {
@@ -356,12 +356,12 @@ describe('cli - entry', function () {
         this.testFiles = _.range(1, 10).map((x) => {
           const subdir = subdirectories[x % 3];
           return path.join(fixtureDirTmp, subdir, `failing-test-${x}.js`);
-        }).map((file) => normalizePath(file));
+        }).map(normalizePath);
         this.testFiles.forEach((file) => createTest(file, false));
       });
 
       it('runs all tests in directory\'', function (done) {
-        const matcher = anymatch(`${fixtureDirTmp}/*.js`);
+        const matcher = anymatch(normalizePath(`${fixtureDirTmp}/*.js`));
         const files = this.testFiles.filter(matcher);
 
         exec(`node ${binPath} --mode development "${fixtureDirTmp}"`, (err, output) => {
@@ -378,7 +378,7 @@ describe('cli - entry', function () {
       });
 
       it('runs all tests in directory & subdirectories\'', function (done) {
-        const matcher = anymatch(`${fixtureDirTmp}/**/*.js`);
+        const matcher = anymatch(normalizePath(`${fixtureDirTmp}/**/*.js`));
         const files = this.testFiles.filter(matcher);
 
         exec(`node ${binPath} --mode development --recursive "${fixtureDirTmp}"`, (err, output) => {
@@ -471,7 +471,7 @@ describe('cli - entry', function () {
     });
 
     it('resolve.extensions will not be used for module resolution when --glob is given', function (done) {
-      const matcher = anymatch(`${this.testDir}/*.js`);
+      const matcher = anymatch(normalizePath(`${this.testDir}/*.js`));
       const files = this.testFiles.filter(matcher);
       exec(`node ${binPath} --mode development --webpack-config "${this.configPath}" --glob "*.js" "${this.testDir}"`, (err, output) => {
         assert.isNull(err);
