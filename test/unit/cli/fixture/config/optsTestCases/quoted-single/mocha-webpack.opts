@@ -1,0 +1,3 @@
+--colors --webpack-config webpack.config-test.js
+--glob '*.test.js'
+'test/**/.js'

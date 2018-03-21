@@ -1,0 +1,134 @@
+{
+  "name": "mocha-webpack",
+  "version": "2.0.0-beta.0",
+  "description": "mocha cli with webpack support",
+  "bin": {
+    "mocha-webpack": "./bin/mocha-webpack"
+  },
+  "main": "./lib/createMochaWebpack.js",
+  "files": [
+    "*.md",
+    "bin",
+    "src",
+    "lib"
+  ],
+  "scripts": {
+    "clean-lib": "del-cli \"lib/**\" \"!lib\" \"!lib/reporters\" \"!lib/utils.js\" \"!lib/entry.js\" \"!lib/reporters/base.js\"",
+    "clean-tmp": "del-cli \".tmp/**\"",
+    "build": "npm run clean-lib && babel ./src -d lib",
+    "lint": "eslint --report-unused-disable-directives src test bin",
+    "flow": "flow",
+    "test": "npm run clean-tmp && npm run build && mocha --timeout 10000 --recursive --require babel-register \"test/**/*.test.js\"",
+    "cover": "cross-env BABEL_ENV=coverage nyc --reporter=lcov --reporter=text npm test",
+    "posttest": "npm run lint",
+    "docs:clean": "del-cli _book",
+    "docs:prepare": "gitbook install",
+    "docs:build": "npm run docs:prepare && gitbook build",
+    "docs:watch": "npm run docs:prepare && gitbook serve --port 3000",
+    "docs:deploy": "npm run docs:clean && npm run docs:build && gh-pages -d _book",
+    "prepublish": "npm run build",
+    "postpublish": "npm run docs:deploy",
+    "release": "np"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zinserjan/mocha-webpack"
+  },
+  "bugs": {
+    "url": "https://github.com/zinserjan/mocha-webpack/issues"
+  },
+  "keywords": [
+    "webpack",
+    "mocha"
+  ],
+  "author": "Jan-André Zinser",
+  "license": "MIT",
+  "peerDependencies": {
+    "mocha": ">=4 <=5",
+    "webpack": "^4.0.0"
+  },
+  "devDependencies": {
+    "anymatch": "^2.0.0",
+    "babel-cli": "^6.5.1",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-loader": "~7.1.0",
+    "babel-plugin-istanbul": "^4.1.5",
+    "babel-plugin-lodash": "^3.2.10",
+    "babel-plugin-transform-class-properties": "^6.5.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-flow-strip-types": "^6.18.0",
+    "babel-plugin-transform-object-rest-spread": "^6.19.0",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.5.2",
+    "bdd-lazy-var": "^2.1.2",
+    "chai": "^4.1.0",
+    "coffee-script": "^1.11.1",
+    "cross-env": "^5.1.0",
+    "css-loader": "~0.28.7",
+    "del": "^3.0.0",
+    "del-cli": "^1.1.0",
+    "eslint": "^4.19.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-flowtype": "^2.29.1",
+    "eslint-plugin-flowtype-errors": "^3.5.1",
+    "eslint-plugin-import": "^2.9.0",
+    "fast-async": "^6.1.2",
+    "flow-bin": "^0.68.0",
+    "fs-extra": "^5.0.0",
+    "gh-pages": "^1.0.0",
+    "gitbook-cli": "^2.3.2",
+    "gitbook-plugin-anchors": "^0.7.1",
+    "gitbook-plugin-edit-link": "^2.0.2",
+    "gitbook-plugin-github": "^2.0.0",
+    "gitbook-plugin-prism": "^2.0.0",
+    "glob": "7.1.2",
+    "mocha": "^5.0.1",
+    "node-sass": "~4.7.2",
+    "np": "^2.9.0",
+    "nyc": "^11.3.0",
+    "sass-loader": "~6.0.0",
+    "sinon": "^4.0.1",
+    "tiny-worker": "^2.1.2",
+    "webpack": "^4",
+    "worker-loader": "^1.1.1",
+    "write-file-webpack-plugin": "^4.2.0"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.18.0",
+    "chalk": "^2.3.0",
+    "chokidar": "^2.0.2",
+    "glob-parent": "^3.1.0",
+    "globby": "^7.1.1",
+    "interpret": "^1.0.1",
+    "is-glob": "^4.0.0",
+    "loader-utils": "^1.1.0",
+    "lodash": "^4.3.0",
+    "memory-fs": "^0.4.1",
+    "nodent-runtime": "^3.0.3",
+    "normalize-path": "^2.0.1",
+    "progress": "^2.0.0",
+    "source-map-support": "^0.5.0",
+    "strip-ansi": "^4.0.0",
+    "toposort": "^1.0.0",
+    "yargs": "^11.0.0"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "globby",
+      "gitbook-cli",
+      "gitbook-plugin-anchors",
+      "gitbook-plugin-edit-link",
+      "gitbook-plugin-github",
+      "gitbook-plugin-prism"
+    ]
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.js"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  }
+}
