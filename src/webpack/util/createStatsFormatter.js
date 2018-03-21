@@ -24,9 +24,7 @@ const ensureWebpackErrors = (errors: Array<string | WebpackError>): Array<Webpac
     /* istanbul ignore if */
     if (typeof e === 'string') {
       // webpack does this also, so there must be case when this happens
-      return {
-        message: e,
-      };
+      return (({ message: e }: any): WebpackError);
     }
     return e;
   });

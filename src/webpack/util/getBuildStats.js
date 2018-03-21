@@ -6,7 +6,7 @@ import getAffectedModuleIds from './getAffectedModuleIds';
 import type { Chunk, Module, Stats } from '../types';
 
 export type BuildStats = {
-  affectedModules: Array<number>,
+  affectedModules: Array<number | string>,
   affectedFiles: Array<string>,
   entries: Array<string>,
 };

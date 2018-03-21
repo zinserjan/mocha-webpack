@@ -4,6 +4,7 @@ sudo: false
 branches:
   only:
     - master
+    - /^greenkeeper/.*$/
 
 language: node_js
 

@@ -65,6 +65,6 @@ export default function registerInMemoryCompiler(compiler: Compiler) {
 
   return function unmount() {
     unmountHook();
-    readFile = () => null;
+    readFile = (filePath) => null; // eslint-disable-line no-unused-vars
   };
 }

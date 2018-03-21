@@ -1,4 +1,4 @@
-# mocha-webpack [![npm package][npm-badge]][npm]  [![Build Status Linux][build-badge]][build] [![Build Status Windows][build-badge-windows]][build-windows] [![codecov][codecov-badge]][codecov]
+# mocha-webpack [![npm package][npm-badge]][npm]  [![Build Status Linux][build-badge]][build] [![Build Status Windows][build-badge-windows]][build-windows] [![codecov][codecov-badge]][codecov] [![Greenkeeper badge][greenkeeper-badge]][greenkeeper]
 
 > mocha test runner with integrated webpack precompiler
 
@@ -88,3 +88,5 @@ MIT
 [npm]: https://www.npmjs.org/package/mocha-webpack
 [codecov-badge]:https://codecov.io/gh/zinserjan/mocha-webpack/branch/master/graph/badge.svg
 [codecov]: https://codecov.io/gh/zinserjan/mocha-webpack
+[greenkeeper]: https://greenkeeper.io/
+[greenkeeper-badge]: https://badges.greenkeeper.io/zinserjan/mocha-webpack.svg
