@@ -103,7 +103,8 @@ export default function requireWebpackConfig(webpackConfig, required, env, mode)
   config = config.default || config;
 
   if (typeof config === 'function') {
-    config = config(env);
+    const argv = { mode };
+    config = config(env, argv);
   }
 
   if (mode != null) {
