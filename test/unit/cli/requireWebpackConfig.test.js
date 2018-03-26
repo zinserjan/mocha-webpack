@@ -9,10 +9,15 @@ describe('requireWebpackConfig', () => {
     path.join(__dirname, 'fixture', 'webpackConfig', `webpack.${suffix}${extension}`);
 
   const expectedConfigPath = path.join(__dirname, 'fixture', 'webpackConfig', 'expected.json');
-  const expectedConfig = require(expectedConfigPath); // eslint-disable-line global-require
+  const expectedConfig = require(expectedConfigPath); // eslint-disable-line global-require, import/no-dynamic-require
 
   it('requires plain JavaScript Webpack config file', () => {
     const configPath = getConfigPath('.js');
+    assert.deepEqual(requireWebpackConfig(configPath), expectedConfig);
+  });
+
+  (process.platform === 'win32' ? it.skip : it)('requires symlinked config file', () => {
+    const configPath = getConfigPath('.js', 'config-symlink');
     assert.deepEqual(requireWebpackConfig(configPath), expectedConfig);
   });
 
@@ -33,7 +38,7 @@ describe('requireWebpackConfig', () => {
 
   it('supports config that exports a function', () => {
     const configPath = getConfigPath('.js', 'config-function');
-    assert.deepEqual(requireWebpackConfig(configPath), expectedConfig);
+    assert.deepEqual(requireWebpackConfig(configPath, false, 'test'), expectedConfig);
   });
 
   it('throws error when multi compiler config is given', () => {

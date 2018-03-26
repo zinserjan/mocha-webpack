@@ -96,7 +96,7 @@ module.exports = {
     devtoolFallbackModuleFilenameTemplate: '[absolute-resource-path]?[hash]'
   },
   module: {
-    loaders: [].concat(
+    rules: [].concat(
       isCoverage ? {
           test: /\.(js|ts)/,
           include: path.resolve('src'), // instrument only testing sources with Istanbul, after ts-loader runs
@@ -122,7 +122,7 @@ module.exports = {
 ```
 
 In this config we add `istanbul-instrumenter-loader` only when we want coverage reports. The loader must be the first entry in the loaders array to ensure that it gets applied as last.
-Alternatively you can also use the [`postLoaders` option](https://webpack.github.io/docs/configuration.html#module-preloaders-module-postloaders) when you are using webpack@1 or for webpack@2 the [`enforce` option](https://webpack.js.org/configuration/module/#rule-enforce).
+Alternatively you can also use the [`enforce` option](https://webpack.js.org/configuration/module/#rule-enforce).
 
 Another important detail is that the `include` option should be configured in the same way (but webpack compatible) as in the `package.json`. `istanbul-instrumenter-loader` does not respect the value in the package.json, that's why you need to configure it again.
 

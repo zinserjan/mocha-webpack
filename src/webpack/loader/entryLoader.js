@@ -3,10 +3,7 @@ import loaderUtils from 'loader-utils';
 import normalizePath from 'normalize-path';
 import createEntry from '../util/createEntry';
 
-const KEY = Symbol('entryConfig');
-
 class EntryConfig {
-
   files: Array<string>;
 
   constructor() {
@@ -26,11 +23,11 @@ class EntryConfig {
   getFiles(): Array<string> {
     return this.files;
   }
-
 }
 
 const entryLoader = function entryLoader() {
-  const config: EntryConfig = this.options[KEY];
+  const loaderOptions = loaderUtils.getOptions(this);
+  const config: EntryConfig = loaderOptions.entryConfig;
 
   // Remove all dependencies of the loader result
   this.clearDependencies();
@@ -50,6 +47,4 @@ const entryLoader = function entryLoader() {
 
 
 module.exports = entryLoader;
-module.exports.KEY = KEY;
 module.exports.EntryConfig = EntryConfig;
-

@@ -1,7 +1,7 @@
 // @flow
 import fs from 'fs';
 
-/* eslint-disable import/prefer-default-export*/
+/* eslint-disable import/prefer-default-export */
 
 export function existsFileSync(file: string): boolean {
   try {

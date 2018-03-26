@@ -1,13 +1,13 @@
 // @flow
+import EventEmitter from 'events';
 import chalk from 'chalk';
 import type { Stats } from '../webpack/types';
 import createStatsFormatter from '../webpack/util/createStatsFormatter';
 
 type ReporterOptions = {
-  eventEmitter: {
-    on: (event: string, callback: (...rest: Array<any>) => void) => void
-  },
+  eventEmitter: EventEmitter,
   interactive: boolean,
+  quiet: boolean,
   cwd: string,
 };
 
@@ -21,18 +21,21 @@ const formatTitleWarn = (title) => chalk.black.bgYellow('', title, '');
 const formatTitleError = (title) => chalk.white.bold.bgRed('', title, '');
 
 class Reporter {
-
   added: Array<string>;
   removed: Array<string>;
   interactive: boolean;
+  quiet: boolean;
   formatStats: (stats: Stats) => { warnings: Array<string>, errors: Array<string> };
 
   constructor(options: ReporterOptions) {
-    const { eventEmitter, interactive, cwd } = options;
+    const {
+      eventEmitter, interactive, quiet, cwd,
+    } = options;
 
     this.added = [];
     this.removed = [];
     this.interactive = interactive;
+    this.quiet = quiet;
     this.formatStats = createStatsFormatter(cwd);
 
     eventEmitter.on('uncaughtException', this.onUncaughtException);
@@ -46,13 +49,19 @@ class Reporter {
     eventEmitter.on('entry:removed', this.onEntryRemoved);
   }
 
-  clearConsole() {
-    if (this.interactive) {
-      process.stdout.write(process.platform === 'win32' ? '\x1Bc' : '\x1B[2J\x1B[3J\x1B[H');
+  logInfo(...args: Array<any>) {
+    if (!this.quiet) {
+      log(...args);
     }
   }
 
-  displayErrors(severity: string, errors: Array<any>) {
+  clearConsole() {
+    if (this.interactive) {
+      process.stdout.write(process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H');
+    }
+  }
+
+  static displayErrors(severity: string, errors: Array<any>) {
     const errorCount = errors.length;
 
     const message = severity === 'error' ?
@@ -77,16 +86,16 @@ class Reporter {
   onWebpackStart = () => {
     this.clearConsole();
     if (this.added.length > 0) {
-      log(formatTitleInfo('MOCHA'), 'The following test entry files were added:');
-      log(this.added.map((f) => `+ ${f}`).join('\n'));
+      this.logInfo(formatTitleInfo('MOCHA'), 'The following test entry files were added:');
+      this.logInfo(this.added.map((f) => `+ ${f}`).join('\n'));
     }
 
     if (this.removed.length > 0) {
-      log(formatTitleInfo('MOCHA'), 'The following test entry files were removed:');
-      log(this.removed.map((f) => `- ${f}`).join('\n'));
+      this.logInfo(formatTitleInfo('MOCHA'), 'The following test entry files were removed:');
+      this.logInfo(this.removed.map((f) => `- ${f}`).join('\n'));
     }
 
-    log(formatTitleInfo('WEBPACK'), 'Compiling...');
+    this.logInfo(formatTitleInfo('WEBPACK'), 'Compiling...');
 
     this.added.length = 0;
     this.removed.length = 0;
@@ -100,36 +109,36 @@ class Reporter {
       if (errors.length === 0 && warnings.length === 0) {
         const { startTime, endTime } = stats;
         const compileTime = endTime - startTime;
-        log(formatTitleInfo('WEBPACK'), `Compiled successfully in ${chalk.green(`${compileTime}ms`)}`);
+        this.logInfo(formatTitleInfo('WEBPACK'), `Compiled successfully in ${chalk.green(`${compileTime}ms`)}`);
         return;
       }
 
       if (errors.length > 0) {
-        this.displayErrors('error', errors);
+        Reporter.displayErrors('error', errors);
         return;
       }
 
       if (warnings.length > 0) {
-        this.displayErrors('warning', warnings);
+        Reporter.displayErrors('warning', warnings);
       }
     } else {
-      this.displayErrors('error', [err]);
+      Reporter.displayErrors('error', [err]);
     }
   };
 
   onMochaStart = () => {
-    log(formatTitleInfo('MOCHA'), 'Testing...');
+    this.logInfo(formatTitleInfo('MOCHA'), 'Testing...');
   };
 
   onMochaAbort = () => {
-    log(formatTitleInfo('MOCHA'), 'Tests aborted');
+    this.logInfo(formatTitleInfo('MOCHA'), 'Tests aborted');
   };
 
   onMochaReady = (failures: number) => {
     if (failures === 0) {
-      log(formatTitleInfo('MOCHA'), `Tests completed ${chalk.green('successfully')}`);
+      this.logInfo(formatTitleInfo('MOCHA'), `Tests completed ${chalk.green('successfully')}`);
     } else {
-      log(formatTitleInfo('MOCHA'), `Tests completed with ${chalk.red(`${failures} failure(s)`)}`);
+      this.logInfo(formatTitleInfo('MOCHA'), `Tests completed with ${chalk.red(`${failures} failure(s)`)}`);
     }
   };
 

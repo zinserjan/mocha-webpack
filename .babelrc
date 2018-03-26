@@ -1,19 +1,34 @@
 {
-  "presets": ["babel-preset-es2015"],
+  "presets": [
+    [
+      "babel-preset-env",
+      {
+        "exclude": [
+          "transform-async-to-generator",
+          "transform-regenerator"
+        ]
+      }
+    ]
+  ],
   "plugins": [
     "babel-plugin-transform-flow-strip-types",
     "babel-plugin-transform-decorators-legacy",
     "babel-plugin-transform-class-properties",
     "babel-plugin-transform-object-rest-spread",
-    ["fast-async", {
-      "useRuntimeModule": true
-    }],
+    [
+      "fast-async",
+      {
+        "useRuntimeModule": true
+      }
+    ],
     "babel-plugin-lodash",
     "babel-plugin-transform-runtime"
   ],
   "env": {
     "coverage": {
-      "plugins": ["babel-plugin-istanbul"]
+      "plugins": [
+        "babel-plugin-istanbul"
+      ]
     }
   }
 }

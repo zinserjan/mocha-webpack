@@ -1,5 +1,5 @@
 /* eslint-env node, mocha */
-/* eslint-disable func-names, prefer-arrow-callback, no-loop-func, max-len */
+/* eslint-disable func-names, max-len */
 
 import { assert } from 'chai';
 import path from 'path';
@@ -57,7 +57,7 @@ function createErrorFile(fileName, testName) {
 const createLongRunningTest = (fileName, testName) => {
   const content = `
     var assert = require('assert');
-    describe('${fileName} - ${testName} - 1', function () {      
+    describe('${fileName} - ${testName} - 1', function () {
       it('runs test 1' , function (done) {
         this.timeout(3000);
         console.log('starting ${testName} - 1');
@@ -67,7 +67,7 @@ const createLongRunningTest = (fileName, testName) => {
         }, 2000);
       });
     });
-    
+
     describe('${fileName} - ${testName}', function () {
       it('runs test 2' , function (done) {
         this.timeout(3000);
@@ -85,7 +85,7 @@ const createLongRunningTest = (fileName, testName) => {
 const createNeverEndingTest = (fileName, testName) => {
   const content = `
     var assert = require('assert');
-    describe('${fileName} - ${testName} - 1', function () {      
+    describe('${fileName} - ${testName} - 1', function () {
       it('runs test 1' , function (done) {
         console.log('starting ${testName}');
       });
@@ -103,10 +103,21 @@ const waitFor = (condition, timeoutInMs) => new Promise((resolve, reject) => {
   const timeoutDelay = () => Math.min(remainingTime(), 500);
 
   const run = () => {
-    if (condition()) {
+    let result = false;
+    let error = null;
+    try {
+      result = condition();
+    } catch (e) {
+      error = e;
+      result = false;
+    }
+
+    if (result !== false && error === null) {
       resolve();
     } else if (remainingTime() > 0) {
       setTimeout(run, timeoutDelay());
+    } else if (error != null) {
+      reject(error);
     } else {
       reject(new Error(`Condition not met within time: ${condition.toString()}`));
     }
@@ -118,7 +129,7 @@ const spawnMochaWebpack = (...args) => {
   let data = '';
   const binPath = path.relative(process.cwd(), path.join('bin', 'mocha-webpack'));
 
-  const child = spawn('node', [binPath, ...args]);
+  const child = spawn('node', [binPath, '--mode', 'development', ...args]);
   const receiveData = (d) => {
     data += d.toString();
   };
@@ -161,7 +172,7 @@ describe('cli --watch', function () {
     return Promise
       .resolve()
       // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('Unexpected token'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, 'Unexpected token'), 5000))
       // output matched our condition
       .then(() => {
         assert.notInclude(mw.log, testId);
@@ -177,7 +188,7 @@ describe('cli --watch', function () {
         return updatedTestId;
       })
       // wait until the output matches our condition
-      .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+      .then((updatedTestId) => waitFor(() => assert.include(mw.log, updatedTestId) && assert.include(mw.log, '1 passing'), 5000))
       // output matched our condition
       .then(() => {
         // check if test was updated
@@ -187,9 +198,6 @@ describe('cli --watch', function () {
       .then((e) => {
         // finally, kill watch process
         mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
         // maybe rethrow error
         assert.ifError(e);
       });
@@ -205,7 +213,7 @@ describe('cli --watch', function () {
     return Promise
       .resolve()
       // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes(`Error ${testFile}`), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, `Error ${testFile}`), 5000))
       // output matched our condition
       .then(() => {
         assert.include(mw.log, 'Exception occurred while loading your tests');
@@ -222,7 +230,7 @@ describe('cli --watch', function () {
         return updatedTestId;
       })
       // wait until the output matches our condition
-      .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+      .then((updatedTestId) => waitFor(() => assert.include(mw.log, updatedTestId) && assert.include(mw.log, '1 passing'), 5000))
       // output matched our condition
       .then(() => {
         // check if test was updated
@@ -232,9 +240,6 @@ describe('cli --watch', function () {
       .then((e) => {
         // finally, kill watch process
         mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
         // maybe rethrow error
         assert.ifError(e);
       });
@@ -250,7 +255,7 @@ describe('cli --watch', function () {
     return Promise
       .resolve()
       // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('UNCAUGHT EXCEPTION'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, 'UNCAUGHT EXCEPTION'), 5000))
       // output matched our condition
       .then(() => {
         assert.include(mw.log, 'Exception occurred after running tests');
@@ -267,7 +272,7 @@ describe('cli --watch', function () {
         return updatedTestId;
       })
       // wait until the output matches our condition
-      .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+      .then((updatedTestId) => waitFor(() => assert.include(mw.log, updatedTestId) && assert.include(mw.log, '1 passing'), 5000))
       // output matched our condition
       .then(() => {
         // check if test was updated
@@ -277,9 +282,6 @@ describe('cli --watch', function () {
       .then((e) => {
         // finally, kill watch process
         mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
         // maybe rethrow error
         assert.ifError(e);
       });
@@ -296,14 +298,11 @@ describe('cli --watch', function () {
     return Promise
       .resolve()
       // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes(testId) && mw.log.includes('1 passing'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, testId) && assert.include(mw.log, '1 passing'), 5000))
       .catch((e) => e)
       .then((e) => {
         // finally, kill watch process
         mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
         // maybe rethrow error
         assert.ifError(e);
       });
@@ -319,7 +318,7 @@ describe('cli --watch', function () {
     return Promise
       .resolve()
       // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes(testId) && mw.log.includes('1 passing'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, testId) && assert.include(mw.log, '1 passing'), 5000))
       // output matched our condition
       .then(() => {
         // clear log to receive only changes
@@ -331,7 +330,7 @@ describe('cli --watch', function () {
         return updatedTestId;
       })
       // wait until the output matches our condition
-      .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+      .then((updatedTestId) => waitFor(() => assert.include(mw.log, updatedTestId) && assert.include(mw.log, '1 passing'), 5000))
       // output matched our condition
       .then(() => {
         // check if test was updated
@@ -341,9 +340,6 @@ describe('cli --watch', function () {
       .then((e) => {
         // finally, kill watch process
         mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
         // maybe rethrow error
         assert.ifError(e);
       });
@@ -362,7 +358,7 @@ describe('cli --watch', function () {
     return Promise
       .resolve()
       // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('2 passing'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, '2 passing'), 5000))
       // output matched our condition
       .then(() => {
         // check if both tests were tested
@@ -380,7 +376,7 @@ describe('cli --watch', function () {
         return updatedTestId;
       })
       // wait until the output matches our condition
-      .then((updatedTestId) => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+      .then((updatedTestId) => waitFor(() => assert.include(mw.log, updatedTestId) && assert.include(mw.log, '1 passing'), 5000))
       // output matched our condition
       .then(() => {
         // check if just updated test was tested again
@@ -391,9 +387,6 @@ describe('cli --watch', function () {
       .then((e) => {
         // finally, kill watch process
         mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
         // maybe rethrow error
         assert.ifError(e);
       });
@@ -410,7 +403,7 @@ describe('cli --watch', function () {
     return Promise
       .resolve()
       // wait until the first async test start
-      .then(() => waitFor(() => mw.log.includes(`starting ${testId} - 1`), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, `starting ${testId} - 1`), 5000))
       .then(() => {
         // check if tests were not ready yet
         assert.notInclude(mw.log, `starting ${testId} - 2`);
@@ -423,20 +416,17 @@ describe('cli --watch', function () {
         createTest(testFile, updatedTestId, true);
       })
       // wait until tests were aborted
-      .then(() => waitFor(() => mw.log.includes('Tests aborted'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, 'Tests aborted'), 5000))
       .then(() => {
         // check if tests were aborted
         assert.notInclude(mw.log, `finished ${testId} - 2`);
       })
       // wait until tests were tested again
-      .then(() => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, updatedTestId) && assert.include(mw.log, '1 passing'), 5000))
       .catch((e) => e)
       .then((e) => {
         // finally, kill watch process
         mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
         // maybe rethrow error
         assert.ifError(e);
       });
@@ -453,7 +443,7 @@ describe('cli --watch', function () {
     return Promise
       .resolve()
       // wait until the first async test start
-      .then(() => waitFor(() => mw.log.includes(`starting ${testId}`), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, `starting ${testId}`), 5000))
       .then(() => {
         // clear log to receive only changes
         mw.clearLog();
@@ -462,20 +452,17 @@ describe('cli --watch', function () {
         createTest(testFile, updatedTestId, true);
       })
       // wait until tests were aborted
-      .then(() => waitFor(() => mw.log.includes('Tests aborted'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, 'Tests aborted'), 5000))
       .then(() => {
         // check if tests were aborted
         assert.notInclude(mw.log, `finished ${testId} - 2`);
       })
       // wait until tests were tested again
-      .then(() => waitFor(() => mw.log.includes(updatedTestId) && mw.log.includes('1 passing'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, updatedTestId) && assert.include(mw.log, '1 passing'), 5000))
       .catch((e) => e)
       .then((e) => {
         // finally, kill watch process
         mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
         // maybe rethrow error
         assert.ifError(e);
       });
@@ -493,25 +480,25 @@ describe('cli --watch', function () {
     return Promise
       .resolve()
       // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes(testId1) && mw.log.includes('1 passing'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, testId1) && assert.include(mw.log, '1 passing'), 5000))
       // output matched our condition
       .then(() => {
         // clear log to receive only changes
         mw.clearLog();
-
         // create new test
         createTest(testFile2, testId2, true);
       })
       // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes(testId2) && mw.log.includes('passing'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, testId2) && assert.include(mw.log, 'passing'), 5000))
+      .then(() => {
+        assert.notInclude(mw.log, testId1);
+        assert.notInclude(mw.log, testFile1);
+      })
       // output matched our condition
       .catch((e) => e)
       .then((e) => {
         // finally, kill watch process
         mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
         // maybe rethrow error
         assert.ifError(e);
       });
@@ -531,7 +518,7 @@ describe('cli --watch', function () {
     return Promise
       .resolve()
       // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('1 passing'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, '1 passing'), 5000))
       // output matched our condition
       .then(() => {
         assert.include(mw.log, testId1);
@@ -545,15 +532,16 @@ describe('cli --watch', function () {
         createTest(testFile3, testId3, true);
       })
       // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes(testId2) && mw.log.includes(testId3) && mw.log.includes('passing'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, testId2) && assert.include(mw.log, testId3) && assert.include(mw.log, 'passing'), 5000))
+      .then(() => {
+        assert.notInclude(mw.log, testId1);
+        assert.notInclude(mw.log, testFile1);
+      })
       // output matched our condition
       .catch((e) => e)
       .then((e) => {
         // finally, kill watch process
         mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
         // maybe rethrow error
         assert.ifError(e);
       });
@@ -572,7 +560,7 @@ describe('cli --watch', function () {
     return Promise
       .resolve()
       // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('2 passing'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, '2 passing'), 5000))
       // output matched our condition
       .then(() => {
         assert.include(mw.log, testId1);
@@ -587,14 +575,14 @@ describe('cli --watch', function () {
         deleteTest(testFile2);
       })
       // wait until the output matches our condition
-      .then(() => waitFor(() => mw.log.includes('passing'), 5000))
+      .then(() => waitFor(() => assert.include(mw.log, 'passing'), 5000))
+      .then(() => {
+        assert.notInclude(mw.log, testId2);
+      })
       .catch((e) => e)
       .then((e) => {
         // finally, kill watch process
         mw.kill();
-        if (e) {
-          console.log(mw.log); // eslint-disable-line
-        }
         // maybe rethrow error
         assert.ifError(e);
       });

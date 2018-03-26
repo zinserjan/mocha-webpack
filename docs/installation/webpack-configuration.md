@@ -21,9 +21,8 @@ The reason for this is that webpack isn't able to compile all node_modules like 
 
 *Info*: You can install this plugin with `npm install --save-dev webpack-node-externals`
 
-Maybe you noticed that [entry](https://webpack.github.io/docs/configuration.html#entry), [output.filename](https://webpack.github.io/docs/configuration.html#output-filename) and [output.path](https://webpack.github.io/docs/configuration.html#output-path) are completely missing in this config.
-mocha-webpack does this automatically for you and if you would specify it anyway, it will be overridden.
-
+Maybe you noticed that [entry](https://webpack.github.io/docs/configuration.html#entry) and [output.path](https://webpack.github.io/docs/configuration.html#output-path) are completely missing in this config.
+mocha-webpack does this automatically for you, but it respects custom `output` settings. This is especially useful, when you want to write the files to disk with an additional plugin.
 
 
 ## Sourcemaps
@@ -70,10 +69,10 @@ Your webpack-config for the browser might look like the following:
 ```javascript
 module.exports = {
     module: {
-        loaders: [
+        rules: [
             // ...
-            { test: /\.scss$/, loaders: ['style-loader', 'css-loader', 'sass-loader'] },
-            { test: /\.css$/, loaders: ['style-loader', 'css-loader'] },
+            { test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader'] },
+            { test: /\.css$/, use: ['style-loader', 'css-loader'] },
             // ...
         ]
     },
@@ -85,7 +84,7 @@ Replacing all CSS related loaders with [null-loader](https://github.com/webpack/
 ```javascript
 module.exports = {
     module: {
-        loaders: [
+        rules: [
             // ...
             { test: /\.scss$/, loader: 'null-loader' },
             { test: /\.css$/, loader: 'null-loader' },
@@ -109,10 +108,10 @@ Your webpack-config for the browser might look like the following:
 ```javascript
 module.exports = {
     module: {
-        loaders: [
+        rules: [
             // ...
-            { test: /\.scss$/, loaders: ['style-loader', 'css-loader?modules', 'sass-loader'] },
-            { test: /\.css$/, loaders: ['style-loader', 'css-loader?modules'] },
+            { test: /\.scss$/, use: ['style-loader', 'css-loader?modules', 'sass-loader'] },
+            { test: /\.css$/, use: ['style-loader', 'css-loader?modules'] },
             // ...
         ]
     },
@@ -127,10 +126,10 @@ Then your config looks like this and you're ready to test:
 ```javascript
 module.exports = {
     module: {
-        loaders: [
+        rules: [
             // ...
-            { test: /\.scss$/, loaders: ['css-loader/locals?modules', 'sass-loader'] },
-            { test: /\.css$/, loaders: ['css-loader/locals?modules'] },
+            { test: /\.scss$/, use: ['css-loader/locals?modules', 'sass-loader'] },
+            { test: /\.css$/, use: ['css-loader/locals?modules'] },
             // ...
         ]
     },

@@ -1,46 +1,43 @@
 /* eslint-env node, mocha */
-/* eslint-disable func-names, prefer-arrow-callback, no-loop-func, max-len */
+/* eslint-disable func-names, prefer-arrow-callback */
 import fs from 'fs-extra';
 import path from 'path';
 
 import _ from 'lodash';
-import chalk from 'chalk';
+import stripAnsi from 'strip-ansi';
 import webpack from 'webpack';
 import { version as WEBPACK_VERSION } from 'webpack/package.json';
 import MemoryFileSystem from 'memory-fs';
 import { assert } from 'chai';
 import createStatsFormatter from '../../../src/webpack/util/createStatsFormatter';
+
 const webpackMajorVersion = WEBPACK_VERSION.charAt(0);
 
 const base = path.join(__dirname, 'statsCasesFixture');
 const tests = fs.readdirSync(base).filter((testName) => fs.existsSync(path.join(base, testName, 'entry.js')));
-const jsonLoaderPath = path.resolve(__dirname, './mock/json-loader.js');
 
 const webpackConfig = {
+  mode: 'development',
   output: {
     path: path.join(__dirname, '/dist'),
     filename: 'bundle.js',
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /.js$/,
         loader: 'babel-loader',
-        query: {
-          presets: ['babel-preset-es2015'],
+        options: {
+          presets: ['babel-preset-env'],
         },
       },
       {
-        test: /.json$/,
-        loader: jsonLoaderPath,
-      },
-      {
         test: /\.css$/,
-        loaders: ['css-loader'],
+        loader: 'css-loader',
       },
       {
         test: /\.scss$/,
-        loaders: ['sass-loader'],
+        loader: 'sass-loader',
       },
     ],
   },
@@ -59,7 +56,7 @@ describe('statFormatter', function () {
 
     // make os & location independent messages without colors
     const ensureConsistentCompare = _.flow([
-      chalk.stripColor,
+      stripAnsi,
       (message) => message.replace(/\r?\n/g, '\n'),
       (message) => message.replace(testDirPath, `Xdir/${testName}`),
     ]);

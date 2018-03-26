@@ -1,4 +1,4 @@
-# mocha-webpack [![npm package][npm-badge]][npm]  [![Build Status Linux][build-badge]][build] [![Build Status Windows][build-badge-windows]][build-windows] [![codecov][codecov-badge]][codecov]
+# mocha-webpack [![npm package][npm-badge]][npm]  [![Build Status Linux][build-badge]][build] [![Build Status Windows][build-badge-windows]][build-windows] [![codecov][codecov-badge]][codecov] [![Greenkeeper badge][greenkeeper-badge]][greenkeeper]
 
 > mocha test runner with integrated webpack precompiler
 
@@ -35,16 +35,14 @@ If any build errors happens, they will be shown like below
 ## Which version works with mocha-webpack?
 
 mocha-webpack works with
-- webpack in version `2.x.x` & `3.x.x`
-- mocha in version `2.x.x` & `3.x.x`
+- webpack in version `4.x.x`
+- mocha in version `4.x.x` & `5.x.x`
 
 ## Installation
 
-**Note:** Version 1.0.0 is on the way and the latest pre-releases are available on npm under the `next` tag.
-
 Install mocha-webpack via npm install
 ```bash
-$ npm install webpack mocha mocha-webpack@next --save-dev
+$ npm install webpack mocha mocha-webpack --save-dev
 ```
 
 and use it via npm scripts in your `package.json`
@@ -90,3 +88,5 @@ MIT
 [npm]: https://www.npmjs.org/package/mocha-webpack
 [codecov-badge]:https://codecov.io/gh/zinserjan/mocha-webpack/branch/master/graph/badge.svg
 [codecov]: https://codecov.io/gh/zinserjan/mocha-webpack
+[greenkeeper]: https://greenkeeper.io/
+[greenkeeper-badge]: https://badges.greenkeeper.io/zinserjan/mocha-webpack.svg

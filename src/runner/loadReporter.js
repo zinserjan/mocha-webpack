@@ -16,10 +16,11 @@ export default function loadReporter(reporter: string | () => void, cwd: string)
   let loadedReporter = null;
   try {
     // try to load reporter from node_modules
-    loadedReporter = require(reporter); // eslint-disable-line global-require
+    loadedReporter = require(reporter); // eslint-disable-line global-require, import/no-dynamic-require
   } catch (e) {
     // try to load reporter from cwd
-    loadedReporter = require(path.resolve(cwd, reporter)); // eslint-disable-line global-require
+    // eslint-disable-next-line global-require, import/no-dynamic-require
+    loadedReporter = require(path.resolve(cwd, reporter));
   }
   return loadedReporter;
 }

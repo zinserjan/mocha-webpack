@@ -1,5 +1,5 @@
 /* eslint-env node, mocha */
-/* eslint-disable func-names, prefer-arrow-callback, no-loop-func, max-len */
+/* eslint-disable func-names, prefer-arrow-callback */
 
 import { assert } from 'chai';
 import parseArgv from '../../../src/cli/parseArgv';
@@ -128,7 +128,7 @@ describe('parseArgv', function () {
     context('async-only', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -138,7 +138,7 @@ describe('parseArgv', function () {
       });
 
       for (const parameter of ['--async-only', '--A', '-A']) {
-        it(`'parses ${parameter}'`, function () { // eslint-disable-line no-loop-func
+        it(`'parses ${parameter}'`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -154,7 +154,7 @@ describe('parseArgv', function () {
     context('colors', function () {
       it('uses undefined as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -165,7 +165,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--colors', '--c', '-c']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -179,7 +179,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--no-colors', '--colors=false', '--no-c', '--c=false']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -195,7 +195,7 @@ describe('parseArgv', function () {
     context('growl', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -206,7 +206,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--growl', '--G', '-G']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -222,7 +222,7 @@ describe('parseArgv', function () {
     context('recursive', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -233,7 +233,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--recursive']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -249,7 +249,7 @@ describe('parseArgv', function () {
     context('reporter-options', function () {
       it('uses {} as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -268,7 +268,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -285,7 +285,7 @@ describe('parseArgv', function () {
     context('reporter', function () {
       it('uses "spec" as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -301,7 +301,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -317,7 +317,7 @@ describe('parseArgv', function () {
     context('bail', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -328,7 +328,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--bail', '--b', '-b']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -344,7 +344,7 @@ describe('parseArgv', function () {
     context('grep', function () {
       it('has no default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -361,7 +361,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -377,7 +377,7 @@ describe('parseArgv', function () {
     context('fgrep', function () {
       it('has no default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -394,7 +394,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -410,7 +410,7 @@ describe('parseArgv', function () {
     context('invert', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -421,7 +421,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--invert', '--i', '-i']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -437,7 +437,7 @@ describe('parseArgv', function () {
     context('require', function () {
       it('uses [] as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -456,7 +456,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -473,7 +473,7 @@ describe('parseArgv', function () {
     context('include', function () {
       it('uses [] as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -490,7 +490,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -507,7 +507,7 @@ describe('parseArgv', function () {
     context('slow', function () {
       it('uses 75 as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -519,12 +519,14 @@ describe('parseArgv', function () {
 
       const parameters = [
         { given: ['--slow', '1000'], expected: 1000 },
+        { given: ['--slow', '-1'], expected: -1 },
         { given: ['--s', '1000'], expected: 1000 },
         { given: ['-s', '1000'], expected: 1000 },
+        { given: ['-s', '-1'], expected: -1 },
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -540,7 +542,7 @@ describe('parseArgv', function () {
     context('timeout', function () {
       it('uses 2000 as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -557,7 +559,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -573,7 +575,7 @@ describe('parseArgv', function () {
     context('ui', function () {
       it('uses "bdd" as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -590,7 +592,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -606,7 +608,7 @@ describe('parseArgv', function () {
     context('watch', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -617,7 +619,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--watch', '--w', '-w']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -633,7 +635,7 @@ describe('parseArgv', function () {
     context('check-leaks', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -644,7 +646,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--check-leaks']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -660,7 +662,7 @@ describe('parseArgv', function () {
     context('full-trace', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -671,7 +673,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--full-trace']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -687,7 +689,7 @@ describe('parseArgv', function () {
     context('inline-diffs', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -698,7 +700,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--inline-diffs']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -714,7 +716,7 @@ describe('parseArgv', function () {
     context('exit', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -725,7 +727,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--exit']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -741,7 +743,7 @@ describe('parseArgv', function () {
     context('retries', function () {
       it('has no default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -756,7 +758,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -772,7 +774,7 @@ describe('parseArgv', function () {
     context('delay', function () {
       it('uses false as default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -783,7 +785,7 @@ describe('parseArgv', function () {
 
 
       for (const parameter of ['--delay']) {
-        it(`parses ${parameter}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter}`, function () {
           // given
           const argv = this.argv.concat([parameter]);
 
@@ -799,13 +801,13 @@ describe('parseArgv', function () {
     context('webpack-config', function () {
       it('has default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
 
         // then
-        assert.propertyVal(parsedArgv, 'webpackConfig', 'webpack-config.js');
+        assert.propertyVal(parsedArgv, 'webpackConfig', 'webpack.config.js');
       });
 
 
@@ -814,7 +816,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -827,10 +829,40 @@ describe('parseArgv', function () {
       }
     });
 
+    context('webpack-env', function () {
+      it('has no default value', function () {
+        // given
+        const { argv } = this;
+
+        // when
+        const parsedArgv = this.parseArgv(argv);
+
+        // then
+        assert.notProperty(parsedArgv, 'webpackEnv');
+      });
+
+      const parameters = [
+        { given: ['--webpack-env', 'production'], expected: 'production' },
+        { given: ['--webpack-env.env', 'production'], expected: { env: 'production' } },
+      ];
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () {
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.deepPropertyVal(parsedArgv, 'webpackEnv', parameter.expected);
+        });
+      }
+    });
+
     context('opts', function () {
       it('has no default value', function () {
         // given
-        const argv = this.argv;
+        const { argv } = this;
 
         // when
         const parsedArgv = this.parseArgv(argv);
@@ -845,7 +877,7 @@ describe('parseArgv', function () {
       ];
 
       for (const parameter of parameters) {
-        it(`parses ${parameter.given.join(' ')}`, function () { // eslint-disable-line no-loop-func
+        it(`parses ${parameter.given.join(' ')}`, function () {
           // given
           const argv = this.argv.concat(parameter.given);
 
@@ -854,6 +886,38 @@ describe('parseArgv', function () {
 
           // then
           assert.propertyVal(parsedArgv, 'opts', parameter.expected);
+        });
+      }
+    });
+
+    context('mode', function () {
+      it('has no default value', function () {
+        // given
+        const { argv } = this;
+
+        // when
+        const parsedArgv = this.parseArgv(argv);
+
+        // then
+        assert.notProperty(parsedArgv, 'mode');
+      });
+
+
+      const parameters = [
+        { given: ['--mode', 'development'], expected: 'development' },
+        { given: ['--mode', 'production'], expected: 'production' },
+      ];
+
+      for (const parameter of parameters) {
+        it(`parses ${parameter.given.join(' ')}`, function () {
+          // given
+          const argv = this.argv.concat(parameter.given);
+
+          // when
+          const parsedArgv = this.parseArgv(argv);
+
+          // then
+          assert.propertyVal(parsedArgv, 'mode', parameter.expected);
         });
       }
     });

@@ -11,10 +11,10 @@ export default function loadUI(ui: string, cwd: string) {
   let loadedUI = null;
   try {
     // try to load reporter from node_modules
-    loadedUI = require.resolve(ui); // eslint-disable-line global-require
+    loadedUI = require.resolve(ui);
   } catch (e) {
     // try to load reporter from cwd
-    loadedUI = require.resolve(path.resolve(cwd, ui)); // eslint-disable-line global-require
+    loadedUI = require.resolve(path.resolve(cwd, ui));
   }
   return loadedUI;
 }

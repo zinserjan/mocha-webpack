@@ -1,0 +1,11 @@
+# restore defaults
+* text=auto
+
+# use lf line endings at least for the following files
+*.js text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.opts text eol=lf
+*.coffee text eol=lf
+*.yml text eol=lf

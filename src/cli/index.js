@@ -33,12 +33,17 @@ const defaultOptions = parseArgv([]);
 const options = _.defaults({}, cliOptions, configOptions, defaultOptions);
 
 options.require.forEach((mod) => {
-  require(resolve(mod)); // eslint-disable-line global-require
+  require(resolve(mod)); // eslint-disable-line global-require, import/no-dynamic-require
 });
 
 options.include = options.include.map(resolve);
 
-options.webpackConfig = requireWebpackConfig(options.webpackConfig, requiresWebpackConfig);
+options.webpackConfig = requireWebpackConfig(
+  options.webpackConfig,
+  requiresWebpackConfig,
+  options.webpackEnv,
+  options.mode,
+);
 
 const mochaWebpack = createMochaWebpack();
 
@@ -75,6 +80,10 @@ if (options.checkLeaks) {
 
 if (options.fullTrace) {
   mochaWebpack.fullStackTrace();
+}
+
+if (options.quiet) {
+  mochaWebpack.quiet();
 }
 
 mochaWebpack.useColors(options.colors);

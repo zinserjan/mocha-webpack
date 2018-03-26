@@ -5,5 +5,4 @@
 # But not these files...
 !*.md
 !book.json
-!docs/*
-!docs/*/*
+!docs

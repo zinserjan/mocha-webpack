@@ -4,7 +4,7 @@ The recommended approach to setup mocha-webpack is to install it locally in your
 
 ```bash
 # install mocha, webpack & mocha-webpack as devDependencies
-$ npm install --save-dev mocha webpack mocha-webpack@next
+$ npm install --save-dev mocha webpack mocha-webpack
 ```
 This will install `mocha`, `webpack` and `mocha-webpack` packages in your project directory into `node_modules` and also store them as `devDependencies` in your package.json.
 

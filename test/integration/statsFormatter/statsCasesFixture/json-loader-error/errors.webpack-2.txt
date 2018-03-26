@@ -1,3 +1,0 @@
-Error in ./syntax-error.json
-
-  Syntax error: Unexpected token

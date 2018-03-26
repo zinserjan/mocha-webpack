@@ -1,5 +1,6 @@
 // @flow
 import _ from 'lodash';
+import Watching from 'webpack/lib/Watching';
 import type { Compiler } from '../types';
 
 export type WatchCompiler = {
@@ -12,11 +13,11 @@ export type WatchCompiler = {
   },
 }
 
-const noop = () => void 0;
+const noop = () => undefined;
 export default function createWatchCompiler(compiler: Compiler, watchOptions: {}): WatchCompiler {
   // this ugly statement to create a watch compiler is unfortunately necessary,
   // as webpack clears the file timestamps with the official compiler.watch()
-  const createWatcher = () => new compiler.constructor.Watching(compiler, watchOptions, noop);
+  const createWatcher = () => new Watching(compiler, watchOptions, noop);
   let watchCompiler = null;
 
   return {
@@ -29,11 +30,12 @@ export default function createWatchCompiler(compiler: Compiler, watchOptions: {}
         // the non-empty check is necessary as the times will be reseted after .close()
         // and we don't want to reset already existing timestamps
         if (Object.keys(times).length > 0) {
+          const timesMap = new Map(Object.keys(times).map((key) => [key, times[key]]));
           // set already collected file timestamps to cache compiled files
           // webpack will do this only after a file change, but that will not happen when we add or delete files
           // and this means that we have to test the whole test suite again ...
-          compiler.fileTimestamps = times; // eslint-disable-line no-param-reassign
-          compiler.contextTimestamps = times; // eslint-disable-line no-param-reassign
+          compiler.fileTimestamps = timesMap; // eslint-disable-line no-param-reassign
+          compiler.contextTimestamps = timesMap; // eslint-disable-line no-param-reassign
         }
 
         watchCompiler.close(() => {

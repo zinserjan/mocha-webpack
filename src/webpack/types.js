@@ -16,8 +16,14 @@ export type Compiler = {
   watch: (watchOptions: {}, cb: () => void) => void,
   outputFileSystem: any,
   watchFileSystem: any,
+  hooks: any,
   fileTimestamps: {},
   contextTimestamps: {},
+  options: {
+    output: {
+      path: string,
+    },
+  },
 }
 
 /**
@@ -30,13 +36,14 @@ export type Module = {
   dependencies: Array<{ module: Module }>,
   readableIdentifier: ?any,
   chunks: Array<Chunk>, // eslint-disable-line no-use-before-define
-  blocks: Array<{chunks: Array<Chunk>}> // eslint-disable-line no-use-before-define
+  getChunks: () => Array<Chunk>, // eslint-disable-line no-use-before-define
+  blocks: Array<DependenciesBlock> // eslint-disable-line no-use-before-define
 };
 
 /**
  * Webpack build error or warning
  */
-export type WebpackError = {
+export type WebpackError = Error & {
   message: string,
   file?: ?string,
   module?: ?Module
@@ -52,8 +59,23 @@ export type Chunk = {
   chunks: Array<Chunk>,
   parents: Array<Chunk>,
   files: Array<string>,
-  isInitial?: () => boolean, // webpack >= 2
-  initial?: boolean, // webpack 1
+  isOnlyInitial: () => boolean,
+  getModules: () => Array<Module>,
+};
+
+/**
+ * webpack/lib/ChunkGroup.js
+ */
+export type ChunkGroup = {
+  chunks: Array<Chunk>,
+};
+
+/**
+ * webpack/lib/DependenciesBlock.js
+ * webpack/lib/AsyncDependenciesBlock.js
+ */
+export type DependenciesBlock = {
+  chunkGroup?: ChunkGroup,
 };
 
 /**
@@ -64,6 +86,7 @@ export type Compilation = {
   plugin: (hook: string, fn: () => void) => void,
   modules: Module[],
   chunks: Chunk[],
+  chunkGroups: ChunkGroup[],
   errors: Array<string | WebpackError>,
   warnings: Array<string | WebpackError>,
   assets: {
@@ -84,7 +107,7 @@ export type Stats = {
   startTime: number,
   endTime: number,
   toString: (options: Object) => string,
-  toJson: (options?: Object) => {
+  toJson: (options: ?Object) => {
     startTime: number,
     endTime: number,
     errors: Array<string | WebpackError>,

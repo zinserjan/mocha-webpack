@@ -5,12 +5,13 @@ import _ from 'lodash';
 import chokidar from 'chokidar';
 
 import { glob } from '../util/glob';
+import { ensureAbsolutePath } from '../util/paths';
 import createCompiler from '../webpack/compiler/createCompiler';
 import createWatchCompiler from '../webpack/compiler/createWatchCompiler';
 import registerInMemoryCompiler from '../webpack/compiler/registerInMemoryCompiler';
 import registerReadyCallback from '../webpack/compiler/registerReadyCallback';
 // $FlowFixMe
-import { EntryConfig, KEY as ENTRY_CONFIG_KEY } from '../webpack/loader/entryLoader';
+import { EntryConfig } from '../webpack/loader/entryLoader';
 import configureMocha from './configureMocha';
 import getBuildStats from '../webpack/util/getBuildStats';
 import buildProgressPlugin from '../webpack/plugin/buildProgressPlugin';
@@ -23,23 +24,26 @@ import type { Compiler, Stats } from '../webpack/types';
 const entryPath = path.resolve(__dirname, '../entry.js');
 const entryLoaderPath = path.resolve(__dirname, '../webpack/loader/entryLoader.js');
 const includeLoaderPath = path.resolve(__dirname, '../webpack/loader/includeFilesLoader.js');
-const noop = () => void 0;
+const noop = () => undefined;
 
 
 type MochaRunner = {
   abort: () => void,
+  currentRunnable?: {
+    retries: (count: number) => void,
+    enableTimeouts: (enabled: boolean) => void,
+    timeout: (ms: number) => void,
+    resetTimeout: (ms: number) => void,
+  }
 };
 type Mocha = {
   run: (cb: (failures: number) => void) => MochaRunner,
 };
 
 export default class TestRunner extends EventEmitter {
-
   entries: Array<string>;
   includes: Array<string>;
-  tmpPath: string;
   options: MochaWebpackOptions;
-  outputFilePath: string;
 
   constructor(entries: Array<string>, includes: Array<string>, options: MochaWebpackOptions) {
     super();
@@ -47,8 +51,6 @@ export default class TestRunner extends EventEmitter {
     this.includes = includes;
 
     this.options = options;
-    this.tmpPath = path.join(this.options.cwd, '.tmp', 'mocha-webpack');
-    this.outputFilePath = path.join(this.tmpPath, 'bundle.js');
   }
 
   prepareMocha(webpackConfig: Object, stats: Stats): Mocha {
@@ -68,11 +70,11 @@ export default class TestRunner extends EventEmitter {
   }
 
   async run(): Promise<number> {
-    const config = await this.createWebpackConfig();
+    const { webpackConfig: config } = await this.createWebpackConfig();
     let failures = 0;
     const compiler: Compiler = createCompiler(config);
 
-    compiler.plugin('run', (c, cb) => {
+    compiler.hooks.run.tapAsync('mocha-webpack', (c, cb) => {
       this.emit('webpack:start');
       // $FlowFixMe
       cb();
@@ -81,22 +83,26 @@ export default class TestRunner extends EventEmitter {
     const dispose = registerInMemoryCompiler(compiler);
     try {
       failures = await new Promise((resolve, reject) => {
-        registerReadyCallback(compiler, (err?: Error, webpackStats?: Stats) => {
+        registerReadyCallback(compiler, (err: ?(Error | string), webpackStats: ?Stats) => {
           this.emit('webpack:ready', err, webpackStats);
           if (err || !webpackStats) {
             reject();
             return;
           }
-          const mocha = this.prepareMocha(config, webpackStats);
-          this.emit('mocha:begin');
           try {
-            mocha.run((fails) => {
-              this.emit('mocha:finished', fails);
-              resolve(fails);
-            });
+            const mocha = this.prepareMocha(config, webpackStats);
+            this.emit('mocha:begin');
+            try {
+              mocha.run((fails) => {
+                this.emit('mocha:finished', fails);
+                resolve(fails);
+              });
+            } catch (e) {
+              this.emit('exception', e);
+              resolve(1);
+            }
           } catch (e) {
-            this.emit('exception', e);
-            resolve(1);
+            reject(e);
           }
         });
         compiler.run(noop);
@@ -109,8 +115,7 @@ export default class TestRunner extends EventEmitter {
   }
 
   async watch(): Promise<void> {
-    const config = await this.createWebpackConfig();
-    const entryConfig: EntryConfig = config[ENTRY_CONFIG_KEY];
+    const { webpackConfig: config, entryConfig } = await this.createWebpackConfig();
 
     let mochaRunner: ?MochaRunner = null;
     let stats: ?Stats = null;
@@ -123,10 +128,9 @@ export default class TestRunner extends EventEmitter {
     };
 
     const runMocha = () => {
-      // $FlowFixMe
-      const mocha = this.prepareMocha(config, stats);
-
       try {
+        // $FlowFixMe
+        const mocha = this.prepareMocha(config, stats);
         // unregister our custom exception handler (see declaration)
         process.removeListener('uncaughtException', uncaughtExceptionListener);
 
@@ -156,7 +160,7 @@ export default class TestRunner extends EventEmitter {
     const compiler = createCompiler(config);
     registerInMemoryCompiler(compiler);
     // register webpack start callback
-    compiler.plugin('watch-run', (w, cb) => {
+    compiler.hooks.watchRun.tapAsync('mocha-webpack', (c, cb) => {
       // check if mocha tests are still running, abort them and start compiling
       if (mochaRunner) {
         compilationScheduler = () => {
@@ -168,7 +172,7 @@ export default class TestRunner extends EventEmitter {
         mochaRunner.abort();
         // make sure that the current running test will be aborted when timeouts are disabled for async tests
         if (mochaRunner.currentRunnable) {
-          const runnable: any = mochaRunner.currentRunnable;
+          const runnable = mochaRunner.currentRunnable;
           runnable.retries(0);
           runnable.enableTimeouts(true);
           runnable.timeout(1);
@@ -181,7 +185,7 @@ export default class TestRunner extends EventEmitter {
       }
     });
     // register webpack ready callback
-    registerReadyCallback(compiler, (err?: Error, webpackStats?: Stats) => {
+    registerReadyCallback(compiler, (err: ?(Error | string), webpackStats: ?Stats) => {
       this.emit('webpack:ready', err, webpackStats);
       if (err) {
         // wait for fixed tests
@@ -197,6 +201,7 @@ export default class TestRunner extends EventEmitter {
 
     // webpack enhances watch options, that's why we use them instead
     const watchOptions = watchCompiler.getWatchOptions();
+    const pollingInterval = typeof watchOptions.poll === 'number' ? watchOptions.poll : undefined;
     // create own file watcher for entry files to detect created or deleted files
     const watcher = chokidar.watch(this.entries, {
       cwd: this.options.cwd,
@@ -207,7 +212,8 @@ export default class TestRunner extends EventEmitter {
       ignorePermissionErrors: true,
       ignored: watchOptions.ignored,
       usePolling: watchOptions.poll ? true : undefined,
-      interval: typeof watchOptions.poll === 'number' ? watchOptions.poll : undefined,
+      interval: pollingInterval,
+      binaryInterval: pollingInterval,
     });
 
     const restartWebpackBuild = _.debounce(() => watchCompiler.watch(), watchOptions.aggregateTimeout);
@@ -228,14 +234,14 @@ export default class TestRunner extends EventEmitter {
     };
 
     // add listener for entry creation & deletion events
-    watcher.on('add', file => fileDeletedOrAdded(file, false));
-    watcher.on('unlink', file => fileDeletedOrAdded(file, true));
+    watcher.on('add', (file) => fileDeletedOrAdded(file, false));
+    watcher.on('unlink', (file) => fileDeletedOrAdded(file, true));
 
-    return new Promise(() => void 0); // never ending story
+    return new Promise(() => undefined); // never ending story
   }
 
-  async createWebpackConfig(): {} {
-    const webpackConfig = this.options.webpackConfig;
+  async createWebpackConfig() {
+    const { webpackConfig } = this.options;
 
     const files = await glob(this.entries, {
       cwd: this.options.cwd,
@@ -243,16 +249,14 @@ export default class TestRunner extends EventEmitter {
     });
 
     const entryConfig = new EntryConfig();
-    files.forEach((f) => entryConfig.addFile(f));
+    files
+      .map((f) => ensureAbsolutePath(f, this.options.cwd))
+      .forEach((f) => entryConfig.addFile(f));
 
-    const includeLoaderQuery = {
-      include: this.includes,
-    };
-
-    const entry = `!!${includeLoaderPath}?${JSON.stringify(includeLoaderQuery)}!${entryLoaderPath}!${entryPath}`;
-
-    const outputFileName = path.basename(this.outputFilePath);
-    const outputPath = path.dirname(this.outputFilePath);
+    const tmpPath = path.join(this.options.cwd, '.tmp', 'mocha-webpack', Date.now().toString());
+    const withCustomPath = _.has(webpackConfig, 'output.path');
+    const outputPath = path.normalize(_.get(webpackConfig, 'output.path', tmpPath));
+    const publicPath = withCustomPath ? _.get(webpackConfig, 'output.publicPath', undefined) : outputPath + path.sep;
 
     const plugins = [];
 
@@ -260,19 +264,45 @@ export default class TestRunner extends EventEmitter {
       plugins.push(buildProgressPlugin());
     }
 
-    return {
+    const userLoaders = _.get(webpackConfig, 'module.rules', []);
+    userLoaders.unshift({
+      test: entryPath,
+      use: [
+        {
+          loader: includeLoaderPath,
+          options: {
+            include: this.includes,
+          },
+        },
+        {
+          loader: entryLoaderPath,
+          options: {
+            entryConfig,
+          },
+        },
+      ],
+    });
+
+    const config = {
       ...webpackConfig,
-      [ENTRY_CONFIG_KEY]: entryConfig,
-      entry,
+      entry: entryPath,
+      module: {
+        ...(webpackConfig: any).module,
+        rules: userLoaders,
+      },
       output: {
         ...(webpackConfig: any).output,
-        filename: outputFileName,
         path: outputPath,
+        publicPath,
       },
       plugins: [
         ...((webpackConfig: any).plugins || []),
         ...plugins,
       ],
+    };
+    return {
+      webpackConfig: config,
+      entryConfig,
     };
   }
 }

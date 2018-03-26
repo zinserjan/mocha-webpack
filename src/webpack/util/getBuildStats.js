@@ -6,16 +6,16 @@ import getAffectedModuleIds from './getAffectedModuleIds';
 import type { Chunk, Module, Stats } from '../types';
 
 export type BuildStats = {
-  affectedModules: Array<number>,
+  affectedModules: Array<number | string>,
   affectedFiles: Array<string>,
   entries: Array<string>,
 };
 
 
 export default function getBuildStats(stats: Stats, outputPath: string): BuildStats {
-  const { chunks, modules } = stats.compilation;
+  const { chunks, chunkGroups, modules } = stats.compilation;
 
-  const sortedChunks = sortChunks(chunks);
+  const sortedChunks = sortChunks(chunks, chunkGroups);
   const affectedModules = getAffectedModuleIds(chunks, modules);
 
   const entries = [];
@@ -26,13 +26,14 @@ export default function getBuildStats(stats: Stats, outputPath: string): BuildSt
   sortedChunks.forEach((chunk: Chunk) => {
     const files = Array.isArray(chunk.files) ? chunk.files : [chunk.files];
 
-    if (chunk.isInitial ? chunk.isInitial() : chunk.initial) {
+    if (chunk.isOnlyInitial()) {
       // only entry files
       const entry = files[0];
       entries.push(entry);
     }
 
-    if (chunk.modules.some((module: Module) => affectedModules.indexOf(module.id) !== -1)) {
+    if (chunk.getModules().some((module: Module) => affectedModules.indexOf(module.id) !== -1)
+    ) {
       files.forEach((file) => {
         if (/\.js$/.test(file)) {
           js.push(file);

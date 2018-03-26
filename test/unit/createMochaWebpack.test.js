@@ -1,5 +1,5 @@
 /* eslint-env node, mocha */
-/* eslint-disable func-names, prefer-arrow-callback, no-loop-func, max-len */
+/* eslint-disable func-names, prefer-arrow-callback */
 import { assert } from 'chai';
 import MochaWebpack from '../../src/MochaWebpack';
 import createMochaWebpack from '../../src/createMochaWebpack';

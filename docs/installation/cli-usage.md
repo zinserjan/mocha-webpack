@@ -9,6 +9,7 @@ Options
   --async-only, -A               force all tests to take a callback (async) or return a promise
   --colors, -c                   force enabling of colors
   --interactive                  force interactive mode
+  --quiet, -q                    does not display informational messages
   --growl, -G                    enable growl notification support
   --recursive                    include sub directories
   --reporter, -R                 specify the reporter to use
@@ -31,6 +32,7 @@ Options
   --retries                      set numbers of time to retry a failed test case
   --delay                        wait for async suite definition
   --webpack-config               path to webpack-config file
+  --webpack-env                  environment passed to the webpack-config, when it is a function
   --opts                         path to webpack-mocha options file, Default cwd/mocha-webpack.opts
 
 Examples
@@ -63,7 +65,7 @@ for your webpack config file then give it a name that ends with corresponding ex
 ```javascript
 export default {
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         loader: "babel-loader"
@@ -77,12 +79,31 @@ export default {
 ```coffeescript
 module.exports =
   module:
-    loaders: [
+    rules: [
       {
         test: /\.coffee$/
         loader: "coffee-loader"
       }
     ]
+```
+
+Instead of returning a webpack config, you can also export a function which returns the config when called. You should use this in conjunction with the `--webpack-env` option to make your config environment aware, for example `--webpack-env test`.
+
+```javascript
+export default function (env) {
+  return {
+    devtool: env === "production" ? "source-map": "inline-cheap-module-source-map",
+    target: env === "test" ? "node" : "web",
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          loader: "babel-loader"
+        }
+      ]
+    }
+  }
+};
 ```
 
 Please have a look at the [webpack configuration chapter](./webpack-configuration.md) to get further instructions & tips.
