@@ -33,7 +33,7 @@ Options
   --delay                        wait for async suite definition
   --webpack-config               path to webpack-config file
   --webpack-env                  environment passed to the webpack-config, when it is a function
-  --opts                         path to webpack-mocha options file, Default cwd/mocha-webpack.opts
+  --opts                         path to webpack-mocha options file, Default test/mocha-webpack.opts
 
 Examples
 
@@ -50,7 +50,7 @@ Default pattern when no arguments:
 
 ### --webpack-config
 
-Allows you to use your own webpack configuration to define custom loaders and other webpack related stuff. 
+Allows you to use your own webpack configuration to define custom loaders and other webpack related stuff.
 
 When the parameter `--webpack-config` is omitted, mocha-webpack tries to load a webpack-config file named `webpack.config.js`, but will not bail when it doesn't exist.
 It fails only for missing webpack config files when the config is explicitly given.
@@ -110,15 +110,15 @@ Please have a look at the [webpack configuration chapter](./webpack-configuratio
 
 ### --opts
 
-mocha-webpack attempts to load a configuration file named `mocha-webpack.opts` in your working directory. It's basically the same like `mocha.opts` for mocha and appends common CLI options automatically to your commands.
+mocha-webpack attempts to load a configuration file named `mocha-webpack.opts` in your `test` directory. It's basically the same like `mocha.opts` for mocha and appends common CLI options automatically to your commands.
 
 `--opts` allows you to define a custom file path for this config file.
 
 The lines in this file are combined with any command-line arguments. Command-line arguments take precedence.
 
-Imagine you have the following mocha-webpack.opts file:
+Imagine you have the following `test/mocha-webpack.opts` file:
 
-**mocha-webpack.opts**
+**test/mocha-webpack.opts**
 ```
 --colors
 --webpack-config webpack.config-test.js
@@ -157,4 +157,3 @@ But like `--require` they will be executed before your tests.
 
 Starts mocha-webpack in watch mode and compiles & run your tests automatically when a file change occur.
 Unlike mocha, mocha-webpack analyzes your dependency graph and run only those test files that were affected by this file change.
-
