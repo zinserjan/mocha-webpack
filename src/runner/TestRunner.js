@@ -5,7 +5,6 @@ import _ from 'lodash';
 import chokidar from 'chokidar';
 
 import { glob } from '../util/glob';
-import { ensureAbsolutePath } from '../util/paths';
 import createCompiler from '../webpack/compiler/createCompiler';
 import createWatchCompiler from '../webpack/compiler/createWatchCompiler';
 import registerInMemoryCompiler from '../webpack/compiler/registerInMemoryCompiler';
@@ -245,13 +244,11 @@ export default class TestRunner extends EventEmitter {
 
     const files = await glob(this.entries, {
       cwd: this.options.cwd,
-      absolute: false, // this option isn't covered by the version range in 'globby' for 'glob' (default value is false)
+      absolute: true,
     });
 
     const entryConfig = new EntryConfig();
-    files
-      .map((f) => ensureAbsolutePath(f, this.options.cwd))
-      .forEach((f) => entryConfig.addFile(f));
+    files.forEach((f) => entryConfig.addFile(f));
 
     const tmpPath = path.join(this.options.cwd, '.tmp', 'mocha-webpack', Date.now().toString());
     const withCustomPath = _.has(webpackConfig, 'output.path');
