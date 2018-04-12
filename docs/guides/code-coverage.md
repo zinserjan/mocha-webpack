@@ -100,7 +100,11 @@ module.exports = {
       isCoverage ? {
           test: /\.(js|ts)/,
           include: path.resolve('src'), // instrument only testing sources with Istanbul, after ts-loader runs
-          loader: 'istanbul-instrumenter-loader'
+          loader: 'istanbul-instrumenter-loader',
+          // if ES6 is used, need the configuration so that it compiles properly
+          query: {
+            esModules: true
+          }
       }: [],
       {
           test: /.js$/,
