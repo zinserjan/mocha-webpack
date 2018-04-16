@@ -15,21 +15,27 @@ Then create a helper script to prepare the jsdom environment, e.g. `setup.js`.
 
 **setup.js**
 ```js
-const jsdom = require('jsdom').jsdom;
+import jsdom from "jsdom";
 
-global.document = jsdom('');
-global.window = document.defaultView;
-window.console = global.console;
+const { JSDOM } = jsdom;
+const dom = new JSDOM("");
 
-Object.keys(document.defaultView).forEach((property) => {
-  if (typeof global[property] === 'undefined') {
-    global[property] = document.defaultView[property];
+Object.assign(global, {
+  document: dom.window.document,
+  window: dom.window,
+  navigator: {
+    userAgent: `node.js`
   }
 });
 
-global.navigator = {
-  userAgent: 'node.js'
-};
+window.console = global.console;
+
+Object.getOwnPropertyNames(window)
+  .forEach(property => {
+    if (typeof global[property] === `undefined`) {
+      global[property] = window[property];
+    }
+  });
 ```
 
 As next you need to make sure that the compile `target` in your Webpack configuration is `node`.
