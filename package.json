@@ -92,7 +92,7 @@
     "sinon": "^4.0.1",
     "tiny-worker": "^2.1.2",
     "webpack": "^4",
-    "worker-loader": "^1.1.1",
+    "worker-loader": "^2.0.0",
     "write-file-webpack-plugin": "^4.2.0"
   },
   "dependencies": {
