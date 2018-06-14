@@ -35,7 +35,7 @@ If any build errors happens, they will be shown like below
 ## Which version works with mocha-webpack?
 
 mocha-webpack works with
-- webpack in version `4.x.x`
+- webpack in version `4.x.x` (install mocha-webpack `2.x.x`)
 - mocha in version `4.x.x` & `5.x.x`
 
 ## Installation
