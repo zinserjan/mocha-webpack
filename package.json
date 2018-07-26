@@ -62,7 +62,7 @@
     "babel-plugin-transform-runtime": "^6.15.0",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.5.2",
-    "bdd-lazy-var": "^2.1.2",
+    "bdd-lazy-var": "^2.4.4",
     "chai": "^4.1.0",
     "coffee-script": "^1.11.1",
     "cross-env": "^5.1.0",
