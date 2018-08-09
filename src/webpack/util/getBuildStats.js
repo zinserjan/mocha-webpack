@@ -15,7 +15,12 @@ export type BuildStats = {
 export default function getBuildStats(stats: Stats, outputPath: string): BuildStats {
   const { chunks, chunkGroups, modules } = stats.compilation;
 
-  const sortedChunks = sortChunks(chunks, chunkGroups);
+  let sortedChunks = chunks;
+  try {
+    sortedChunks = (0, _sortChunks2.default)(chunks, chunkGroups);
+  } catch (e) {
+    // if sort fails (because of circular dependencies for instance), do nothing
+  }
   const affectedModules = getAffectedModuleIds(chunks, modules);
 
   const entries = [];
