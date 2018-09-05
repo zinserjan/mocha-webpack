@@ -93,7 +93,7 @@
     "tiny-worker": "^2.1.2",
     "webpack": "^4",
     "worker-loader": "^1.1.1",
-    "write-file-webpack-plugin": "^4.2.0"
+    "write-file-webpack-plugin": "^4.4.0"
   },
   "dependencies": {
     "babel-runtime": "^6.18.0",
