@@ -108,7 +108,7 @@
     "memory-fs": "^0.4.1",
     "nodent-runtime": "^3.0.3",
     "normalize-path": "^2.0.1",
-    "progress": "^2.0.0",
+    "progress": "^2.0.1",
     "source-map-support": "^0.5.0",
     "strip-ansi": "^4.0.0",
     "toposort": "^1.0.0",
