@@ -84,7 +84,7 @@
     "gitbook-plugin-github": "^2.0.0",
     "gitbook-plugin-prism": "^2.0.0",
     "glob": "7.1.2",
-    "mocha": "^5.0.1",
+    "mocha": "^6.0.2",
     "node-sass": "~4.7.2",
     "np": "^2.9.0",
     "nyc": "^11.3.0",
