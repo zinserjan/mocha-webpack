@@ -89,7 +89,7 @@
     "np": "^2.9.0",
     "nyc": "^11.3.0",
     "sass-loader": "~6.0.0",
-    "sinon": "^4.0.1",
+    "sinon": "^7.2.7",
     "tiny-worker": "^2.1.2",
     "webpack": "^4",
     "worker-loader": "^1.1.1",
