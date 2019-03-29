@@ -102,7 +102,7 @@
     "glob-parent": "^3.1.0",
     "globby": "^7.1.1",
     "interpret": "^1.0.1",
-    "is-glob": "^4.0.0",
+    "is-glob": "^4.0.1",
     "loader-utils": "^1.1.0",
     "lodash": "^4.3.0",
     "memory-fs": "^0.4.1",
