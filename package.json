@@ -90,7 +90,7 @@
     "nyc": "^11.3.0",
     "sass-loader": "~6.0.0",
     "sinon": "^4.0.1",
-    "tiny-worker": "^2.1.2",
+    "tiny-worker": "^2.3.0",
     "webpack": "^4",
     "worker-loader": "^1.1.1",
     "write-file-webpack-plugin": "^4.2.0"
