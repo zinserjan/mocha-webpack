@@ -98,7 +98,7 @@
   "dependencies": {
     "babel-runtime": "^6.18.0",
     "chalk": "^2.3.0",
-    "chokidar": "^2.0.2",
+    "chokidar": "^3.2.3",
     "glob-parent": "^3.1.0",
     "globby": "^7.1.1",
     "interpret": "^1.0.1",
