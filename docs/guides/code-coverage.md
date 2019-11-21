@@ -88,6 +88,7 @@ Now it's time to setup `istanbul-instrumenter-loader` to get proper code coverag
 ```javascript
 var nodeExternals = require('webpack-node-externals');
 var isCoverage = process.env.NODE_ENV === 'coverage';
+var path = require('path');
 
 module.exports = {
   output: {
