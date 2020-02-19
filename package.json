@@ -103,7 +103,7 @@
     "globby": "^7.1.1",
     "interpret": "^1.0.1",
     "is-glob": "^4.0.0",
-    "loader-utils": "^1.1.0",
+    "loader-utils": "^1.4.0",
     "lodash": "^4.3.0",
     "memory-fs": "^0.4.1",
     "nodent-runtime": "^3.0.3",
