@@ -72,7 +72,7 @@
     "eslint": "^4.19.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-flowtype": "^2.29.1",
-    "eslint-plugin-flowtype-errors": "^3.5.1",
+    "eslint-plugin-flowtype-errors": "^4.2.0",
     "eslint-plugin-import": "^2.9.0",
     "fast-async": "^6.1.2",
     "flow-bin": "^0.68.0",
