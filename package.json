@@ -65,7 +65,7 @@
     "bdd-lazy-var": "^2.1.2",
     "chai": "^4.1.0",
     "coffee-script": "^1.11.1",
-    "cross-env": "^5.1.0",
+    "cross-env": "^7.0.2",
     "css-loader": "~0.28.7",
     "del": "^3.0.0",
     "del-cli": "^1.1.0",
